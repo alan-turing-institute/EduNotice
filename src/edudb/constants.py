@@ -1,4 +1,3 @@
-
 """
 Constants module.
 """
@@ -34,14 +33,14 @@ SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DEFAULT_DB
 SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
 
 # pandas dataframe column names
-CONST_PD_COL_COURSE_NAME = 'Course name'
-CONST_PD_COL_SUB_ID = 'Subscription id'
-CONST_PD_COL_CRAWL_TIME_UTC = 'Crawl time utc'
+CONST_PD_COL_COURSE_NAME = "Course name"
+CONST_PD_COL_LAB_NAME = "Lab name"
+CONST_PD_COL_SUB_ID = "Subscription id"
+CONST_PD_COL_CRAWL_TIME_UTC = "Crawl time utc"
 
-# ['Lab name', 
-# 'Handout name', 'Handout budget', 'Handout consumed', 
-# 'Handout status', 'Subscription name', 'Subscription id', 
-# 'Subscription status', 'Subscription expiry date', 
+# 'Handout name', 'Handout budget', 'Handout consumed',
+# 'Handout status', 'Subscription name', 'Subscription id',
+# 'Subscription status', 'Subscription expiry date',
 # 'Subscription users', 'Crawl time utc']
 
 
@@ -52,7 +51,9 @@ CONST_DATA_FOLDER = "data"
 CONST_TEST1_FILENAME = "ec_output_1.csv"
 
 CONST_TEST_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", CONST_TEST_FOLDER)
+    os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "..", "..", CONST_TEST_FOLDER
+    )
 )
 
 CONST_TEST_DIR_DATA = os.path.join(CONST_TEST_DIR, CONST_DATA_FOLDER)

@@ -68,6 +68,7 @@ class LabClass(BASE):
     time_created = Column(DateTime(), server_default=func.now())
     time_updated = Column(DateTime(), onupdate=func.now())
 
+
 #    subscription_relationship = relationship("SubscriptionClass")
 
 
@@ -89,41 +90,41 @@ class LabClass(BASE):
 
 
 # class DetailsClass(BASE):
-    """
-    Subscription details class
-    """
+#     """
+#     Subscription details class
+#     """
 
-    __tablename__ = DETAILS_TABLE_NAME
+#     __tablename__ = DETAILS_TABLE_NAME
 
-    # columns
-    id = Column(Integer, primary_key=True, autoincrement=True)
+#     # columns
+#     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    sub_id = Column(
-        Integer,
-        ForeignKey("{}.{}".format(SUBSCRIPTIONS_TABLE_NAME, ID_COL_NAME)),
-        nullable=False,
-    )
+#     sub_id = Column(
+#         Integer,
+#         ForeignKey("{}.{}".format(SUBSCRIPTIONS_TABLE_NAME, ID_COL_NAME)),
+#         nullable=False,
+#     )
 
-    lab_id = Column(
-        Integer,
-        ForeignKey("{}.{}".format(LABS_TABLE_NAME, ID_COL_NAME)),
-        nullable=False,
-    )
+#     lab_id = Column(
+#         Integer,
+#         ForeignKey("{}.{}".format(LABS_TABLE_NAME, ID_COL_NAME)),
+#         nullable=False,
+#     )
 
-    handout_name = String(100)
-    handout_status = String(10)
-    handout_budget = Column(Float, nullable=False)
-    handout_consumed = Column(Float, nullable=False)
+#     handout_name = String(100)
+#     handout_status = String(10)
+#     handout_budget = Column(Float, nullable=False)
+#     handout_consumed = Column(Float, nullable=False)
 
-    subscription_name = String(100)
-    subscription_status = String(10)
-    subscription_expiry_date = Column(DateTime, nullable=False)
-    subscription_users = ""
+#     subscription_name = String(100)
+#     subscription_status = String(10)
+#     subscription_expiry_date = Column(DateTime, nullable=False)
+#     subscription_users = ""
 
-    timestamp = Column(DateTime, nullable=False)
+#     timestamp = Column(DateTime, nullable=False)
 
-    time_created = Column(DateTime(), server_default=func.now())
-    time_updated = Column(DateTime(), onupdate=func.now())
+#     time_created = Column(DateTime(), server_default=func.now())
+#     time_updated = Column(DateTime(), onupdate=func.now())
 
-    # arguments
-    __table_args__ = (UniqueConstraint("sub_id", "timestamp"),)
+#     # arguments
+#     __table_args__ = (UniqueConstraint("sub_id", "timestamp"),)
