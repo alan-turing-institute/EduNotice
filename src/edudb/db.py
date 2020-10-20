@@ -4,6 +4,7 @@ DB management module.
 """
 
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists
 
 from edudb.constants import (
@@ -13,6 +14,7 @@ from edudb.constants import (
 )
 
 from edudb.structure import BASE
+
 
 def create_database():
     """
@@ -42,3 +44,28 @@ def create_database():
         return False, "Database already exists."
 
     return True, None
+
+
+def session_open(engine):
+    """
+    Opens a new connection/session to the db and binds the engine
+
+    Arguments:
+        engine: the connected engine
+    """
+
+    Session = sessionmaker()
+    Session.configure(bind=engine)
+
+    return Session()
+
+
+def session_close(session):
+    """
+    Closes the session
+    Arguments:
+        session: session
+    """
+
+    session.commit()
+    session.close()
