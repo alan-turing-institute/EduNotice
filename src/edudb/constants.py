@@ -35,11 +35,16 @@ SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
 # pandas dataframe column names
 CONST_PD_COL_COURSE_NAME = "Course name"
 CONST_PD_COL_LAB_NAME = "Lab name"
+
 CONST_PD_COL_SUB_ID = "Subscription id"
+
 CONST_PD_COL_CRAWL_TIME_UTC = "Crawl time utc"
 
 # 'Handout name', 'Handout budget', 'Handout consumed',
-# 'Handout status', 'Subscription name', 'Subscription id',
+# 'Handout status', 'Subscription name', 
+
+# 'Subscription id',
+
 # 'Subscription status', 'Subscription expiry date',
 # 'Subscription users', 'Crawl time utc']
 

@@ -68,25 +68,24 @@ class LabClass(BASE):
     time_created = Column(DateTime(), server_default=func.now())
     time_updated = Column(DateTime(), onupdate=func.now())
 
+    #details_relationship = relationship("DetailsClass")
 
-#    subscription_relationship = relationship("SubscriptionClass")
 
+class SubscriptionClass(BASE):
+    """
+    Subscription class
+    """
 
-# class SubscriptionClass(BASE):
-#     """
-#     Subscription class
-#     """
+    __tablename__ = SUBSCRIPTIONS_TABLE_NAME
 
-#     __tablename__ = SUBSCRIPTIONS_TABLE_NAME
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-#     id = Column(Integer, primary_key=True, autoincrement=True)
+    guid = Column(String(36), nullable=False)
 
-#     guid = Column(String(36), nullable=False)
+    time_created = Column(DateTime(), server_default=func.now())
+    time_updated = Column(DateTime(), onupdate=func.now())
 
-#     time_created = Column(DateTime(), server_default=func.now())
-#     time_updated = Column(DateTime(), onupdate=func.now())
-
-#     details_relationship = relationship("DetailsClass")
+    #details_relationship = relationship("DetailsClass")
 
 
 # class DetailsClass(BASE):

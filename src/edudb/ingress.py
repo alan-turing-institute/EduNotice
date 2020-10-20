@@ -193,3 +193,37 @@ def update_labs(engine, eduhub_df, course_dict):
     session_close(session)
 
     return True, None, lab_dict
+
+
+def update_subscriptions(engine, eduhub_df):
+    """
+    Updates database with the subscriptions eduhub crawl data and returns a
+        dictionary containing all subscription ids and their internal id numbers.
+
+    Arguments:
+        engine - an sql engine instance
+        eduhub_df - pandas dataframe with the eduhub crawl data
+    Returns:
+        success - flag if the action was succesful
+        error - error message
+        sub_dict - subscription id /internal id dictionary
+    """
+
+    sub_dict = {}
+
+    success, error = check_df(eduhub_df)
+
+    if not success:
+        return success, error, sub_dict
+
+    try:
+        unique_subscription_ids = eduhub_df[CONST_PD_COL_SUB_ID].unique()
+    except KeyError as exception:
+        return False, exception, sub_dict
+
+    if len(unique_subscription_ids) == 0:
+        return False, "dataframe does not contain course names", sub_dict
+
+    print(unique_subscription_ids)
+
+    return False, None, sub_dict
