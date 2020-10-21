@@ -68,7 +68,7 @@ class LabClass(BASE):
     time_created = Column(DateTime(), server_default=func.now())
     time_updated = Column(DateTime(), onupdate=func.now())
 
-    #details_relationship = relationship("DetailsClass")
+    details_relationship = relationship("DetailsClass")
 
 
 class SubscriptionClass(BASE):
@@ -85,45 +85,47 @@ class SubscriptionClass(BASE):
     time_created = Column(DateTime(), server_default=func.now())
     time_updated = Column(DateTime(), onupdate=func.now())
 
-    #details_relationship = relationship("DetailsClass")
+    details_relationship = relationship("DetailsClass")
 
 
-# class DetailsClass(BASE):
-#     """
-#     Subscription details class
-#     """
+class DetailsClass(BASE):
+    """
+    Subscription details class
+    """
 
-#     __tablename__ = DETAILS_TABLE_NAME
+    __tablename__ = DETAILS_TABLE_NAME
 
-#     # columns
-#     id = Column(Integer, primary_key=True, autoincrement=True)
+    subscription_guid = None
 
-#     sub_id = Column(
-#         Integer,
-#         ForeignKey("{}.{}".format(SUBSCRIPTIONS_TABLE_NAME, ID_COL_NAME)),
-#         nullable=False,
-#     )
+    # columns
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-#     lab_id = Column(
-#         Integer,
-#         ForeignKey("{}.{}".format(LABS_TABLE_NAME, ID_COL_NAME)),
-#         nullable=False,
-#     )
+    sub_id = Column(
+        Integer,
+        ForeignKey("{}.{}".format(SUBSCRIPTIONS_TABLE_NAME, ID_COL_NAME)),
+        nullable=False,
+    )
 
-#     handout_name = String(100)
-#     handout_status = String(10)
-#     handout_budget = Column(Float, nullable=False)
-#     handout_consumed = Column(Float, nullable=False)
+    lab_id = Column(
+        Integer,
+        ForeignKey("{}.{}".format(LABS_TABLE_NAME, ID_COL_NAME)),
+        nullable=False,
+    )
 
-#     subscription_name = String(100)
-#     subscription_status = String(10)
-#     subscription_expiry_date = Column(DateTime, nullable=False)
-#     subscription_users = ""
+    handout_name = Column(String(100), nullable=False)
+    handout_status = Column(String(10), nullable=False)
+    handout_budget = Column(Float, nullable=False)
+    handout_consumed = Column(Float, nullable=False)
 
-#     timestamp = Column(DateTime, nullable=False)
+    subscription_name = Column(String(100), nullable=False)
+    subscription_status = Column(String(10), nullable=False)
+    subscription_expiry_date = Column(DateTime, nullable=False)
+    subscription_users = Column(String(10000), nullable=False)
 
-#     time_created = Column(DateTime(), server_default=func.now())
-#     time_updated = Column(DateTime(), onupdate=func.now())
+    timestamp_utc = Column(DateTime, nullable=False)
 
-#     # arguments
-#     __table_args__ = (UniqueConstraint("sub_id", "timestamp"),)
+    time_created = Column(DateTime(), server_default=func.now())
+    time_updated = Column(DateTime(), onupdate=func.now())
+
+    # arguments
+    __table_args__ = (UniqueConstraint("sub_id", "timestamp_utc"),)

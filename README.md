@@ -2,6 +2,10 @@
 
 Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a>.
 
+## Notes
+
+Existing details (are not updated)
+
 ## Setup
 
 Set the required and optional environmental parameters (recommended by modifying the `~/.bash_profile` file).
@@ -15,6 +19,7 @@ export EDB_SQL_USER=$EDB_SQL_USERNAME"@"$EDB_SQL_SERVER
 export EDB_SQL_PASS="<<replace me>>"
 export EDB_SQL_DBNAME="<<replace me>>"
 export EDB_SQL_PORT="<<replace me>>"
+export EDB_TEST_MODE=False
 ```
 
 Do not forget either restart the terminal or use the `source` command to effect the changes.

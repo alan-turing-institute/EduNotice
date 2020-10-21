@@ -5,7 +5,7 @@ DB management module.
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_utils import database_exists
+from sqlalchemy_utils import database_exists, drop_database
 
 from edudb.constants import (
     SQL_CONNECTION_STRING_DB,
@@ -16,9 +16,9 @@ from edudb.constants import (
 from edudb.structure import BASE
 
 
-def create_database():
+def create_db():
     """
-    Creates new database.
+    Creates a new database.
     """
 
     if not database_exists(SQL_CONNECTION_STRING_DB):
@@ -41,6 +41,16 @@ def create_database():
             return False, "Error while creating a new database"
     else:
         return False, "Database already exists."
+
+    return True, None
+
+
+def drop_db():
+    """
+    Drops the default database.
+    """
+
+    drop_database(SQL_CONNECTION_STRING_DB)
 
     return True, None
 
