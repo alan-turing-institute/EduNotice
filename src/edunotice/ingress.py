@@ -8,19 +8,19 @@ import pandas as pd
 from sqlalchemy.sql import func
 from sqlalchemy import desc
 
-from edudb.db import (
+from edunotice.db import (
     session_open,
     session_close,
 )
 
-from edudb.structure import (
+from edunotice.structure import (
     CourseClass, 
     LabClass,
     SubscriptionClass,
     DetailsClass,
 )
 
-from edudb.constants import (
+from edunotice.constants import (
     CONST_PD_COL_COURSE_NAME,
     CONST_PD_COL_LAB_NAME,
     CONST_PD_COL_HANDOUT_NAME,

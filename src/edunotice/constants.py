@@ -6,7 +6,7 @@ import os
 
 # Test mode
 try:
-    TEST_MODE = os.environ["EDB_TEST_MODE"].lower() == 'true'
+    TEST_MODE = os.environ["ENS_TEST_MODE"].lower() == 'true'
 except:
     TEST_MODE = False
 
@@ -20,11 +20,11 @@ ID_COL_NAME = "id"
 
 # Connection strings
 SQL_ENGINE = "postgresql"
-SQL_USER = os.environ["EDB_SQL_USER"]
-SQL_PASSWORD = os.environ["EDB_SQL_PASS"]
-SQL_HOST = os.environ["EDB_SQL_HOST"]
-SQL_PORT = os.environ["EDB_SQL_PORT"]
-__SQL_DBNAME = os.environ["EDB_SQL_DBNAME"].strip().lower()
+SQL_USER = os.environ["ENS_SQL_USER"]
+SQL_PASSWORD = os.environ["ENS_SQL_PASS"]
+SQL_HOST = os.environ["ENS_SQL_HOST"]
+SQL_PORT = os.environ["ENS_SQL_PORT"]
+__SQL_DBNAME = os.environ["ENS_SQL_DBNAME"].strip().lower()
 SQL_DEFAULT_DBNAME = "postgres"
 SQL_TEST_DBNAME = "edutestdb"
 

@@ -1,6 +1,6 @@
 
-from edudb.constants import TEST_MODE
-from edudb.db import create_db, drop_db
+from edunotice.constants import TEST_MODE
+from edunotice.db import create_db, drop_db
 
 
 def pytest_configure(config):

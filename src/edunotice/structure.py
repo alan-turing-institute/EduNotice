@@ -17,7 +17,7 @@ from sqlalchemy.sql import func
 
 from flask_sqlalchemy import SQLAlchemy
 
-from edudb.constants import (
+from edunotice.constants import (
     COURSES_TABLE_NAME,
     LABS_TABLE_NAME,
     SUBSCRIPTIONS_TABLE_NAME,

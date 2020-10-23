@@ -1,0 +1,5 @@
+"""
+Notification/email composition module
+"""
+
+

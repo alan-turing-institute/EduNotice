@@ -7,7 +7,7 @@ import pandas as pd
 
 from sqlalchemy import create_engine
 
-from edudb.ingress import (
+from edunotice.ingress import (
     _update_courses,
     _update_labs,
     _update_subscriptions,
@@ -15,7 +15,7 @@ from edudb.ingress import (
     update_edu_data,
 )
 
-from edudb.constants import (
+from edunotice.constants import (
     CONST_TEST_DIR_DATA,
     CONST_TEST1_FILENAME,
     CONST_TEST2_FILENAME,

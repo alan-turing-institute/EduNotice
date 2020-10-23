@@ -7,13 +7,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
-from edudb.constants import (
+from edunotice.constants import (
     SQL_CONNECTION_STRING_DB,
     SQL_CONNECTION_STRING_DEFAULT,
     SQL_DBNAME,
 )
 
-from edudb.structure import BASE
+from edunotice.structure import BASE
 
 
 def create_db():
