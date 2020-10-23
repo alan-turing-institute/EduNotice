@@ -2,6 +2,8 @@
 
 Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a>.
 
+[![Build Status](https://travis-ci.com/tomaslaz/EduNotice.svg?branch=main)](https://travis-ci.org/tomaslaz/EduNotice)
+
 ## Notes
 
 Existing details (are not updated)
