@@ -39,6 +39,11 @@ if [ -z "$ENS_SUBSCRIPTION_ID" ]; then
     exit 0 
 fi
 
+if [ -z "$ENS_SQL_WHITELISTED_IP" ]; then 
+    echo "ENS_SQL_WHITELISTED_IP is unset"; 
+    exit 0 
+fi
+
 # Setting the default subsciption
 az account set -s $ENS_SUBSCRIPTION_ID || exit 0 
 echo "EduNotice BUILD INFO: default subscription set to $ENS_SUBSCRIPTION_ID"
@@ -94,8 +99,22 @@ if [ ${#exists} = 2 ]; then
         --end-ip-address 0.0.0.0 \
         || exit 0
 
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: 0.0.0.0"
 
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rules created."
+    az postgres server firewall-rule create \
+        --resource-group $ENS_RG_NAME \
+        --server-name $ENS_SQL_SERVER \
+        -n whitelistedip \
+        --start-ip-address $ENS_SQL_WHITELISTED_IP \
+        --end-ip-address $ENS_SQL_WHITELISTED_IP \
+        || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: $ENS_SQL_WHITELISTED_IP"
+
+
+    # Establishing database
+    python -c 'from edunotice import db; db.create_db();' || exit 0
+
 else
     echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
 fi
