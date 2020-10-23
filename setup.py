@@ -41,7 +41,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='A command line experience for interacting with the Education section of portal.azure.com.',  # Optional
+    description='EduHub DB infrastructure and interaction tools ',  # Optional
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.

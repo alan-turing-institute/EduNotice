@@ -135,6 +135,7 @@ def test_update_details_1():
     assert len(new_list) == 2
     assert len(update_list) == 0
 
+
 def test_update_details_2():
     """
     tests ingress._update_details routine
