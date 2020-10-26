@@ -1,5 +1,9 @@
 
-from edunotice.constants import TEST_MODE
+from edunotice.constants import (
+    TEST_MODE, 
+    SQL_TEST_DBNAME1,
+    SQL_TEST_DBNAME2,
+)
 from edunotice.db import create_db, drop_db
 
 
@@ -14,11 +18,16 @@ def pytest_configure(config):
     
     assert TEST_MODE, "Unit tests need to be run in TEST MODE"
 
-    # creates test db
-    success, log = create_db()
+    # creates test db 1
+    success, log = create_db(db_name=SQL_TEST_DBNAME1)
+    assert success, log
+
+    # creates test db 2
+    success, log = create_db(db_name=SQL_TEST_DBNAME2)
     assert success, log
 
     print("pytest_configure: end")
+
 
 def pytest_unconfigure(config):
     """
@@ -29,8 +38,12 @@ def pytest_unconfigure(config):
     
     assert TEST_MODE, "Unit tests need to be run in TEST MODE"
 
-    # drops test db
-    success, log = drop_db()
+    # drops test db 1
+    success, log = drop_db(db_name=SQL_TEST_DBNAME1)
+    assert success, log
+
+    # drops test db 2
+    success, log = drop_db(db_name=SQL_TEST_DBNAME2)
     assert success, log
 
     print("pytest_unconfigure: end")

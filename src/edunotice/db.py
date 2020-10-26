@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
 from edunotice.constants import (
+    SQL_CONNECTION_STRING,
     SQL_CONNECTION_STRING_DB,
     SQL_CONNECTION_STRING_DEFAULT,
     SQL_DBNAME,
@@ -16,12 +17,26 @@ from edunotice.constants import (
 from edunotice.structure import BASE
 
 
-def create_db():
+def create_db(db_name=None):
     """
     Creates a new database.
+
+    Arguments:
+        db_name - name of the new database
+    Returns:
+        success - success flag
+        error - error message
     """
 
-    if not database_exists(SQL_CONNECTION_STRING_DB):
+    # if db_name is not specified, use the default values
+    if db_name is None:
+        new_db_name = SQL_DBNAME
+        new_db_sql_con_string = SQL_CONNECTION_STRING_DB
+    else:
+        new_db_name = db_name
+        new_db_sql_con_string = "%s/%s" % (SQL_CONNECTION_STRING, db_name)
+
+    if not database_exists(new_db_sql_con_string):
 
         try:
             engine = create_engine(SQL_CONNECTION_STRING_DEFAULT)
@@ -30,9 +45,9 @@ def create_db():
 
             conn.execute("commit")
 
-            conn.execute("create database " + SQL_DBNAME)
+            conn.execute("create database " + new_db_name)
 
-            engine = create_engine(SQL_CONNECTION_STRING_DB)
+            engine = create_engine(new_db_sql_con_string)
 
             BASE.metadata.create_all(engine)
 
@@ -45,12 +60,24 @@ def create_db():
     return True, None
 
 
-def drop_db():
+def drop_db(db_name=None):
     """
     Drops the default database.
+
+    Arguments:
+        db_name - name of the new database
+    Returns:
+        success - success flag
+        error - error message
     """
 
-    drop_database(SQL_CONNECTION_STRING_DB)
+    # if db_name is not specified, use the default value
+    if db_name is None:
+        del_db_sql_con_string = SQL_CONNECTION_STRING_DB
+    else:
+        del_db_sql_con_string = "%s/%s" % (SQL_CONNECTION_STRING, db_name)
+
+    drop_database(del_db_sql_con_string)
 
     return True, None
 

@@ -111,10 +111,10 @@ if [ ${#exists} = 2 ]; then
 
     echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: $ENS_SQL_WHITELISTED_IP"
 
-
     # Establishing database
     python -c 'from edunotice import db; db.create_db();' || exit 0
 
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER database initialised."
 else
     echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
 fi

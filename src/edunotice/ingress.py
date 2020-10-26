@@ -50,13 +50,19 @@ def update_edu_data(engine, eduhub_df):
         eduhub_df - pandas dataframe with the eduhub crawl data
     """
 
+    course_dict = None
+    lab_dict = None
+    sub_dict = None
+    sub_new_list = None
+    sub_update_list = None
+
     # Checks if df exists
     if not isinstance(eduhub_df, pd.DataFrame):
-        return False, "Not a pandas dataframe"
+        return False, "Not a pandas dataframe", lab_dict, sub_dict, sub_new_list, sub_update_list
 
     # Checks if df is empty
     if eduhub_df.empty:
-        return False, "Dataframe empty"
+        return False, "Dataframe empty", lab_dict, sub_dict, sub_new_list, sub_update_list
 
     # order data by 'Subscription id' and 'Crawl time utc'
     eduhub_df.sort_values(
@@ -67,21 +73,27 @@ def update_edu_data(engine, eduhub_df):
     succes, error, course_dict = _update_courses(engine, eduhub_df)
 
     if not succes:
-        return success, error
+        return success, error, lab_dict, sub_dict, sub_new_list, sub_update_list
 
     # getting unique labs and making sure that they are in the database
     succes, error, lab_dict = _update_labs(engine, eduhub_df, course_dict)
 
     if not succes:
-        return success, error
+        return success, error, lab_dict, sub_dict, sub_new_list, sub_update_list
 
     # getting unique subscriptions and making sure that they are in the database
     succes, error, sub_dict = _update_subscriptions(engine, eduhub_df)
 
     if not succes:
-        return success, error
+        return success, error, lab_dict, sub_dict, sub_new_list, sub_update_list
 
-    return True, None
+    # updating details
+    succes, error, sub_new_list, sub_update_list = _update_details(engine, eduhub_df, lab_dict, sub_dict)
+
+    if not succes:
+        return success, error, lab_dict, sub_dict, sub_new_list, sub_update_list
+
+    return True, None, lab_dict, sub_dict, sub_new_list, sub_update_list
 
 
 def _update_courses(engine, eduhub_df):
@@ -328,6 +340,7 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
             prev_details.subscription_guid = sub_guid
             update_list.append((prev_details, latest_details))
 
+    session.expunge_all()
     session_close(session)
 
     return True, None, new_list, update_list

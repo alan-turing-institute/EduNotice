@@ -24,9 +24,10 @@ SQL_USER = os.environ["ENS_SQL_USER"]
 SQL_PASSWORD = os.environ["ENS_SQL_PASS"]
 SQL_HOST = os.environ["ENS_SQL_HOST"]
 SQL_PORT = os.environ["ENS_SQL_PORT"]
-__SQL_DBNAME = os.environ["ENS_SQL_DBNAME"].strip().lower()
+SQL_DBNAME = os.environ["ENS_SQL_DBNAME"].strip().lower()
 SQL_DEFAULT_DBNAME = "postgres"
-SQL_TEST_DBNAME = "edutestdb"
+SQL_TEST_DBNAME1 = "edutestdb1"
+SQL_TEST_DBNAME2 = "edutestdb2"
 
 SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
     SQL_ENGINE,
@@ -37,11 +38,6 @@ SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
 )
 
 SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DEFAULT_DBNAME)
-
-if TEST_MODE:
-    SQL_DBNAME = SQL_TEST_DBNAME
-else:
-    SQL_DBNAME = __SQL_DBNAME
 
 SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
 

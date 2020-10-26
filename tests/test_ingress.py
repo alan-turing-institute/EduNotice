@@ -19,7 +19,8 @@ from edunotice.constants import (
     CONST_TEST_DIR_DATA,
     CONST_TEST1_FILENAME,
     CONST_TEST2_FILENAME,
-    SQL_CONNECTION_STRING_DB
+    SQL_CONNECTION_STRING,
+    SQL_TEST_DBNAME1
 )
 
 # wrong dataframe
@@ -35,7 +36,7 @@ wrong_df = pd.DataFrame({
 file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST1_FILENAME)
 eduhub_df1 = pd.read_csv(file_path)
 
-engine = create_engine(SQL_CONNECTION_STRING_DB)
+ENGINE = create_engine("%s/%s" % (SQL_CONNECTION_STRING, SQL_TEST_DBNAME1))
 
 
 def test_update_courses():
@@ -43,18 +44,16 @@ def test_update_courses():
     tests ingress._update_courses routine
     """
 
-    engine = create_engine(SQL_CONNECTION_STRING_DB)
-
     # wrong dataframe
-    succes, error, _ = _update_courses(engine, wrong_df)
+    succes, error, _ = _update_courses(ENGINE, wrong_df)
     assert succes is False, error
 
     # good data
-    succes, error, course_dict = _update_courses(engine, eduhub_df1)
+    succes, error, course_dict = _update_courses(ENGINE, eduhub_df1)
     assert succes, error
     assert len(course_dict) == 2
 
-    succes, error, course_dict = _update_courses(engine, eduhub_df1)
+    succes, error, course_dict = _update_courses(ENGINE, eduhub_df1)
     assert succes, error
     assert len(course_dict) == 2
 
@@ -64,23 +63,21 @@ def test_update_labs():
     tests ingress._update_labs routine
     """
 
-    engine = create_engine(SQL_CONNECTION_STRING_DB)
-
     # getting the courses
-    succes, error, course_dict = _update_courses(engine, eduhub_df1)
+    succes, error, course_dict = _update_courses(ENGINE, eduhub_df1)
     assert succes, error
     assert len(course_dict) == 2
 
     # wrong dataframe
-    succes, error, _ = _update_labs(engine, wrong_df, course_dict)
+    succes, error, _ = _update_labs(ENGINE, wrong_df, course_dict)
     assert succes is False, error
 
     # good data
-    succes, error, lab_dict = _update_labs(engine, eduhub_df1, course_dict)
+    succes, error, lab_dict = _update_labs(ENGINE, eduhub_df1, course_dict)
     assert succes, error
     assert len(lab_dict) == 2
 
-    succes, error, lab_dict = _update_labs(engine, eduhub_df1, course_dict)
+    succes, error, lab_dict = _update_labs(ENGINE, eduhub_df1, course_dict)
     assert succes, error
     assert len(lab_dict) == 2
 
@@ -90,18 +87,16 @@ def test_update_subscriptions():
     tests ingress._update_subscriptions routine
     """
 
-    engine = create_engine(SQL_CONNECTION_STRING_DB)
-
     # wrong dataframe
-    succes, error, _ = _update_subscriptions(engine, wrong_df)
+    succes, error, _ = _update_subscriptions(ENGINE, wrong_df)
     assert succes is False, error
 
     # good data
-    succes, error, sub_dict = _update_subscriptions(engine, eduhub_df1)
+    succes, error, sub_dict = _update_subscriptions(ENGINE, eduhub_df1)
     assert succes, error
     assert len(sub_dict) == 2
 
-    succes, error, sub_dict = _update_subscriptions(engine, eduhub_df1)
+    succes, error, sub_dict = _update_subscriptions(ENGINE, eduhub_df1)
     assert succes, error
     assert len(sub_dict) == 2
 
@@ -114,22 +109,22 @@ def test_update_details_1():
     """
 
     # getting the courses
-    succes, error, course_dict = _update_courses(engine, eduhub_df1)
+    succes, error, course_dict = _update_courses(ENGINE, eduhub_df1)
     assert succes, error
     assert len(course_dict) == 2
 
     # getting the labs
-    succes, error, lab_dict = _update_labs(engine, eduhub_df1, course_dict)
+    succes, error, lab_dict = _update_labs(ENGINE, eduhub_df1, course_dict)
     assert succes, error
     assert len(lab_dict) == 2
 
     # getting the subscriptions
-    succes, error, sub_dict = _update_subscriptions(engine, eduhub_df1)
+    succes, error, sub_dict = _update_subscriptions(ENGINE, eduhub_df1)
     assert succes, error
     assert len(sub_dict) == 2
 
     # 2 new subscriptions
-    succes, error, new_list, update_list = _update_details(engine, eduhub_df1, lab_dict, sub_dict)
+    succes, error, new_list, update_list = _update_details(ENGINE, eduhub_df1, lab_dict, sub_dict)
 
     assert succes, error
     assert len(new_list) == 2
@@ -147,21 +142,21 @@ def test_update_details_2():
         os.path.join(CONST_TEST_DIR_DATA, CONST_TEST2_FILENAME))
 
     # getting the courses
-    succes, error, course_dict = _update_courses(engine, eduhub_df_local)
+    succes, error, course_dict = _update_courses(ENGINE, eduhub_df_local)
     assert succes, error
     assert len(course_dict) == 1
 
     # getting the labs
-    succes, error, lab_dict = _update_labs(engine, eduhub_df_local, course_dict)
+    succes, error, lab_dict = _update_labs(ENGINE, eduhub_df_local, course_dict)
     assert succes, error
     assert len(lab_dict) == 1
 
     # getting the subscriptions
-    succes, error, sub_dict = _update_subscriptions(engine, eduhub_df_local)
+    succes, error, sub_dict = _update_subscriptions(ENGINE, eduhub_df_local)
     assert succes, error
     assert len(sub_dict) == 1
 
-    succes, error, new_list, update_list = _update_details(engine, eduhub_df_local, lab_dict, sub_dict)
+    succes, error, new_list, update_list = _update_details(ENGINE, eduhub_df_local, lab_dict, sub_dict)
 
     assert succes, error
     assert len(new_list) == 0
@@ -173,20 +168,20 @@ def test_update_edu_data():
     tests ingress.update_edu_data routine
     """
 
-    engine = create_engine(SQL_CONNECTION_STRING_DB)
-
     # not a dataframe
-    succes, error = update_edu_data(engine, None)
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list = update_edu_data(ENGINE, None)
     assert succes is False, error
 
     # empty dataframe
-    succes, error = update_edu_data(engine, pd.DataFrame())
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list = update_edu_data(ENGINE, pd.DataFrame())
     assert succes is False, error
 
     # real data
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST1_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    succes, error = update_edu_data(engine, eduhub_df)
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list = update_edu_data(ENGINE, eduhub_df)
 
     assert succes, error
+    assert len(sub_new_list) == 0
+    assert len(sub_update_list) == 2
