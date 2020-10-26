@@ -41,7 +41,6 @@ def test_summary():
     succes, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list)
 
     assert succes, error
-
-    print(html_content)
+    assert len(html_content) == 735
 
     assert False
