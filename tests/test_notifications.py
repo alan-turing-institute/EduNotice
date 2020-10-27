@@ -16,6 +16,7 @@ from edunotice.notifications import (
 from edunotice.constants import (
     CONST_TEST_DIR_DATA,
     CONST_TEST1_FILENAME,
+    CONST_TEST2_FILENAME,
     SQL_CONNECTION_STRING,
     SQL_TEST_DBNAME2
 )
@@ -38,9 +39,23 @@ def test_summary():
     assert len(sub_new_list) == 2
     assert len(sub_update_list) == 0
 
+    # no changes
+    succes, error, html_content = summary(lab_dict, sub_dict, [], [])
+    assert succes, error
+
+    # 2 new subscriptions
     succes, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list)
+    assert succes, error
+
+    # 2 updates and 1 new 
+    file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST2_FILENAME)
+    eduhub_df = pd.read_csv(file_path)
+
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list = update_edu_data(ENGINE, eduhub_df)
 
     assert succes, error
-    assert len(html_content) == 735
+    assert len(sub_new_list) == 1
+    assert len(sub_update_list) == 2
 
-    assert False
+    succes, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list)
+    assert succes, error

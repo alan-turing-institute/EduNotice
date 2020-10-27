@@ -144,23 +144,23 @@ def test_update_details_2():
     # getting the courses
     succes, error, course_dict = _update_courses(ENGINE, eduhub_df_local)
     assert succes, error
-    assert len(course_dict) == 1
+    assert len(course_dict) == 2
 
     # getting the labs
     succes, error, lab_dict = _update_labs(ENGINE, eduhub_df_local, course_dict)
     assert succes, error
-    assert len(lab_dict) == 1
+    assert len(lab_dict) == 2
 
     # getting the subscriptions
     succes, error, sub_dict = _update_subscriptions(ENGINE, eduhub_df_local)
     assert succes, error
-    assert len(sub_dict) == 1
+    assert len(sub_dict) == 3
 
     succes, error, new_list, update_list = _update_details(ENGINE, eduhub_df_local, lab_dict, sub_dict)
 
     assert succes, error
-    assert len(new_list) == 0
-    assert len(update_list) == 1
+    assert len(new_list) == 1
+    assert len(update_list) == 2
 
 
 def test_update_edu_data():
