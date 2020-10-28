@@ -22,6 +22,7 @@ from edunotice.constants import (
     LABS_TABLE_NAME,
     SUBSCRIPTIONS_TABLE_NAME,
     DETAILS_TABLE_NAME,
+    LOGS_TABLE_NAME,
     ID_COL_NAME,
 )
 
@@ -129,3 +130,17 @@ class DetailsClass(BASE):
 
     # arguments
     __table_args__ = (UniqueConstraint("sub_id", "timestamp_utc"),)
+
+
+class LogsClass(BASE):
+    """
+    Log class
+    """
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    code = Column(Integer, nullable=False)
+    timestamp_utc = Column(DateTime, nullable=False)
+
+    time_created = Column(DateTime(), server_default=func.now())
+    time_updated = Column(DateTime(), onupdate=func.now())

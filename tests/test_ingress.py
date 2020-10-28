@@ -5,7 +5,7 @@ Test ingress.py module
 import os
 import pandas as pd
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 
 from edunotice.ingress import (
     _update_courses,
@@ -21,6 +21,13 @@ from edunotice.constants import (
     CONST_TEST2_FILENAME,
     SQL_CONNECTION_STRING,
     SQL_TEST_DBNAME1
+)
+
+from edunotice.structure import LogsClass
+
+from edunotice.db import (
+    session_open,
+    session_close,
 )
 
 # wrong dataframe
@@ -169,19 +176,25 @@ def test_update_edu_data():
     """
 
     # not a dataframe
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list = update_edu_data(ENGINE, None)
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp = update_edu_data(ENGINE, None)
     assert succes is False, error
 
     # empty dataframe
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list = update_edu_data(ENGINE, pd.DataFrame())
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp = update_edu_data(ENGINE, pd.DataFrame())
     assert succes is False, error
 
     # real data
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST1_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list = update_edu_data(ENGINE, eduhub_df)
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp = update_edu_data(ENGINE, eduhub_df)
 
     assert succes, error
     assert len(sub_new_list) == 0
     assert len(sub_update_list) == 2
+
+    # checking if the log message was created for the update
+    session = session_open(ENGINE)
+    query_cnt = session.query(func.count(LogsClass.id)).scalar()
+    session_close(session)
+    assert query_cnt == 1

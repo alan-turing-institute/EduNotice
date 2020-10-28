@@ -15,8 +15,12 @@ COURSES_TABLE_NAME = "course"
 LABS_TABLE_NAME = "lab"
 SUBSCRIPTIONS_TABLE_NAME = "subscription"
 DETAILS_TABLE_NAME = "details"
+LOGS_TABLE_NAME = "logs"
 
 ID_COL_NAME = "id"
+
+# Log codes
+CONST_LOG_CODE_SUCCESS = 0 # The operation completed successfully.
 
 # Connection strings
 SQL_ENGINE = "postgresql"

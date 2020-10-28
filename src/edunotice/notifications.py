@@ -90,24 +90,39 @@ def value_change(paramter_name, old_value, new_value):
     return html_content
 
 
-def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date=None, to_date=None):
+def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_date):
     """
-    
+    Generates summary email content as an html document. It includes information about new 
+        and updated subscriptions.
 
     Arguments:
         lab_dict - lab name /internal id dictionary
         sub_dict - subscription id /internal id dictionary
         sub_new_list - a list of details of new subscriptions
         sub_update_list - a list of tuple (before, after) of subscription details
+        from_date - timestamp of the previous successful eduhub log update
+        to_date - timestamp of the current successful eduhub log update
     Returns:
         success - flag if the action was succesful
         error - error message
         html_content - summary as an html text
     """
 
-    html_content = email_top("EduHub activity from ---- to ----")
+    html_content = email_top("EduHub activity update")
     
-    html_middle = ""
+
+    html_middle = '<div style="font-size:18px;line-height:16px;text-align:left">'
+
+    to_date_str = to_date.strftime("%Y-%m-%d %H:%M")
+    if from_date is None:
+        html_middle += "%s" % (to_date_str)
+    else:
+        from_date_str = from_date.strftime("%Y-%m-%d %H:%M")
+        html_middle += "%s - %s" % (from_date_str, to_date_str)
+    
+    html_middle += "</div><br>"
+    html_middle += '<div style="border-bottom:1px solid #ededed"></div>'
+
 
     # no updates
     if len(sub_new_list) == 0 and len(sub_update_list) == 0:
@@ -199,6 +214,8 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date=None, t
             new_budget = "${:,.2f}".format(new_details.handout_budget)
 
             sub_updates += value_change("Budget", prev_budget, new_budget)
+
+            sub_updates += "&#9 Consumed: <i>%s</i><br>" % ("${:,.2f}".format(new_details.handout_consumed))
             
             prev_users = prev_details.subscription_users.split(",")
             new_users = new_details.subscription_users.split(",")
