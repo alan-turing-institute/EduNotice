@@ -1,4 +1,4 @@
-# EduHub Notification Service
+# EduHub Activity Notification Service
 
 Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a>.
 
@@ -38,7 +38,7 @@ In addition to Python packages listed in `requirements.txt` and EduCrawler,
 
 ## Setup
 
-Make sure that [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package is installed and configured.
+Make sure that the [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package is installed and configured.
 
 Set the required and optional environmental parameters (recommended by appending/modifying the `~/.bash_profile` file).
 

@@ -1,5 +1,5 @@
 """
-EduHub Notification Service
+EduHub Activity Notification Service
 
 Tomas Lazauskas
 """
