@@ -3,6 +3,7 @@
 
 # Misc
 tests/data/info.txt
+ec_output.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
