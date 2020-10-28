@@ -10,11 +10,12 @@ jobs:
       install:
         - pip install -r requirements.txt
       env:
-        -CROP_SQL_HOST="localhost"
-        -CROP_SQL_USER="postgres"
-        -CROP_SQL_PASS="postgres"
-        -CROP_SQL_DBNAME="testdb"
-        -CROP_SQL_PORT="5432"
+        -ENS_SQL_SERVER="localhost"
+        -ENS_SQL_HOST="localhost"
+        -ENS_SQL_USERNAME="postgres"
+        -ENS_SQL_USER="postgres"
+        -ENS_SQL_PASS=""
+        -ENS_SQL_DBNAME="5432"
         -PYTHONPATH=$PYTHONPATH:$(pwd)/src
       git:
         submodules: false
