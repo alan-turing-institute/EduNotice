@@ -1,5 +1,3 @@
-
-
 jobs:
   include:
     - stage: test
@@ -15,7 +13,8 @@ jobs:
         -ENS_SQL_USERNAME="postgres"
         -ENS_SQL_USER="postgres"
         -ENS_SQL_PASS=""
-        -ENS_SQL_DBNAME="5432"
+        -ENS_SQL_DBNAME="edutestdb"
+        -ENS_SQL_PORT="5432"
         -PYTHONPATH=$PYTHONPATH:$(pwd)/src
       git:
         submodules: false

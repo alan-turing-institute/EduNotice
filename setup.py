@@ -203,6 +203,9 @@ setup(
     #     'Source': 'https://github.com/pypa/sampleproject/',
     # },
 
+    # scripts
+    scripts=['en'],
+
     #license
     license='MIT',
 )

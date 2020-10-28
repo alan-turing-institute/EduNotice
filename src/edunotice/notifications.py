@@ -90,6 +90,32 @@ def value_change(paramter_name, old_value, new_value):
     return html_content
 
 
+def details_changed(prev_details, new_details):
+    """
+    Checks if at least one of the main details from a subscriptions 
+        has changed.
+    
+    Arguments:
+        prev_details - previous details of a subscription
+        new_details - new details of a subscription
+    Returns:
+        changed - True/False
+    """
+
+    changed = False
+
+    if ((prev_details.handout_status != new_details.handout_status) or 
+        (prev_details.subscription_name != new_details.subscription_name) or
+        (prev_details.subscription_status != new_details.subscription_status) or
+        (prev_details.subscription_expiry_date != new_details.subscription_expiry_date) or
+        (prev_details.handout_budget != new_details.handout_budget) or
+        (prev_details.subscription_users != new_details.subscription_users)):
+
+        changed = True
+
+    return changed
+
+
 def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_date):
     """
     Generates summary email content as an html document. It includes information about new 
@@ -108,9 +134,19 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
         html_content - summary as an html text
     """
 
-    html_content = email_top("EduHub activity update")
-    
+    sub_update_details_list = []
 
+    # check which subsciptions have chaged details
+    for i, sub_update in enumerate(sub_update_list):
+        
+        prev_details = sub_update[0]
+        new_details = sub_update[1]
+
+        if details_changed(prev_details, new_details):
+            sub_update_details_list.append((prev_details, new_details))
+
+    html_content = email_top("EduHub Activity Update")
+    
     html_middle = '<div style="font-size:18px;line-height:16px;text-align:left">'
 
     to_date_str = to_date.strftime("%Y-%m-%d %H:%M")
@@ -123,15 +159,14 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
     html_middle += "</div><br>"
     html_middle += '<div style="border-bottom:1px solid #ededed"></div>'
 
-
     # no updates
-    if len(sub_new_list) == 0 and len(sub_update_list) == 0:
+    if len(sub_new_list) == 0 and len(sub_update_details_list) == 0:
         html_middle += "No new subscriptions or updates."
 
     # new subscriptions
     if len(sub_new_list) > 0:
 
-        html_middle += "New subscriptions:"
+        html_middle += "New subscriptions (%d):" % (len(sub_new_list))
         html_middle += '<div style="font-size:12px;line-height:16px;text-align:left">'
         
         new_subs = ""
@@ -165,17 +200,17 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
         html_middle += '</div>'
 
     # middle line between new subscriptions and updates
-    if len(sub_new_list) > 0 and len(sub_update_list) > 0:
+    if len(sub_new_list) > 0 and len(sub_update_details_list) > 0:
         html_middle += '<div style="border-bottom:1px solid #ededed"></div>'
 
-    if len(sub_update_list) > 0:
+    if len(sub_update_details_list) > 0:
 
-        html_middle += "Updates:"
+        html_middle += "Updates (%d):" % (len(sub_update_details_list))
         html_middle += '<div style="font-size:12px;line-height:16px;text-align:left">'
         
         sub_updates = ""
 
-        for i, sub_update in enumerate(sub_update_list):
+        for i, sub_update in enumerate(sub_update_details_list):
             
             prev_details = sub_update[0]
             new_details = sub_update[1]
@@ -206,7 +241,7 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
             sub_updates += "<br>"
 
             prev_expiry_date = prev_details.subscription_expiry_date.strftime("%Y-%m-%d")
-            new_expiry_date = new_details.subscription_expiry_date
+            new_expiry_date = new_details.subscription_expiry_date.strftime("%Y-%m-%d")
 
             sub_updates += value_change("Expiry date", prev_expiry_date, new_expiry_date)
 
@@ -253,4 +288,3 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
     html_content += email_bottom()
 
     return True, None, html_content
-

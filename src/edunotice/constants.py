@@ -45,6 +45,7 @@ SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DEFAULT_DB
 
 SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
 
+
 # pandas dataframe column names
 CONST_PD_COL_COURSE_NAME = "Course name"
 CONST_PD_COL_LAB_NAME = "Lab name"
@@ -65,6 +66,7 @@ CONST_DATA_FOLDER = "data"
 
 CONST_TEST1_FILENAME = "ec_output_1.csv"
 CONST_TEST2_FILENAME = "ec_output_2.csv"
+CONST_TEST3_FILENAME = "ec_output_3.csv"
 
 CONST_TEST_DIR = os.path.abspath(
     os.path.join(

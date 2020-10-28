@@ -381,7 +381,7 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
 
         # appending details
         for _, row in sub_eduhub_df.iterrows():
-
+            
             crawl_time = row[CONST_PD_COL_CRAWL_TIME_UTC]
 
             if (
@@ -406,7 +406,7 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                     handout_consumed=CONVERT_LAMBDA(row[CONST_PD_COL_HANDOUT_CONSUMED]),
                     subscription_name=row[CONST_PD_COL_SUB_NAME],
                     subscription_status=row[CONST_PD_COL_SUB_STATUS],
-                    subscription_expiry_date=row[CONST_PD_COL_SUB_EXPIRY_DATE],
+                    subscription_expiry_date=datetime.strptime(row[CONST_PD_COL_SUB_EXPIRY_DATE], "%Y-%m-%d"),
                     subscription_users=", ".join(eval(row[CONST_PD_COL_SUB_USERS])),
                     timestamp_utc=crawl_time,
                 )
@@ -422,12 +422,9 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
             .first()
         )
 
-        latest_details.subscription_guid = sub_guid
-
         if prev_details is None:
             new_list.append(latest_details)
         else:
-            prev_details.subscription_guid = sub_guid
             update_list.append((prev_details, latest_details))
 
     session.expunge_all()

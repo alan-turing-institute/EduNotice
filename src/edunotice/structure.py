@@ -96,8 +96,6 @@ class DetailsClass(BASE):
 
     __tablename__ = DETAILS_TABLE_NAME
 
-    subscription_guid = None
-
     # columns
     id = Column(Integer, primary_key=True, autoincrement=True)
 

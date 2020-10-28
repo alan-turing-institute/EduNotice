@@ -8,9 +8,25 @@ Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a
 
 Existing details (are not updated)
 
+## Installation
+
+- [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package
+
+```bash
+pip install git+https://github.com/tomaslaz/EduCrawler.git
+```
+
+- [EduNotice](https://github.com/tomaslaz/EduNotice) Python package
+
+```bash
+pip install git+https://github.com/tomaslaz/EduNotice.git
+```
+
 ## Requirements
 
-In addition to Python packages listed in `requirements.txt`,
+- [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package
+
+In addition to Python packages listed in `requirements.txt` and EduCrawler,
 
 - SendGrid service
     - Generate API KEY (
@@ -21,6 +37,8 @@ In addition to Python packages listed in `requirements.txt`,
 
 
 ## Setup
+
+Make sure that [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package is installed and configured.
 
 Set the required and optional environmental parameters (recommended by appending/modifying the `~/.bash_profile` file).
 
@@ -38,6 +56,7 @@ export ENS_TEST_MODE=False
 # Email sending
 export ENS_EMAIL_API="<<replace me>>"
 export ENS_FROM_EMAIL="<<replace me>>"
+export ENS_SUMMARY_RECIPIENTS="<<replace me>>"
 ```
 
 Do not forget either restart the terminal or use the `source` command to effect the changes.
