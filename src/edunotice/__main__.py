@@ -15,15 +15,8 @@ from edunotice.ingress import (
 )
 from edunotice.notifications import summary
 from edunotice.sender import send_summary_email
-
 from edunotice.constants import SQL_CONNECTION_STRING_DB
-
-
 from edunotice import db
-
-db.drop_db()
-db.create_db()
-
 
 ENGINE = create_engine(SQL_CONNECTION_STRING_DB)
 

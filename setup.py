@@ -153,6 +153,7 @@ setup(
         'flask-sqlalchemy>=2.4.1',
         'sendgrid>=6.4.7',
         'educrawler>=0.5.9',
+        'psycopg2-binary>=2.8.4',
     ],  # Optional
 
     # List additional groups of dependencies here (e.g. development

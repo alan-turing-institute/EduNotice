@@ -6,5 +6,7 @@ SQLAlchemy-Utils==0.36.3 # 0.36.8 breaks database_exists() call
 flask-sqlalchemy>=2.4.1
 
 sendgrid>=6.4.7
+psycopg2-binary>=2.8.4
 
-educrawler>=0.5.8
+#educrawler>=0.5.8
+-e git://github.com/tomaslaz/EduCrawler.git#egg=educrawler 
