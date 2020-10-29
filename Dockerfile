@@ -36,6 +36,8 @@ ENV PATH="/usr/local/bin/chromedriver:${PATH}"
 # update pip
 RUN python -m pip install --upgrade pip
 
+RUN echo 1
+
 RUN pip install git+https://github.com/tomaslaz/EduCrawler.git
 
 RUN pip install git+https://github.com/tomaslaz/EduNotice.git
