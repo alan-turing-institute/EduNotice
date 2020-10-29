@@ -146,7 +146,14 @@ setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    #install_requires=['peppercorn'],  # Optional
+    install_requires=[
+        'pandas>=0.25.3',
+        'sqlalchemy>=1.3.12',
+        'SQLAlchemy-Utils==0.36.3',
+        'flask-sqlalchemy>=2.4.1',
+        'sendgrid>=6.4.7',
+        'educrawler>=0.5.9',
+    ],  # Optional
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
