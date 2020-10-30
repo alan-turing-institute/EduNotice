@@ -68,7 +68,7 @@ def test_summary():
         latest_timestamp_utc, success_timestamp_utc)
 
     assert succes, error
-    assert len(html_content) == 1295
+    assert len(html_content) == 1301
 
     # 2 new subscriptions
     succes, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list, 
@@ -76,7 +76,7 @@ def test_summary():
     assert succes, error
 
     assert succes, error
-    assert len(html_content) == 2317
+    assert len(html_content) == 2323
 
     ################### UPDATE 2
 
@@ -99,7 +99,7 @@ def test_summary():
         latest_timestamp_utc, success_timestamp_utc)
 
     assert succes, error
-    assert len(html_content) == 3430
+    assert len(html_content) == 3436
 
     # checking if the log message was created for the update
     session = session_open(ENGINE)
@@ -129,4 +129,4 @@ def test_summary():
         latest_timestamp_utc, success_timestamp_utc)
 
     assert succes, error
-    assert len(html_content) == 1314
+    assert len(html_content) == 1320

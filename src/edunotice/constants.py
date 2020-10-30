@@ -4,7 +4,7 @@ Constants module.
 
 import os
 
-from edunotice.utilities import log
+
 
 # Test mode
 try:
@@ -22,8 +22,8 @@ except:
 SQL_ENGINE = "postgresql"
 
 if TEST_MODE:
-    log("!!! EduNotice is running TEST MODE !!!", level=1)
-    
+    print("!!! EduNotice is running TEST MODE !!!")
+
     SQL_USER = "postgres"
     SQL_PASSWORD = ""
     SQL_HOST = "localhost"
