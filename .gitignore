@@ -1,6 +1,9 @@
 # Secrets
 .secrets
 
+# Azure function
+local.settings.json
+
 # Misc
 tests/data/info.txt
 ec_output.csv
