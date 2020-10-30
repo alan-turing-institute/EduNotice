@@ -8,13 +8,7 @@ jobs:
       install:
         - pip install -r requirements.txt
       env:
-        -ENS_SQL_SERVER="localhost"
-        -ENS_SQL_HOST="localhost"
-        -ENS_SQL_USERNAME="postgres"
-        -ENS_SQL_USER="postgres"
-        -ENS_SQL_PASS=""
-        -ENS_SQL_DBNAME="edutestdb"
-        -ENS_SQL_PORT="5432"
+        -ENS_TEST_MODE=true
         -PYTHONPATH=$PYTHONPATH:$(pwd)/src
       git:
         submodules: false

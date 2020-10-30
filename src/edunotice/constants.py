@@ -4,23 +4,13 @@ Constants module.
 
 import os
 
+from edunotice.utilities import log
+
 # Test mode
 try:
     TEST_MODE = os.environ["ENS_TEST_MODE"].lower() == 'true'
 except:
     TEST_MODE = False
-
-# DB Constants
-COURSES_TABLE_NAME = "course"
-LABS_TABLE_NAME = "lab"
-SUBSCRIPTIONS_TABLE_NAME = "subscription"
-DETAILS_TABLE_NAME = "details"
-LOGS_TABLE_NAME = "logs"
-
-ID_COL_NAME = "id"
-
-# Log codes
-CONST_LOG_CODE_SUCCESS = 0 # The operation completed successfully.
 
 # Verbose level
 try:
@@ -30,11 +20,22 @@ except:
 
 # Connection strings
 SQL_ENGINE = "postgresql"
-SQL_USER = os.environ["ENS_SQL_USER"]
-SQL_PASSWORD = os.environ["ENS_SQL_PASS"]
-SQL_HOST = os.environ["ENS_SQL_HOST"]
-SQL_PORT = os.environ["ENS_SQL_PORT"]
-SQL_DBNAME = os.environ["ENS_SQL_DBNAME"].strip().lower()
+
+if TEST_MODE:
+    log("!!! EduNotice is running TEST MODE !!!", level=1)
+    
+    SQL_USER = "postgres"
+    SQL_PASSWORD = ""
+    SQL_HOST = "localhost"
+    SQL_PORT = "5432"
+    SQL_DBNAME = "edutestdb"
+else:
+    SQL_USER = os.environ["ENS_SQL_USER"]
+    SQL_PASSWORD = os.environ["ENS_SQL_PASS"]
+    SQL_HOST = os.environ["ENS_SQL_HOST"]
+    SQL_PORT = os.environ["ENS_SQL_PORT"]
+    SQL_DBNAME = os.environ["ENS_SQL_DBNAME"].strip().lower()
+
 SQL_DEFAULT_DBNAME = "postgres"
 SQL_TEST_DBNAME1 = "edutestdb1"
 SQL_TEST_DBNAME2 = "edutestdb2"
@@ -51,6 +52,17 @@ SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DEFAULT_DB
 
 SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
 
+# DB Constants
+COURSES_TABLE_NAME = "course"
+LABS_TABLE_NAME = "lab"
+SUBSCRIPTIONS_TABLE_NAME = "subscription"
+DETAILS_TABLE_NAME = "details"
+LOGS_TABLE_NAME = "logs"
+
+ID_COL_NAME = "id"
+
+# Log codes
+CONST_LOG_CODE_SUCCESS = 0 # The operation completed successfully.
 
 # pandas dataframe column names
 CONST_PD_COL_COURSE_NAME = "Course name"
@@ -81,3 +93,6 @@ CONST_TEST_DIR = os.path.abspath(
 )
 
 CONST_TEST_DIR_DATA = os.path.join(CONST_TEST_DIR, CONST_DATA_FOLDER)
+
+
+# UNITTEST
