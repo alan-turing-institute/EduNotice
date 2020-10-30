@@ -8,15 +8,19 @@ CONST_LOCATION='uksouth'
 CONST_POSTGRES_V='11'
 CONST_POSTGRES_SERVER='B_Gen5_1'
 
-# Azure resource group names
-ENS_RG_NAME_TEST="EduNoticeTest"
-ENS_RG_NAME_PROD="EduNoticeProduction"
+
 
 ###################################################################################
 # THE CODE BELOW SHOULD NOT BE MODIFIED
 ###################################################################################
 
+# Azure resource group names
 ENS_RG_NAME=""
+ENS_RG_NAME_TEST="EduNoticeTest"
+ENS_RG_NAME_PROD="EduNoticeProd"
+ENS_STORAGE_ACCOUNT="edunoticestorage"
+
+CONST_FUNCAPP_PLAN=$CROP_RG_NAME'funcappbasicplan'
 
 if [ -z "$1" ]; then 
     echo "Unspecified positional argument for the environment. Options: PROD, TEST"; 
@@ -25,9 +29,11 @@ fi
 
 if [[ "$1" == "TEST" ]]; then
     ENS_RG_NAME=$ENS_RG_NAME_TEST
+    ENS_STORAGE_ACCOUNT=$ENS_STORAGE_ACCOUNT"test"
 else
     if [[ "$1" == "PROD" ]]; then
         ENS_RG_NAME=$ENS_RG_NAME_PROD
+        ENS_STORAGE_ACCOUNT=$ENS_STORAGE_ACCOUNT"prod"
     else
         echo "Incorrect positional argument for the environment. Options: PROD, TEST"; 
         exit 0 
@@ -48,9 +54,9 @@ fi
 az account set -s $ENS_SUBSCRIPTION_ID || exit 0 
 echo "EduNotice BUILD INFO: default subscription set to $ENS_SUBSCRIPTION_ID"
 
-# -----------------------------------------------------------------------------
+###################################################################################
 # Resource group
-# -----------------------------------------------------------------------------
+###################################################################################
 
 # If resource group does not exist - create
 if ! `az group exists -n $ENS_RG_NAME`; then
@@ -63,6 +69,102 @@ if ! `az group exists -n $ENS_RG_NAME`; then
 else
     echo "EduNotice BUILD INFO: resource group $ENS_RG_NAME already exists. Skipping."
 fi
+
+###################################################################################
+# Creates STORAGE ACCOUNT (required for the FunctionApp)
+###################################################################################
+
+# Checks if storage account does not exist
+#   This is not a great implementation as it depends on Python to parse the json object.
+#   Changes are wellcome.
+available=`az storage account check-name --name $ENS_STORAGE_ACCOUNT | python -c 'import json,sys;obj=json.load(sys.stdin);print (obj["nameAvailable"])'`
+
+if [ $available = "True" ]; then
+
+    az storage account create --name $ENS_STORAGE_ACCOUNT \
+        --location $CONST_LOCATION \
+        --resource-group $ENS_RG_NAME \
+        --sku Standard_LRS
+
+    echo "EduNotice BUILD INFO: storage account $ENS_STORAGE_ACCOUNT has been created."
+else
+    echo "EduNotice BUILD INFO: storage account $ENS_STORAGE_ACCOUNT already exists. Skipping."
+fi
+
+# Getting the first storage account key
+ACCESS_KEY=$(az storage account keys list --account-name $ENS_STORAGE_ACCOUNT --resource-group $ENS_RG_NAME --output tsv |head -1 | awk '{print $3}')
+# Creating a connection string
+CONNECTION_STRING="DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=${ENS_STORAGE_ACCOUNT};AccountKey=${ACCESS_KEY}"
+
+###################################################################################
+# (Re-)Creates Function App
+###################################################################################
+
+function_name=$ENS_RG_NAME"functionapp"
+cwd=`pwd`
+
+echo "EduNotice BUILD INFO: Function APP: cd ../../__app__"
+cd ../../__app__
+
+# echo "EduNotice BUILD INFO: Function APP: az functionapp delete"
+# az functionapp delete \
+#     --name $function_name \
+#     --resource-group $ENS_RG_NAME \
+#     --subscription $ENS_SUBSCRIPTION_ID
+
+# echo "EduNotice BUILD INFO: Function APP: functionapp plan delete"
+# az functionapp plan delete \
+#     --resource-group $ENS_RG_NAME \
+#     --name $CONST_FUNCAPP_PLAN \
+#     --yes
+
+# echo "EduNotice BUILD INFO: Function APP: functionapp plan create"
+# az functionapp plan create \
+#     --resource-group $ENS_RG_NAME \
+#     --name $CONST_FUNCAPP_PLAN \
+#     --location $CONST_LOCATION \
+#     --number-of-workers 1 \
+#     --sku B1 \
+#     --is-linux
+
+# echo "EduNotice BUILD INFO: Function APP: az functionapp create"
+# az functionapp create \
+#     --subscription $ENS_SUBSCRIPTION_ID \
+#     --resource-group $ENS_RG_NAME \
+#     --storage-account $ENS_STORAGE_ACCOUNT \
+#     --name $function_name \
+#     --functions-version 3 \
+#     --plan $CONST_FUNCAPP_PLAN \
+#     --deployment-container-image-name $ENS_DOCKER_IMAGE \
+#     --docker-registry-server-user $ENS_DOCKER_USER \
+#     --docker-registry-server-password $ENS_DOCKER_PASS
+
+# echo "EduNotice BUILD INFO: Function APP: $function_name created."
+
+# echo "EduNotice BUILD INFO: Function APP: sleeping for 30 seconds"
+# sleep 30
+
+# echo "EduNotice BUILD INFO: Function APP: az functionapp config appsettings set"
+
+# az functionapp config appsettings set \
+#     --name $function_name \
+#     --resource-group $ENS_RG_NAME \
+#     --settings \
+#     "AzureWebJobsStorage=$CONNECTION_STRING" \
+#     > /dev/null
+
+# echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
+
+python $cwd/create_json.py $CONNECTION_STRING local.settings.json
+echo "EduNotice BUILD INFO: Function APP: local.settings.json file updated."
+
+# echo "EduNotice BUILD INFO: Function APP: func azure functionapp publish"
+# func azure functionapp publish $function_name --build-native-deps --build remote
+
+# echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
+
+# echo "EduNotice BUILD INFO: Function APP cd: "$cwd
+# cd $cwd
 
 ###################################################################################
 # Creates PostgreSQL DB
@@ -118,3 +220,7 @@ if [ ${#exists} = 2 ]; then
 else
     echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
 fi
+
+###################################################################################
+# Creates PostgreSQL DB
+###################################################################################

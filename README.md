@@ -8,8 +8,28 @@ Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a
 
 Existing details (are not updated)
 
+## Prerequisites and configuration
+
+- Azure services
+
+    - PostgreSQL
+
+    - SendGrid
+
+    - Container Registry
+
+    - StorageAccount
+
+    - FunctionApp
+
+Can be configured and set up using the bash script.
+
+## Set Up
+
+<!--
 ## Installation
 
+ 
 - [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package
 
 ```bash
@@ -21,10 +41,11 @@ pip install git+https://github.com/tomaslaz/EduCrawler.git
 ```bash
 pip install git+https://github.com/tomaslaz/EduNotice.git
 ```
+ -->
 
 ## Requirements
 
-- [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package
+<!-- - [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package
 
 In addition to Python packages listed in `requirements.txt` and EduCrawler,
 
@@ -34,11 +55,11 @@ In addition to Python packages listed in `requirements.txt` and EduCrawler,
             Restricted Access
                 Allow only `Mail Send` Full Access
     - Export the API key value as `ENS_EMAIL_API` environmental parameter as shown in the `Setup` section.
-
+ -->
 
 ## Setup
 
-Make sure that the [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package is installed and configured.
+<!-- Make sure that the [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package is installed and configured.
 
 Set the required and optional environmental parameters (recommended by appending/modifying the `~/.bash_profile` file).
 
@@ -58,9 +79,12 @@ export ENS_TEST_MODE=False
 export ENS_EMAIL_API="<<replace me>>"
 export ENS_FROM_EMAIL="<<replace me>>"
 export ENS_SUMMARY_RECIPIENTS="<<replace me>>"
+# Docker
+ENS_DOCKER_IMAGE 
+ENS_DOCKER_USER
+ENS_DOCKER_PASS
 ```
-
-Do not forget either restart the terminal or use the `source` command to effect the changes.
+Do not forget either restart the terminal or use the `source` command to effect the changes. -->
 
 ## Getting help
 If you found a bug or need support, please submit an issue [here](https://github.com/tomaslaz/EduNotice/issues/new).
