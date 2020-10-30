@@ -1,0 +1,3 @@
+[submodule "src/EduCrawler"]
+	path = src/EduCrawler
+	url = https://github.com/tomaslaz/EduCrawler.git
