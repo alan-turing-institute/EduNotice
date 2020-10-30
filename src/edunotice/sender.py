@@ -48,7 +48,7 @@ def send_summary_email(html_content, upd_timestamp):
         error - error message
     """
 
-    subject = "EduHub Activity Update (%s)" % (upd_timestamp.strftime("%Y-%m-%d %H:%M"))
+    subject = "EduHub Activity Update (%s UTC)" % (upd_timestamp.strftime("%Y-%m-%d %H:%M"))
     
     success, error = send_email(SG_SUMMARY_RECIPIENTS, subject, html_content)
 

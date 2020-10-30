@@ -22,6 +22,12 @@ ID_COL_NAME = "id"
 # Log codes
 CONST_LOG_CODE_SUCCESS = 0 # The operation completed successfully.
 
+# Verbose level
+try:
+    CONST_VERBOSE_LEVEL = int(os.environ["ENS_VERBOSE_LEVEL"])
+except:
+    CONST_VERBOSE_LEVEL = 2
+
 # Connection strings
 SQL_ENGINE = "postgresql"
 SQL_USER = os.environ["ENS_SQL_USER"]

@@ -156,7 +156,7 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
         from_date_str = from_date.strftime("%Y-%m-%d %H:%M")
         html_middle += "%s - %s" % (from_date_str, to_date_str)
     
-    html_middle += "</div><br>"
+    html_middle += " (UTC)</div><br>"
     html_middle += '<div style="border-bottom:1px solid #ededed"></div>'
 
     # no updates

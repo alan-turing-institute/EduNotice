@@ -44,6 +44,7 @@ Set the required and optional environmental parameters (recommended by appending
 
 ```bash
 # EduNotice
+export ENS_VERBOSE_LEVEL=2 # optional (choices: 0-4, 0 - min, 4 - max, default: 2)
 export ENS_SQL_SERVER="<<replace me>>"
 export ENS_SQL_HOST=$ENS_SQL_SERVER".postgres.database.azure.com"
 export ENS_SQL_USERNAME="<<replace me>>"
