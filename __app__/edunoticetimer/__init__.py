@@ -23,13 +23,25 @@ def main(mytimer: func.TimerRequest) -> None:
         handout_action='list', 
         handout_name=None, 
         lab_name=None, 
-        output='csv')
+        output='df')
     
-    crawl(args)
+    num_attempts = 3
+    attempts = 0
 
-    args = Namespace(input='ec_output.csv')
+    for i in range(num_attempts):
+        logging.info("EduCrawler attempt: %d / %d " % (i+1, num_attempts))
 
-    notice(args)
+        status, error, crawl_df = crawl(args)
+
+        if status:
+            break
+    
+    if status:
+        args = Namespace(input_df=crawl_df)
+
+        notice(args)
+    else:
+        logging.error("Failed to crawl EduHub")
 
     utc_timestamp = (
         datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()

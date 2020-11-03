@@ -1,7 +1,6 @@
 # To enable ssh & remote debugging on app service change the base image to the one below
 # FROM mcr.microsoft.com/azure-functions/python:2.0-python3.7-appservice
-FROM mcr.microsoft.com/azure-functions/python:3.0-python3.7
-
+FROM mcr.microsoft.com/azure-functions/python:2.0-python3.7
 
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
@@ -34,10 +33,10 @@ RUN LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELE
 
 ENV PATH="/usr/local/bin/chromedriver:${PATH}"
 
-# . Install requirements
+# 3. Install requirements
 RUN pip install --upgrade pip
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
 
-# . Copy python code to image
-# COPY . /home/site/wwwroot
+# 4. Copy  python code to image
+COPY __app__ /home/site/wwwroot

@@ -8,8 +8,6 @@ CONST_LOCATION='uksouth'
 CONST_POSTGRES_V='11'
 CONST_POSTGRES_SERVER='B_Gen5_1'
 
-
-
 ###################################################################################
 # THE CODE BELOW SHOULD NOT BE MODIFIED
 ###################################################################################
@@ -106,65 +104,78 @@ cwd=`pwd`
 echo "EduNotice BUILD INFO: Function APP: cd ../../__app__"
 cd ../../__app__
 
-# echo "EduNotice BUILD INFO: Function APP: az functionapp delete"
-# az functionapp delete \
-#     --name $function_name \
-#     --resource-group $ENS_RG_NAME \
-#     --subscription $ENS_SUBSCRIPTION_ID
+echo "EduNotice BUILD INFO: Function APP: az functionapp delete"
+az functionapp delete \
+    --name $function_name \
+    --resource-group $ENS_RG_NAME \
+    --subscription $ENS_SUBSCRIPTION_ID
 
-# echo "EduNotice BUILD INFO: Function APP: functionapp plan delete"
-# az functionapp plan delete \
-#     --resource-group $ENS_RG_NAME \
-#     --name $CONST_FUNCAPP_PLAN \
-#     --yes
+echo "EduNotice BUILD INFO: Function APP: functionapp plan delete"
+az functionapp plan delete \
+    --resource-group $ENS_RG_NAME \
+    --name $CONST_FUNCAPP_PLAN \
+    --yes
 
-# echo "EduNotice BUILD INFO: Function APP: functionapp plan create"
-# az functionapp plan create \
-#     --resource-group $ENS_RG_NAME \
-#     --name $CONST_FUNCAPP_PLAN \
-#     --location $CONST_LOCATION \
-#     --number-of-workers 1 \
-#     --sku B1 \
-#     --is-linux
+echo "EduNotice BUILD INFO: Function APP: functionapp plan create"
+az functionapp plan create \
+    --resource-group $ENS_RG_NAME \
+    --name $CONST_FUNCAPP_PLAN \
+    --location $CONST_LOCATION \
+    --number-of-workers 1 \
+    --sku B1 \
+    --is-linux
 
-# echo "EduNotice BUILD INFO: Function APP: az functionapp create"
-# az functionapp create \
-#     --subscription $ENS_SUBSCRIPTION_ID \
-#     --resource-group $ENS_RG_NAME \
-#     --storage-account $ENS_STORAGE_ACCOUNT \
-#     --name $function_name \
-#     --functions-version 3 \
-#     --plan $CONST_FUNCAPP_PLAN \
-#     --deployment-container-image-name $ENS_DOCKER_IMAGE \
-#     --docker-registry-server-user $ENS_DOCKER_USER \
-#     --docker-registry-server-password $ENS_DOCKER_PASS
+echo "EduNotice BUILD INFO: Function APP: az functionapp create"
+az functionapp create \
+    --subscription $ENS_SUBSCRIPTION_ID \
+    --resource-group $ENS_RG_NAME \
+    --storage-account $ENS_STORAGE_ACCOUNT \
+    --name $function_name \
+    --functions-version 3 \
+    --plan $CONST_FUNCAPP_PLAN \
+    --deployment-container-image-name $ENS_DOCKER_IMAGE \
+    --docker-registry-server-user $ENS_DOCKER_USER \
+    --docker-registry-server-password $ENS_DOCKER_PASS
 
-# echo "EduNotice BUILD INFO: Function APP: $function_name created."
+echo "EduNotice BUILD INFO: Function APP: $function_name created."
 
-# echo "EduNotice BUILD INFO: Function APP: sleeping for 30 seconds"
-# sleep 30
+echo "EduNotice BUILD INFO: Function APP: sleeping for 30 seconds"
+sleep 30
 
-# echo "EduNotice BUILD INFO: Function APP: az functionapp config appsettings set"
+echo "EduNotice BUILD INFO: Function APP: az functionapp config appsettings set"
 
-# az functionapp config appsettings set \
-#     --name $function_name \
-#     --resource-group $ENS_RG_NAME \
-#     --settings \
-#     "AzureWebJobsStorage=$CONNECTION_STRING" \
-#     > /dev/null
+az functionapp config appsettings set \
+    --name $function_name \
+    --resource-group $ENS_RG_NAME \
+    --settings \
+    "AzureWebJobsStorage=$CONNECTION_STRING" \
+    "EC_EMAIL=$EC_EMAIL" \
+    "EC_PASSWORD=$EC_PASSWORD" \
+    "EC_DEFAULT_OUTPUT=$EC_DEFAULT_OUTPUT" \
+    "EC_HIDE=$EC_HIDE" \
+    "EC_MFA=$EC_MFA" \
+    "ENS_SQL_HOST=$ENS_SQL_HOST" \
+    "ENS_SQL_USER=$ENS_SQL_USER" \
+    "ENS_SQL_PASS=$ENS_SQL_PASS" \
+    "ENS_SQL_DBNAME=$ENS_SQL_DBNAME" \
+    "ENS_SQL_PORT=$ENS_SQL_PORT" \
+    "ENS_EMAIL_API=$ENS_EMAIL_API" \
+    "ENS_FROM_EMAIL=$ENS_FROM_EMAIL" \
+    "ENS_SUMMARY_RECIPIENTS=$ENS_SUMMARY_RECIPIENTS" \
+    > /dev/null
 
-# echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
+echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
 
 python $cwd/create_json.py $CONNECTION_STRING local.settings.json
 echo "EduNotice BUILD INFO: Function APP: local.settings.json file updated."
 
-# echo "EduNotice BUILD INFO: Function APP: func azure functionapp publish"
-# func azure functionapp publish $function_name --build-native-deps --build remote
+echo "EduNotice BUILD INFO: Function APP: func azure functionapp publish"
+func azure functionapp publish $function_name --build-native-deps --build remote
 
-# echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
+echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
 
-# echo "EduNotice BUILD INFO: Function APP cd: "$cwd
-# cd $cwd
+echo "EduNotice BUILD INFO: Function APP cd: "$cwd
+cd $cwd
 
 ###################################################################################
 # Creates PostgreSQL DB
@@ -221,6 +232,4 @@ else
     echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
 fi
 
-###################################################################################
-# Creates PostgreSQL DB
 ###################################################################################

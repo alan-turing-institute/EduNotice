@@ -10,3 +10,5 @@ clean:
 	docker image rm ${ENS_DOCKER_IMAGE}
 push:
 	docker push ${ENS_DOCKER_IMAGE}
+run:
+	docker run -it ${ENS_DOCKER_IMAGE} /bin/bash

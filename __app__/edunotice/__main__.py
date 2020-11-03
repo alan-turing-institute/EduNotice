@@ -26,7 +26,6 @@ def set_command_line_args():
         help="Full path to the EduCrawler output csv file.",
     )
 
-   
     args, _ = parser.parse_known_args()
 
     return args
@@ -47,5 +46,6 @@ if __name__ == "__main__":
 
     # set up command line arguments
     args = set_command_line_args()
-    print(args)
-    #main(args)
+    
+    # run the service
+    main(args)

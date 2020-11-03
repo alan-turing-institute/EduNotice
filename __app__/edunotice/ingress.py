@@ -394,6 +394,13 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                     is None
             ):
 
+                if type(row[CONST_PD_COL_SUB_USERS]) is str:
+                    sub_users = ", ".join(eval(row[CONST_PD_COL_SUB_USERS]))
+                elif type(row[CONST_PD_COL_SUB_USERS]) is list:
+                    sub_users = ", ".join(row[CONST_PD_COL_SUB_USERS])
+                else:
+                    sub_users = ''
+               
                 # adds new record to the database
                 new_sub_detail = DetailsClass(
                     sub_id=sub_id,
@@ -407,7 +414,7 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                     subscription_name=row[CONST_PD_COL_SUB_NAME],
                     subscription_status=row[CONST_PD_COL_SUB_STATUS],
                     subscription_expiry_date=datetime.strptime(row[CONST_PD_COL_SUB_EXPIRY_DATE], "%Y-%m-%d"),
-                    subscription_users=", ".join(eval(row[CONST_PD_COL_SUB_USERS])),
+                    subscription_users=sub_users,
                     timestamp_utc=crawl_time,
                 )
 

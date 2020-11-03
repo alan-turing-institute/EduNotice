@@ -29,9 +29,15 @@ def notice(args):
 
     log("Notification service started", level=1)
 
-    # read the crawl data in
-    crawl_df = pd.read_csv(args.input)
-    log("Read %d data entries" % (len(crawl_df)), level=1)
+    if hasattr(args, "input_df"):
+        crawl_df = args.input_df
+
+    elif hasattr(args, "input_file"):
+        # read the crawl data in
+        crawl_df = pd.read_csv(args.input_file)
+        log("Read %d data entries" % (len(crawl_df)), level=1)
+    else:
+        assert False, "Input data is not provided"
 
     log("Looking for the latest log timestamp value", level=1)
     succes, error, latest_timestamp_utc = get_latest_log_timestamp(ENGINE)
