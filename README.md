@@ -8,10 +8,11 @@ Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a
 
 ## Email examples
 
-#### Summary email
+#### Summary
 
-```{html}
-```
+<p align="left">
+  <img src="media/email_examples/summary.png" width="250">
+</p>
 
 ## Prerequisites/Configuration/Set up
 

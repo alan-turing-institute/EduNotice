@@ -99,7 +99,10 @@ def test_summary():
         latest_timestamp_utc, success_timestamp_utc)
 
     assert succes, error
+    print(html_content)
     assert len(html_content) == 3436
+
+    assert False
 
     # checking if the log message was created for the update
     session = session_open(ENGINE)
