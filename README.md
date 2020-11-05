@@ -1,90 +1,127 @@
 # EduHub Activity Notification Service
 
+[![Build Status](https://travis-ci.com/tomaslaz/EduNotice.svg?branch=main)](https://travis-ci.org/tomaslaz/EduNotice) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+An Azure Function App that registers changes in the Education section of portal.azure.com and sends out emails to admins and users.
+
 Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a>.
 
-[![Build Status](https://travis-ci.com/tomaslaz/EduNotice.svg?branch=main)](https://travis-ci.org/tomaslaz/EduNotice)
+## Email examples
 
-## Notes
+#### Summary email
 
-Existing details (are not updated)
-
-## Prerequisites and configuration
-
-- Azure services
-
-    - PostgreSQL
-
-    - SendGrid
-
-    - Container Registry
-
-    - StorageAccount
-
-    - FunctionApp
-
-Can be configured and set up using the bash script.
-
-## Set Up
-
-<!--
-## Installation
-
- 
-- [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package
-
-```bash
-pip install git+https://github.com/tomaslaz/EduCrawler.git
+```{html}
 ```
 
-- [EduNotice](https://github.com/tomaslaz/EduNotice) Python package
+## Prerequisites/Configuration/Set up
 
-```bash
-pip install git+https://github.com/tomaslaz/EduNotice.git
+Set the required and optional environmental parameters (recommended by modifying the `~/.bash_profile` file).
+
+#### [EduCrawler](https://github.com/tomaslaz/EduCrawler)
+
+```{bash}
+export EC_EMAIL="example@mail.com" # EduHub account email address
+export EC_PASSWORD="password" # EduHub account password
+export EC_MFA=false # it only works if the EduHub account has MFA switched off
 ```
- -->
 
-## Requirements
+#### SendGrid (Azure service)
 
-<!-- - [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package
+- Installation (optional, an existing service might be reused)
+    - On portal.azure.com navigate to `All services`
+    - Find `SendGrid Accounts`
+    - Create a new `SendGrid` account
+      ```
+      Recommended settings:
+      Location: UK South
+      Pricing Tier: Free
+      ```
+- Set up
+  - go to `https://app.sendgrid.com/guide`
+  - confirm the email address that was used when creating the new account
+  - `Create a Single Sender`
+  - Verify using the `Single Sender Verification`
+  - Generate an API KEY
+    - go to `API Keys`
+    - `Create API Key`
+      - Restricted Access
+      - Allow **ONLY** `Mail Send` Full Access
+  - export the API key value as `ENS_EMAIL_API` environmental parameter as shown in the `Setup` section.
 
-In addition to Python packages listed in `requirements.txt` and EduCrawler,
+- Configuration
+```{bash}
+export ENS_EMAIL_API="<<replace me>>" # SendGrid API Key
+export ENS_FROM_EMAIL="<<replace me>>" # Sender email address
+export ENS_SUMMARY_RECIPIENTS="<<replace me>>" # a list of email address to whom summary emails will be send to
+```
 
-- SendGrid service
-    - Generate API KEY (
-        Recommended settings
-            Restricted Access
-                Allow only `Mail Send` Full Access
-    - Export the API key value as `ENS_EMAIL_API` environmental parameter as shown in the `Setup` section.
- -->
+#### Container Registry (Azure service)
 
-## Setup
+- Installation (optional, an existing service might be reused)
+  - On portal.azure.com navigate to `All services`
+  - Find `Container registries`
+  - `Add`
+  ```
+  Recommended settings:
+  Location: UK South
+  SKU: Basic
+  ```
+  - go to resource
+  - Settings -> Access keys
+    - Enable `Admin user`
+    - export `Username` as `ENS_DOCKER_USER`
+    - export `password` as `ENS_DOCKER_PASS`
+- Configuration
+```{bash}
+export ENS_DOCKER_IMAGE="<<replace me>>" # ex. registryname.azurerc.io/edunoticefuncapp:latest
+export ENS_DOCKER_USER="<<replace me>>"
+export ENS_DOCKER_PASS="<<replace me>>"
+```
 
-<!-- Make sure that the [EduCrawler](https://github.com/tomaslaz/EduCrawler) Python package is installed and configured.
+#### EduHub Activity Notification Service as a FunctionApp
 
-Set the required and optional environmental parameters (recommended by appending/modifying the `~/.bash_profile` file).
+- Configuration
 
-```bash
-# EduNotice
-export ENS_VERBOSE_LEVEL=2 # optional (choices: 0-4, 0 - min, 4 - max, default: 2)
+```{bash}
+# Azure Subscription
+export ENS_SUBSCRIPTION_ID="<<replace me>>"
+
+# Configure PostgreSQL DB
 export ENS_SQL_SERVER="<<replace me>>"
-export ENS_SQL_HOST=$ENS_SQL_SERVER".postgres.database.azure.com"
 export ENS_SQL_USERNAME="<<replace me>>"
-export ENS_SQL_USER=$ENS_SQL_USERNAME"@"$ENS_SQL_SERVER
 export ENS_SQL_PASS="<<replace me>>"
 export ENS_SQL_DBNAME="<<replace me>>"
 export ENS_SQL_PORT="<<replace me>>"
-# Optional (Testing)
-export ENS_TEST_MODE=False
-# Email sending
-export ENS_EMAIL_API="<<replace me>>"
-export ENS_FROM_EMAIL="<<replace me>>"
-export ENS_SUMMARY_RECIPIENTS="<<replace me>>"
-# Docker
-ENS_DOCKER_IMAGE 
-ENS_DOCKER_USER
-ENS_DOCKER_PASS
+
+export ENS_SQL_WHITELISTED_IP="<<replace me>>"
+
+export ENS_SQL_HOST=$ENS_SQL_SERVER".postgres.database.azure.com"
+export ENS_SQL_USER=$ENS_SQL_USERNAME"@"$ENS_SQL_SERVER
 ```
-Do not forget either restart the terminal or use the `source` command to effect the changes. -->
+- FunctionApp container
+
+The following make commands build and publish the custom FunctionApp container to the container registry.
+
+```{bash}
+cd EduNotice
+make build
+make push
+```
+
+#### Azure services
+
+The `infrastructure.sh` bash script has two modes: `TEST` and `PROD`. Each of them in turn will:
+
+- check if an appropriate resource group exists
+- storage account is created
+- PostgreSQL DB established
+- republish EduHub Activity Notification Service FunctionApp
+- update FunctionApp's `local.settings.json` local configuration file
+
+```{bash}
+cd EduNotice/utils/infrastructure
+./infrastructure.sh
+```
 
 ## Getting help
 If you found a bug or need support, please submit an issue [here](https://github.com/tomaslaz/EduNotice/issues/new).

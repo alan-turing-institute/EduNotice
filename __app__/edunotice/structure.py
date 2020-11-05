@@ -135,6 +135,8 @@ class LogsClass(BASE):
     Log class
     """
 
+    __tablename__ = LOGS_TABLE_NAME
+    
     id = Column(Integer, primary_key=True, autoincrement=True)
 
     code = Column(Integer, nullable=False)

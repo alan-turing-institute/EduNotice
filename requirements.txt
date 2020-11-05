@@ -7,6 +7,3 @@ flask-sqlalchemy>=2.4.1
 
 sendgrid>=6.4.7
 psycopg2-binary>=2.8.4
-
-#educrawler
--e git://github.com/tomaslaz/EduCrawler.git#egg=educrawler 

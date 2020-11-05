@@ -95,6 +95,61 @@ ACCESS_KEY=$(az storage account keys list --account-name $ENS_STORAGE_ACCOUNT --
 CONNECTION_STRING="DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=${ENS_STORAGE_ACCOUNT};AccountKey=${ACCESS_KEY}"
 
 ###################################################################################
+# Creates PostgreSQL DB
+###################################################################################
+
+# Checks for postgres databases
+#   This is not a great implementation as it depends on Python to parse the json object.
+#   Suggestions are welcome.
+
+exists=`az postgres server list -g $ENS_RG_NAME`
+
+# Checks the lenght of the query result. 2 means there were no results.
+if [ ${#exists} = 2 ]; then
+    az postgres server create \
+        --resource-group $ENS_RG_NAME \
+        --name $ENS_SQL_SERVER \
+        --location $CONST_LOCATION \
+        --admin-user $ENS_SQL_USERNAME \
+        --admin-password $ENS_SQL_PASS \
+        --sku-name $CONST_POSTGRES_SERVER \
+        --version $CONST_POSTGRES_V \
+        --ssl-enforcement Disabled \
+        || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER has been created."
+
+    # Adding rules of allowed ip addresses
+    #   0.0.0.0 - Azure services
+    az postgres server firewall-rule create \
+        --resource-group $ENS_RG_NAME \
+        --server-name $ENS_SQL_SERVER \
+        -n azureservices \
+        --start-ip-address 0.0.0.0 \
+        --end-ip-address 0.0.0.0 \
+        || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: 0.0.0.0"
+
+    az postgres server firewall-rule create \
+        --resource-group $ENS_RG_NAME \
+        --server-name $ENS_SQL_SERVER \
+        -n whitelistedip \
+        --start-ip-address $ENS_SQL_WHITELISTED_IP \
+        --end-ip-address $ENS_SQL_WHITELISTED_IP \
+        || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: $ENS_SQL_WHITELISTED_IP"
+
+    # Establishing database
+    python -c 'from edunotice import db; db.create_db();' || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER database initialised."
+else
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
+fi
+
+###################################################################################
 # (Re-)Creates Function App
 ###################################################################################
 
@@ -176,60 +231,5 @@ echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
 
 echo "EduNotice BUILD INFO: Function APP cd: "$cwd
 cd $cwd
-
-###################################################################################
-# Creates PostgreSQL DB
-###################################################################################
-
-# Checks for postgres databases
-#   This is not a great implementation as it depends on Python to parse the json object.
-#   Suggestions are welcome.
-
-exists=`az postgres server list -g $ENS_RG_NAME`
-
-# Checks the lenght of the query result. 2 means there were no results.
-if [ ${#exists} = 2 ]; then
-    az postgres server create \
-        --resource-group $ENS_RG_NAME \
-        --name $ENS_SQL_SERVER \
-        --location $CONST_LOCATION \
-        --admin-user $ENS_SQL_USERNAME \
-        --admin-password $ENS_SQL_PASS \
-        --sku-name $CONST_POSTGRES_SERVER \
-        --version $CONST_POSTGRES_V \
-        --ssl-enforcement Disabled \
-        || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER has been created."
-
-    # Adding rules of allowed ip addresses
-    #   0.0.0.0 - Azure services
-    az postgres server firewall-rule create \
-        --resource-group $ENS_RG_NAME \
-        --server-name $ENS_SQL_SERVER \
-        -n whitelistedip \
-        --start-ip-address 0.0.0.0 \
-        --end-ip-address 0.0.0.0 \
-        || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: 0.0.0.0"
-
-    az postgres server firewall-rule create \
-        --resource-group $ENS_RG_NAME \
-        --server-name $ENS_SQL_SERVER \
-        -n whitelistedip \
-        --start-ip-address $ENS_SQL_WHITELISTED_IP \
-        --end-ip-address $ENS_SQL_WHITELISTED_IP \
-        || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: $ENS_SQL_WHITELISTED_IP"
-
-    # Establishing database
-    python -c 'from edunotice import db; db.create_db();' || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER database initialised."
-else
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
-fi
 
 ###################################################################################
