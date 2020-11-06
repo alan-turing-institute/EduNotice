@@ -152,6 +152,100 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub):
     return new_sub_html
 
 
+def upd_sub_details_html(lab_dict, sub_dict, upd_sub):
+    """
+    Generates html content for the details of an updated subscription.
+
+    Arguments:
+        ab_dict - lab name /internal id dictionary
+        sub_dict - subscription id /internal id dictionary
+        upd_sub - tuple (before, after) of subscription details
+
+    Return:
+        upd_sub_html - html content
+    """
+
+    prev_details = upd_sub[0]
+    new_details = upd_sub[1]
+
+    course_name, lab_name = list(lab_dict.keys())[list(lab_dict.values()).index(new_details.lab_id)]
+
+    sub_guid = list(sub_dict.keys())[list(sub_dict.values()).index(new_details.sub_id)]
+
+    upd_sub_html = "&#9 Course: <i>%s</i><br>" % (course_name)
+    upd_sub_html += "&#9 Lab: <i>%s</i><br>" % (lab_name)
+
+    upd_sub_html += value_change("Handout status", 
+        prev_details.handout_status, new_details.handout_status)
+
+    upd_sub_html += "<br>"
+
+    upd_sub_html += value_change("Subscription name", 
+        prev_details.subscription_name, new_details.subscription_name)
+    
+    upd_sub_html += "&#9 Subscription ID: <i>%s</i><br>" % (sub_guid)
+
+    upd_sub_html += value_change("Subscription status", 
+        prev_details.subscription_status, new_details.subscription_status)
+
+    upd_sub_html += "<br>"
+
+    prev_expiry_date = prev_details.subscription_expiry_date.strftime("%Y-%m-%d")
+    new_expiry_date = new_details.subscription_expiry_date.strftime("%Y-%m-%d")
+
+    upd_sub_html += value_change("Expiry date", prev_expiry_date, new_expiry_date)
+
+    prev_budget = "${:,.2f}".format(prev_details.handout_budget)
+    new_budget = "${:,.2f}".format(new_details.handout_budget)
+
+    upd_sub_html += value_change("Budget", prev_budget, new_budget)
+
+    upd_sub_html += "&#9 Consumed: <i>%s</i><br>" % ("${:,.2f}".format(new_details.handout_consumed))
+    
+    prev_users = prev_details.subscription_users.split(",")
+    new_users = new_details.subscription_users.split(",")
+
+    upd_sub_html += "&#9 Users:"
+
+    user_cnt = 0
+    for user in prev_users:
+        if user in new_users:
+            if user_cnt > 0:
+                upd_sub_html += ","
+            upd_sub_html += " <i>%s</i>" % (user)
+        else:
+            if user_cnt > 0:
+                upd_sub_html += ","
+            upd_sub_html += " <strike><i>%s</i></strike>" % (user)
+        user_cnt += 1
+
+    for user in new_users:
+        if user not in prev_users:
+            if user_cnt > 0:
+                upd_sub_html += ","
+            upd_sub_html += " <strong><i>%s</i></strong>" % (user)
+        user_cnt += 1
+    
+    upd_sub_html += "<br>"
+    upd_sub_html += "<br>"
+
+    return upd_sub_html
+
+
+def contact_us_html():
+    """
+    Generates contact us html content.
+
+    """
+
+    # Contact us
+    return '<div>If the information presented in this email does not match your' + \
+        ' expectations or if you have questions related to this service, please contact' + \
+        ' us by submiting a ticket on <a href="https://turingcomplete.topdesk.net/tas/public/' + \
+        'ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895' + \
+        '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a>.</div>'
+
+
 def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_date):
     """
     Generates summary email content as an html document. It includes information about new 
@@ -224,6 +318,7 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
     if len(sub_new_list) > 0 and len(sub_update_details_list) > 0:
         html_middle += '<div style="border-bottom:1px solid #ededed"></div>'
 
+    # updates
     if len(sub_update_details_list) > 0:
 
         html_middle += "Updates (%d):" % (len(sub_update_details_list))
@@ -232,7 +327,7 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
         sub_updates = ""
 
         for i, sub_update in enumerate(sub_update_details_list):
-            
+
             prev_details = sub_update[0]
             new_details = sub_update[1]
 
@@ -243,63 +338,8 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
             sub_updates += "<li><b>%s</b> (%s)</li><br>" % (
                 new_details.subscription_name, sub_guid)
 
-            sub_updates += "&#9 Course: <i>%s</i><br>" % (course_name)
-            sub_updates += "&#9 Lab: <i>%s</i><br>" % (lab_name)
-
-            sub_updates += value_change("Handout status", 
-                prev_details.handout_status, new_details.handout_status)
-
-            sub_updates += "<br>"
-
-            sub_updates += value_change("Subscription name", 
-                prev_details.subscription_name, new_details.subscription_name)
+            sub_updates += upd_sub_details_html(lab_dict, sub_dict, sub_update)
             
-            sub_updates += "&#9 Subscription ID: <i>%s</i><br>" % (sub_guid)
-
-            sub_updates += value_change("Subscription status", 
-                prev_details.subscription_status, new_details.subscription_status)
-
-            sub_updates += "<br>"
-
-            prev_expiry_date = prev_details.subscription_expiry_date.strftime("%Y-%m-%d")
-            new_expiry_date = new_details.subscription_expiry_date.strftime("%Y-%m-%d")
-
-            sub_updates += value_change("Expiry date", prev_expiry_date, new_expiry_date)
-
-            prev_budget = "${:,.2f}".format(prev_details.handout_budget)
-            new_budget = "${:,.2f}".format(new_details.handout_budget)
-
-            sub_updates += value_change("Budget", prev_budget, new_budget)
-
-            sub_updates += "&#9 Consumed: <i>%s</i><br>" % ("${:,.2f}".format(new_details.handout_consumed))
-            
-            prev_users = prev_details.subscription_users.split(",")
-            new_users = new_details.subscription_users.split(",")
-
-            sub_updates += "&#9 Users:"
-
-            user_cnt = 0
-            for user in prev_users:
-                if user in new_users:
-                    if user_cnt > 0:
-                        sub_updates += ","
-                    sub_updates += " <i>%s</i>" % (user)
-                else:
-                    if user_cnt > 0:
-                        sub_updates += ","
-                    sub_updates += " <strike><i>%s</i></strike>" % (user)
-                user_cnt += 1
-
-            for user in new_users:
-                if user not in prev_users:
-                    if user_cnt > 0:
-                        sub_updates += ","
-                    sub_updates += " <strong><i>%s</i></strong>" % (user)
-                user_cnt += 1
-            
-            sub_updates += "<br>"
-            sub_updates += "<br>"
-
         html_middle += "<p><ul>" + sub_updates + "</ul></p>"
 
         html_middle += '</div>'
@@ -325,12 +365,12 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
         html_content - summary as an html text
     """
 
-    html_content = email_top("Your Azure subscription registration")
+    html_content = email_top("Azure subscription registred")
 
     html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
 
     html_middle += '<div>You are receiving this email because a subscription has been' + \
-        ' registered on EduHub notification service (<b>EduNotice</b>) and you are listed as a user.</div>'
+        ' registered on EduHub notification service (<b>EduNotice</b>) and you are listed as its user.</div>'
 
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
@@ -360,11 +400,47 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Contact us
-    html_middle += '<div>If the information presented in this email does not match your' + \
-        ' expectations or if you have questions related to this service, please contact' + \
-        ' us by submiting a ticket on <a href="https://turingcomplete.topdesk.net/tas/public/' + \
-        'ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895' + \
-        '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a>.</div>'
+    html_middle += contact_us_html()
+
+    html_middle += '</div>'
+
+    html_content += email_middle(html_middle)
+
+    html_content += email_bottom()
+
+    return True, None, html_content
+
+
+def indiv_email_upd(lab_dict, sub_dict, upd_sub):
+    """
+    Generates new subscription email content as an html document. 
+
+    Arguments:
+        lab_dict - lab name /internal id dictionary
+        sub_dict - subscription id /internal id dictionary
+        upd_sub - tuple (before, after) of subscription details
+    Returns:
+        success - flag if the action was succesful
+        error - error message
+        html_content - summary as an html text
+    """
+
+    html_content = email_top("Azure subscription updated")
+
+    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
+
+    html_middle += '<div>You are receiving this email because a subscription has been' + \
+        ' updated and you are listed as its user.</div>'
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Details
+    html_middle += upd_sub_details_html(lab_dict, sub_dict, upd_sub)
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Contact us
+    html_middle += contact_us_html()
 
     html_middle += '</div>'
 
