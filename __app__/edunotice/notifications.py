@@ -116,6 +116,42 @@ def details_changed(prev_details, new_details):
     return changed
 
 
+def new_sub_details_html(lab_dict, sub_dict, new_sub):
+    """
+    Generates html content for the details of a new subscription.
+
+    Arguments:
+        ab_dict - lab name /internal id dictionary
+        sub_dict - subscription id /internal id dictionary
+        new_sub - details of a new subscriptions
+
+    Return:
+        new_sub_html - html content
+    """
+
+    course_name, lab_name = list(lab_dict.keys())[list(lab_dict.values()).index(new_sub.lab_id)]
+
+    sub_guid = list(sub_dict.keys())[list(sub_dict.values()).index(new_sub.sub_id)]
+
+    new_sub_html = "&#9 Course: <i>%s</i><br>" % (course_name)
+    new_sub_html += "&#9 Lab: <i>%s</i><br>" % (lab_name)
+    new_sub_html += "&#9 Handout status: <i>%s</i><br>" % (new_sub.handout_status)
+
+    new_sub_html += "<br>"
+
+    new_sub_html += "&#9 Subscription name: <i>%s</i><br>" % (new_sub.subscription_name)
+    new_sub_html += "&#9 Subscription ID: <i>%s</i><br>" % (sub_guid)
+    new_sub_html += "&#9 Subscription status: <i>%s</i><br>" % (new_sub.subscription_status)
+
+    new_sub_html += "<br>"
+
+    new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date)
+    new_sub_html += "&#9 Budget: <i>${:,.2f}</i> <br>".format(new_sub.handout_budget)
+    new_sub_html += "&#9 Users: <i>%s</i><br><br>" % (new_sub.subscription_users)
+
+    return new_sub_html
+
+
 def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_date):
     """
     Generates summary email content as an html document. It includes information about new 
@@ -174,26 +210,11 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
         for i, new_sub in enumerate(sub_new_list):
             
             course_name, lab_name = list(lab_dict.keys())[list(lab_dict.values()).index(new_sub.lab_id)]
-
             sub_guid = list(sub_dict.keys())[list(sub_dict.values()).index(new_sub.sub_id)]
 
             new_subs += "<li><b>%s</b> (%s)</li><br>" % (new_sub.subscription_name, sub_guid)
 
-            new_subs += "&#9 Course: <i>%s</i><br>" % (course_name)
-            new_subs += "&#9 Lab: <i>%s</i><br>" % (lab_name)
-            new_subs += "&#9 Handout status: <i>%s</i><br>" % (new_sub.handout_status)
-
-            new_subs += "<br>"
-
-            new_subs += "&#9 Subscription name: <i>%s</i><br>" % (new_sub.subscription_name)
-            new_subs += "&#9 Subscription ID: <i>%s</i><br>" % (sub_guid)
-            new_subs += "&#9 Subscription status: <i>%s</i><br>" % (new_sub.subscription_status)
-
-            new_subs += "<br>"
-
-            new_subs += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date)
-            new_subs += "&#9 Budget: <i>${:,.2f}</i> <br>".format(new_sub.handout_budget)
-            new_subs += "&#9 Users: <i>%s</i><br><br>" % (new_sub.subscription_users)
+            new_subs += new_sub_details_html(lab_dict, sub_dict, new_sub)
 
         html_middle += "<p><ul>" + new_subs + "</ul></p>"
 
@@ -282,6 +303,70 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
         html_middle += "<p><ul>" + sub_updates + "</ul></p>"
 
         html_middle += '</div>'
+
+    html_content += email_middle(html_middle)
+
+    html_content += email_bottom()
+
+    return True, None, html_content
+
+
+def indiv_email_new(lab_dict, sub_dict, new_sub):
+    """
+    Generates new subscription email content as an html document. 
+
+    Arguments:
+        lab_dict - lab name /internal id dictionary
+        sub_dict - subscription id /internal id dictionary
+        new_sub - details of a new subscription
+    Returns:
+        success - flag if the action was succesful
+        error - error message
+        html_content - summary as an html text
+    """
+
+    html_content = email_top("Your Azure subscription registration")
+
+    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
+
+    html_middle += '<div>You are receiving this email because a subscription has been' + \
+        ' registered on EduHub notification service (<b>EduNotice</b>) and you are listed as a user.</div>'
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Subscription details
+    html_middle += '<div><b>Subscription details:</b></div><br>'
+
+    html_middle += new_sub_details_html(lab_dict, sub_dict, new_sub)
+
+    html_middle += '<div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Communications
+    html_middle += '<div><b>Communications:</b> EduNotice will send the following communications</div>'
+    html_middle += '<div><ul>'
+    html_middle += '<li><b>Confirmation email:</b> EduNotice will send an email denoting the registration of the subscription.</li>'
+    html_middle += '<li><b>Update email:</b> EduNotice will send notification emails denoting changes in your subscription details.</li>'
+    html_middle += '</ul></div>'
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Disclaimer
+    html_middle += '<div><b>Disclaimer:</b> We endeavour to make reasonable effort to keep the' + \
+        ' information and service up to date and correct. However, EduNotice is only for' + \
+        ' demonstration purposes and we make no warranties of any kind, express or implied,' + \
+        ' about the completeness, accuracy, reliability, suitability or availability with' + \
+        ' respect to the information and service.</div>'
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Contact us
+    html_middle += '<div>If the information presented in this email does not match your' + \
+        ' expectations or if you have questions related to this service, please contact' + \
+        ' us by submiting a ticket on <a href="https://turingcomplete.topdesk.net/tas/public/' + \
+        'ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895' + \
+        '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a>.</div>'
+
+    html_middle += '</div>'
 
     html_content += email_middle(html_middle)
 

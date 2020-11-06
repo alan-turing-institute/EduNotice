@@ -85,6 +85,7 @@ CONST_DATA_FOLDER = "data"
 CONST_TEST1_FILENAME = "ec_output_1.csv"
 CONST_TEST2_FILENAME = "ec_output_2.csv"
 CONST_TEST3_FILENAME = "ec_output_3.csv"
+CONST_TEST4_FILENAME = "ec_output_4.csv"
 
 CONST_TEST_DIR = os.path.abspath(
     os.path.join(

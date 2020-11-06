@@ -14,6 +14,7 @@ from edunotice.ingress import (
 
 from edunotice.notifications import (
    summary,
+   indiv_email_new,
 )
 
 from edunotice.constants import (
@@ -21,6 +22,7 @@ from edunotice.constants import (
     CONST_TEST1_FILENAME,
     CONST_TEST2_FILENAME,
     CONST_TEST3_FILENAME,
+    CONST_TEST4_FILENAME,
     SQL_CONNECTION_STRING,
     SQL_TEST_DBNAME2
 )
@@ -130,3 +132,23 @@ def test_summary():
 
     assert succes, error
     assert len(html_content) == 1320
+
+
+def test_indiv_email_new():
+
+
+    # real data
+    file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST4_FILENAME)
+    eduhub_df = pd.read_csv(file_path)
+
+    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc = update_edu_data(ENGINE, eduhub_df)
+
+    assert succes, error
+    assert len(sub_new_list) == 1
+    assert len(sub_update_list) == 0
+
+    succes, error, html_content = indiv_email_new(lab_dict, sub_dict, sub_new_list[0])
+
+    assert succes, error
+    print(html_content)
+    assert len(html_content) == 3124
