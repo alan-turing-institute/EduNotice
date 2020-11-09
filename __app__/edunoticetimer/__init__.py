@@ -3,8 +3,11 @@ import logging
 
 import azure.functions as func
 
+from sqlalchemy import create_engine
+
 from educrawler.crawler import crawl
 from edunotice.edunotice import notice
+from edunotice.constants import SQL_CONNECTION_STRING_DB
 
 class Namespace:
     def __init__(self, **kwargs):
@@ -38,7 +41,10 @@ def main(mytimer: func.TimerRequest) -> None:
     
     if status:
         args = Namespace(input_df=crawl_df)
-        status, error = notice(args)
+
+        engine = create_engine(SQL_CONNECTION_STRING_DB)
+
+        status, error = notice(engine, args)
     else:
         logging.error("Failed to crawl EduHub")
         logging.error(error)

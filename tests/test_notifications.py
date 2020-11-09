@@ -170,5 +170,4 @@ def test_indiv_email_update():
     succes, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[0])
 
     assert succes, error
-    print(html_content)
-    assert len(html_content) == 1
+    assert len(html_content) == 2429

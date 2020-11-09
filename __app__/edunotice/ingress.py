@@ -37,6 +37,7 @@ from edunotice.constants import (
     CONST_LOG_CODE_SUCCESS,
 )
 
+from edunotice.notifications import details_changed
 
 # lambda function to convert amount in dollars to a float
 CONVERT_LAMBDA = lambda x: float(x.replace("$", "").replace(",", ""))
@@ -142,6 +143,7 @@ def _new_log(engine):
     session.add(new_log)
 
     session.flush()
+    #session.commit()
 
     session_close(session)
 
@@ -218,6 +220,7 @@ def _update_courses(engine, eduhub_df):
 
             session.add(new_course)
             session.flush()
+            #session.commit() 
 
             course_dict.update({course_name: new_course.id})
 
@@ -277,6 +280,7 @@ def _update_labs(engine, eduhub_df, course_dict):
 
             session.add(new_lab)
             session.flush()
+            #session.commit()
 
             lab_dict.update({(course_name, lab_name): new_lab.id})
         else:
@@ -332,6 +336,7 @@ def _update_subscriptions(engine, eduhub_df):
 
             session.add(new_subscription)
             session.flush()
+            #session.commit()
 
             sub_dict.update({sub_guid: new_subscription.id})
 
@@ -416,11 +421,16 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                     subscription_expiry_date=datetime.strptime(row[CONST_PD_COL_SUB_EXPIRY_DATE], "%Y-%m-%d"),
                     subscription_users=sub_users,
                     timestamp_utc=crawl_time,
+                    new_flag=(prev_details is None),
                 )
+
+                if (prev_details is not None) and details_changed(prev_details, new_sub_detail):
+                    new_sub_detail.update_flag = True
 
                 session.add(new_sub_detail)
                 session.flush()
-
+                #session.commit() 
+                
         # get the latest details after
         latest_details = (
             session.query(DetailsClass)

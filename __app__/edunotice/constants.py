@@ -37,6 +37,7 @@ else:
 SQL_DEFAULT_DBNAME = "postgres"
 SQL_TEST_DBNAME1 = "edutestdb1"
 SQL_TEST_DBNAME2 = "edutestdb2"
+SQL_TEST_DBNAME3 = "edutestdb3"
 
 SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
     SQL_ENGINE,
@@ -55,7 +56,7 @@ SG_FROM_EMAIL = os.environ.get('ENS_FROM_EMAIL')
 SG_SUMMARY_RECIPIENTS = os.environ.get('ENS_SUMMARY_RECIPIENTS')
 SG_API_KEY = os.environ.get('ENS_EMAIL_API')
 try:
-    SG_TEST_EMAIL = os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
+    SG_TEST_EMAIL = TEST_MODE and os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
 except:
     SG_TEST_EMAIL = False
 
@@ -66,6 +67,10 @@ else:
     SG_EMAIL_EXCL = None
 
 CONST_EMAIL_SUBJECT_NEW = "Azure subscription registred"
+CONST_EMAIL_SUBJECT_UPD = "Azure subscription updated"
+
+SG_TEST_FROM = os.environ.get('ENS_TEST_FROM_EMAIL')
+SG_TEST_TO = os.environ.get('ENS_TEST_TO_EMAIL')
 
 # DB Constants
 COURSES_TABLE_NAME = "course"

@@ -10,6 +10,7 @@ from sqlalchemy import (
     String,
     DateTime,
     UniqueConstraint,
+    Boolean
 )
 
 from sqlalchemy.orm import relationship
@@ -122,6 +123,10 @@ class DetailsClass(BASE):
     subscription_users = Column(String(10000), nullable=False)
 
     timestamp_utc = Column(DateTime, nullable=False)
+
+    new_flag = Column(Boolean, default=False)
+    update_flag = Column(Boolean, default=False)
+    email_sent = Column(DateTime)
 
     time_created = Column(DateTime(), server_default=func.now())
     time_updated = Column(DateTime(), onupdate=func.now())

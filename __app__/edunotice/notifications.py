@@ -2,7 +2,10 @@
 Notification/email composition module
 """
 
-from edunotice.constants import CONST_EMAIL_SUBJECT_NEW
+from edunotice.constants import (
+    CONST_EMAIL_SUBJECT_NEW,
+    CONST_EMAIL_SUBJECT_UPD
+)
 
 def email_top(headline):
     """
@@ -426,7 +429,7 @@ def indiv_email_upd(lab_dict, sub_dict, upd_sub):
         html_content - summary as an html text
     """
 
-    html_content = email_top("Azure subscription updated")
+    html_content = email_top(CONST_EMAIL_SUBJECT_UPD)
 
     html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
 
