@@ -71,7 +71,3 @@ def test_summary_email():
 
     succes, error = _indv_emails(ENGINE, lab_dict, sub_dict, new_sub_list, upd_sub_list)
     assert succes, error
-
-
-
-    assert False
