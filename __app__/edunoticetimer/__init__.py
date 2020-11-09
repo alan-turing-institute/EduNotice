@@ -19,7 +19,7 @@ def main(mytimer: func.TimerRequest) -> None:
 
     # Running EduCrawler
     args = Namespace(
-        course_name=None, 
+        course_name="Research Engineering", 
         handout_action='list', 
         handout_name=None, 
         lab_name=None, 
@@ -38,10 +38,14 @@ def main(mytimer: func.TimerRequest) -> None:
     
     if status:
         args = Namespace(input_df=crawl_df)
-
-        notice(args)
+        status, error = notice(args)
     else:
         logging.error("Failed to crawl EduHub")
+        logging.error(error)
+
+    if not status:
+        logging.error("Failed to send notification emails")
+        logging.error(error)
 
     utc_timestamp = (
         datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()

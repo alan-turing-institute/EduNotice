@@ -4,8 +4,6 @@ Constants module.
 
 import os
 
-
-
 # Test mode
 try:
     TEST_MODE = os.environ["ENS_TEST_MODE"].lower() == 'true'
@@ -52,6 +50,23 @@ SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DEFAULT_DB
 
 SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
 
+# SendGrid
+SG_FROM_EMAIL = os.environ.get('ENS_FROM_EMAIL')
+SG_SUMMARY_RECIPIENTS = os.environ.get('ENS_SUMMARY_RECIPIENTS')
+SG_API_KEY = os.environ.get('ENS_EMAIL_API')
+try:
+    SG_TEST_EMAIL = os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
+except:
+    SG_TEST_EMAIL = False
+
+__email_excl = os.environ.get('ENS_EMAIL_EXCL')
+if type(__email_excl) is str:
+    SG_EMAIL_EXCL = [x.strip() for x in __email_excl.split(',')]
+else:
+    SG_EMAIL_EXCL = None
+
+CONST_EMAIL_SUBJECT_NEW = "Azure subscription registred"
+
 # DB Constants
 COURSES_TABLE_NAME = "course"
 LABS_TABLE_NAME = "lab"
@@ -95,6 +110,3 @@ CONST_TEST_DIR = os.path.abspath(
 )
 
 CONST_TEST_DIR_DATA = os.path.join(CONST_TEST_DIR, CONST_DATA_FOLDER)
-
-
-# UNITTEST

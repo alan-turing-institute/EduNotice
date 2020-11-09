@@ -78,7 +78,7 @@ def update_edu_data(engine, eduhub_df):
         lab_dict - lab name/internal id dictionary
         sub_dict - subscription id/internal id dictionar
         sub_new_list - a list of details of new subscriptions
-        sub_update_list - a list of tuples (before, after) of subscription details
+        sub_upd_list - a list of tuples (before, after) of subscription details
         success_timestamp_utc - timestamp of successful edu data update
     """
 
@@ -86,7 +86,7 @@ def update_edu_data(engine, eduhub_df):
     lab_dict = None
     sub_dict = None
     sub_new_list = None
-    sub_update_list = None
+    sub_upd_list = None
     success_timestamp_utc = None
 
     success, error = _check_df(eduhub_df)
@@ -110,7 +110,7 @@ def update_edu_data(engine, eduhub_df):
 
     if success:
         # updating details
-        success, error, sub_new_list, sub_update_list = _update_details(
+        success, error, sub_new_list, sub_upd_list = _update_details(
             engine, eduhub_df, lab_dict, sub_dict
         )
 
@@ -118,7 +118,7 @@ def update_edu_data(engine, eduhub_df):
         # log the successful update
         success, error, success_timestamp_utc = _new_log(engine)
 
-    return success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc
+    return success, error, lab_dict, sub_dict, sub_new_list, sub_upd_list, success_timestamp_utc
 
 
 def _new_log(engine):

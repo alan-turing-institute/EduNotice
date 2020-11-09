@@ -2,6 +2,7 @@
 Notification/email composition module
 """
 
+from edunotice.constants import CONST_EMAIL_SUBJECT_NEW
 
 def email_top(headline):
     """
@@ -246,7 +247,7 @@ def contact_us_html():
         '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a>.</div>'
 
 
-def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_date):
+def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, from_date, to_date):
     """
     Generates summary email content as an html document. It includes information about new 
         and updated subscriptions.
@@ -254,8 +255,8 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
     Arguments:
         lab_dict - lab name /internal id dictionary
         sub_dict - subscription id /internal id dictionary
-        sub_new_list - a list of details of new subscriptions
-        sub_update_list - a list of tuple (before, after) of subscription details
+        new_sub_list - a list of details of new subscriptions
+        upd_sub_list - a list of tuple (before, after) of subscription details
         from_date - timestamp of the previous successful eduhub log update
         to_date - timestamp of the current successful eduhub log update
     Returns:
@@ -267,7 +268,7 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
     sub_update_details_list = []
 
     # check which subsciptions have chaged details
-    for i, sub_update in enumerate(sub_update_list):
+    for i, sub_update in enumerate(upd_sub_list):
         
         prev_details = sub_update[0]
         new_details = sub_update[1]
@@ -290,18 +291,18 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
     html_middle += '<div style="border-bottom:1px solid #ededed"></div>'
 
     # no updates
-    if len(sub_new_list) == 0 and len(sub_update_details_list) == 0:
+    if len(new_sub_list) == 0 and len(sub_update_details_list) == 0:
         html_middle += "No new subscriptions or updates."
 
     # new subscriptions
-    if len(sub_new_list) > 0:
+    if len(new_sub_list) > 0:
 
-        html_middle += "New subscriptions (%d):" % (len(sub_new_list))
+        html_middle += "New subscriptions (%d):" % (len(new_sub_list))
         html_middle += '<div style="font-size:12px;line-height:16px;text-align:left">'
         
         new_subs = ""
 
-        for i, new_sub in enumerate(sub_new_list):
+        for i, new_sub in enumerate(new_sub_list):
             
             course_name, lab_name = list(lab_dict.keys())[list(lab_dict.values()).index(new_sub.lab_id)]
             sub_guid = list(sub_dict.keys())[list(sub_dict.values()).index(new_sub.sub_id)]
@@ -315,7 +316,7 @@ def summary(lab_dict, sub_dict, sub_new_list, sub_update_list, from_date, to_dat
         html_middle += '</div>'
 
     # middle line between new subscriptions and updates
-    if len(sub_new_list) > 0 and len(sub_update_details_list) > 0:
+    if len(new_sub_list) > 0 and len(sub_update_details_list) > 0:
         html_middle += '<div style="border-bottom:1px solid #ededed"></div>'
 
     # updates
@@ -365,7 +366,7 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
         html_content - summary as an html text
     """
 
-    html_content = email_top("Azure subscription registred")
+    html_content = email_top(CONST_EMAIL_SUBJECT_NEW)
 
     html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
 

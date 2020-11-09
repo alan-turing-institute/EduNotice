@@ -42,6 +42,7 @@ eduhub_df1 = pd.read_csv(file_path)
 
 ENGINE = create_engine("%s/%s" % (SQL_CONNECTION_STRING, SQL_TEST_DBNAME2))
 
+
 def test_summary():
 
     ################### UPDATE 1

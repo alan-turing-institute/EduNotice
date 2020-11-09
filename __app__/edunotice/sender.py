@@ -4,18 +4,22 @@ Email sending module
 
 import os
 import sendgrid
-from sendgrid.helpers.mail import Email, To, Content, Mail
+from sendgrid.helpers.mail import Email, To, Content, Mail, Personalization
 
-SG_FROM_EMAIL = os.environ.get('ENS_FROM_EMAIL')
-SG_SUMMARY_RECIPIENTS = os.environ.get('ENS_SUMMARY_RECIPIENTS')
-SG_CLIENT = sendgrid.SendGridAPIClient(api_key=os.environ.get('ENS_EMAIL_API'))
+from edunotice.constants import(
+    SG_FROM_EMAIL,
+    SG_SUMMARY_RECIPIENTS,
+    SG_API_KEY,
+)
+
+SG_CLIENT = sendgrid.SendGridAPIClient(api_key=SG_API_KEY)
 
 def send_email(to, subject, html_content):
     """
     A function to send an email
 
     Arguments:
-        to - email receivers
+        to - email receivers (comma separated)
         subject - email subject
         html_content - email content
     Returns:
@@ -23,12 +27,26 @@ def send_email(to, subject, html_content):
         error - error message
     """ 
 
+    if type(to) is list:
+        to_arr = to
+    else:
+        to_arr = [x.strip() for x in to.split(',')]
+
+    to_arr = list(set(to_arr)) # making sure that values are unique
+
+    if len(to_arr) == 0:
+        return False, "Empty recipient list"
+
+    to_list = [] 
+    for to_arr_el in to_arr:
+        to_list.append(To(to_arr_el))
+
     from_email = Email(SG_FROM_EMAIL)
-    to_email = To(to)
 
     content = Content("text/html", html_content)
 
-    mail = Mail(from_email, to_email, subject, content)
+    mail = Mail(from_email=from_email, to_emails=to_list, subject=subject, html_content=content)
+
     response = SG_CLIENT.client.mail.send.post(request_body=mail.get())
 
     success = str(response.status_code).startswith("2")
@@ -53,17 +71,3 @@ def send_summary_email(html_content, upd_timestamp):
     success, error = send_email(SG_SUMMARY_RECIPIENTS, subject, html_content)
 
     return success, error
-
-
-def test_send_email():
-    """
-    Tests send_email function.
-
-    """
-
-    subject = "Test message"
-    html_content = "<html><body><p>This is a test message!</p></body></html>"
-
-    success, error = send_email(SG_FROM_EMAIL, subject, html_content)
-
-    assert success, error
