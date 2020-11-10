@@ -44,14 +44,14 @@ def _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
     """
 
     log("Making summary of the registered changes", level=1)
-    succes, error, html_content = summary(lab_dict, sub_dict, new_sub_list, upd_sub_list,
+    success, error, html_content = summary(lab_dict, sub_dict, new_sub_list, upd_sub_list,
         prev_timestamp_utc, curr_timestamp_utc)
 
-    if succes:
+    if success:
         log("Sending summary email", level=1)
-        succes, error = send_summary_email(html_content, curr_timestamp_utc)
+        success, error = send_summary_email(html_content, curr_timestamp_utc)
 
-    return succes, error
+    return success, error
 
 
 def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
@@ -78,7 +78,7 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
         if success:
             # sending email
             log("Sending new subscription email to: %s " % (new_sub.subscription_users), level=1)
-            #success, error = send_email(new_sub.subscription_users, CONST_EMAIL_SUBJECT_NEW, html_content)
+            success, error = send_email(new_sub.subscription_users, CONST_EMAIL_SUBJECT_NEW, html_content)
             
             # let's note that the email was sent successfully
             if success:
@@ -104,7 +104,7 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
 
             if success:
                 log("Sending subscription update email to: %s " % (new_details.subscription_users), level=1)
-                #success, error = send_email(new_details.subscription_users, CONST_EMAIL_SUBJECT_UPD, html_content)
+                success, error = send_email(new_details.subscription_users, CONST_EMAIL_SUBJECT_UPD, html_content)
 
                 # let's note that the email was sent successfully
                 if success:

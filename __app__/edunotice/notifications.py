@@ -2,9 +2,13 @@
 Notification/email composition module
 """
 
+import datetime
+
 from edunotice.constants import (
     CONST_EMAIL_SUBJECT_NEW,
-    CONST_EMAIL_SUBJECT_UPD
+    CONST_EMAIL_SUBJECT_UPD,
+    CONST_EMAIL_SUBJECT_EXPIRE,
+    CONST_SUB_CANCELLED,
 )
 
 def email_top(headline):
@@ -149,7 +153,11 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub):
 
     new_sub_html += "<br>"
 
-    new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date)
+    if isinstance(new_sub.subscription_expiry_date, datetime.datetime):
+        new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date.date())
+    else:
+        new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date)
+
     new_sub_html += "&#9 Budget: <i>${:,.2f}</i> <br>".format(new_sub.handout_budget)
     new_sub_html += "&#9 Users: <i>%s</i><br><br>" % (new_sub.subscription_users)
 
@@ -248,6 +256,24 @@ def contact_us_html():
         ' us by submiting a ticket on <a href="https://turingcomplete.topdesk.net/tas/public/' + \
         'ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895' + \
         '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a>.</div>'
+
+
+def disabled_html():
+    """
+    Generates contact us html content.
+
+    """
+    return '<div>Once a subscription is cancelled (i.e. expires) Microsoft will <b>' + \
+        '<a href="https://docs.microsoft.com/en-us/microsoft-365/commerce/subscriptions/what-if-my-subscription-expires?view=o365-worldwide"' + \
+        '>permanently delete all data after 90 days</a></b>. If you wish to access data on your subscription, ' + \
+        'you should get in touch with us via ' + \
+        '<a href="https://turingcomplete.topdesk.net/tas/public/' + \
+        'ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895' + \
+        '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a> ' + \
+        'as soon as possible.<br><br>Please also note that <b>we will not be able to extend your ' + \
+        'subscription beyond October 2021</b>. We strongly advise you to transfer your information ' + \
+        'from the subscription in advance of the 1st November 2021 deadline, otherwise you risk ' + \
+        'of losing access to data and Azure resources associated with the subscription.</div>'
 
 
 def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, from_date, to_date):
@@ -372,18 +398,19 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
     html_content = email_top(CONST_EMAIL_SUBJECT_NEW)
 
     html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
-
     html_middle += '<div>You are receiving this email because a subscription has been' + \
         ' registered on EduHub notification service (<b>EduNotice</b>) and you are listed as its user.</div>'
-
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Subscription details
     html_middle += '<div><b>Subscription details:</b></div><br>'
-
     html_middle += new_sub_details_html(lab_dict, sub_dict, new_sub)
-
     html_middle += '<div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Check if the subscription is cancelled
+    if new_sub.subscription_status.lower() == CONST_SUB_CANCELLED.lower():
+        html_middle += disabled_html()
+        html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Communications
     html_middle += '<div><b>Communications:</b> EduNotice will send the following communications</div>'
@@ -391,7 +418,6 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
     html_middle += '<li><b>Confirmation email:</b> EduNotice will send an email denoting the registration of the subscription.</li>'
     html_middle += '<li><b>Update email:</b> EduNotice will send notification emails denoting changes in your subscription details.</li>'
     html_middle += '</ul></div>'
-
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Disclaimer
@@ -400,7 +426,6 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
         ' demonstration purposes and we make no warranties of any kind, express or implied,' + \
         ' about the completeness, accuracy, reliability, suitability or availability with' + \
         ' respect to the information and service.</div>'
-
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Contact us
@@ -417,7 +442,7 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
 
 def indiv_email_upd(lab_dict, sub_dict, upd_sub):
     """
-    Generates new subscription email content as an html document. 
+    Generates subscription update email content as an html document. 
 
     Arguments:
         lab_dict - lab name /internal id dictionary
@@ -432,16 +457,67 @@ def indiv_email_upd(lab_dict, sub_dict, upd_sub):
     html_content = email_top(CONST_EMAIL_SUBJECT_UPD)
 
     html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
-
     html_middle += '<div>You are receiving this email because a subscription has been' + \
         ' updated and you are listed as its user.</div>'
-
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Details
     html_middle += upd_sub_details_html(lab_dict, sub_dict, upd_sub)
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Check if the subscription is cancelled
+    if upd_sub[1].subscription_status.lower() == CONST_SUB_CANCELLED.lower():
+        html_middle += disabled_html()
+        html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Contact us
+    html_middle += contact_us_html()
+
+    html_middle += '</div>'
+
+    html_content += email_middle(html_middle)
+
+    html_content += email_bottom()
+
+    return True, None, html_content
+
+
+def indiv_email_expiry_notification(lab_dict, sub_dict, sub_details, expiry_code, remain_days):
+    """
+    Generates time-based notification content as an html document. 
+
+    Arguments:
+        lab_dict - lab name /internal id dictionary
+        sub_dict - subscription id /internal id dictionary
+        sub_details - subscription details
+        expiry_code - subscription expiry code
+        remain_days - number of remaining days
+    Returns:
+        success - flag if the action was succesful
+        error - error message
+        html_content - summary as an html text
+    """
+
+    html_content = email_top("%s %d day(s)" %(CONST_EMAIL_SUBJECT_EXPIRE, remain_days))
+
+    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
+
+    html_middle += '<div>You are receiving this email because a subscription will expire ' +\
+        'in %d days and you are listed as its user.</div>' % (remain_days)
 
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Important notice
+    html_middle += disabled_html()
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Subscription details
+    html_middle += '<div><b>Subscription details:</b></div><br>'
+
+    html_middle += new_sub_details_html(lab_dict, sub_dict, sub_details)
+
+    html_middle += '<div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Contact us
     html_middle += contact_us_html()

@@ -5,6 +5,7 @@ from edunotice.constants import (
     SQL_TEST_DBNAME1,
     SQL_TEST_DBNAME2,
     SQL_TEST_DBNAME3,
+    SQL_TEST_DBNAME4,
 )
 from edunotice.db import create_db, drop_db
 
@@ -32,6 +33,10 @@ def pytest_configure(config):
     success, log = create_db(db_name=SQL_TEST_DBNAME3)
     assert success, log
 
+    # creates test db 4
+    success, log = create_db(db_name=SQL_TEST_DBNAME4)
+    assert success, log
+
     print("pytest_configure: end")
 
 
@@ -54,6 +59,10 @@ def pytest_unconfigure(config):
 
     # drops test db 3
     success, log = drop_db(db_name=SQL_TEST_DBNAME3)
+    assert success, log
+
+    # drops test db 4
+    success, log = drop_db(db_name=SQL_TEST_DBNAME4)
     assert success, log
 
     print("pytest_unconfigure: end")

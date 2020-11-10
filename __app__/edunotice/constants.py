@@ -38,6 +38,7 @@ SQL_DEFAULT_DBNAME = "postgres"
 SQL_TEST_DBNAME1 = "edutestdb1"
 SQL_TEST_DBNAME2 = "edutestdb2"
 SQL_TEST_DBNAME3 = "edutestdb3"
+SQL_TEST_DBNAME4 = "edutestdb4"
 
 SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
     SQL_ENGINE,
@@ -68,6 +69,7 @@ else:
 
 CONST_EMAIL_SUBJECT_NEW = "Azure subscription registred"
 CONST_EMAIL_SUBJECT_UPD = "Azure subscription updated"
+CONST_EMAIL_SUBJECT_EXPIRE = "Azure subscription expires in"
 
 SG_TEST_FROM = os.environ.get('ENS_TEST_FROM_EMAIL')
 SG_TEST_TO = os.environ.get('ENS_TEST_TO_EMAIL')
@@ -84,6 +86,12 @@ ID_COL_NAME = "id"
 # Log codes
 CONST_LOG_CODE_SUCCESS = 0 # The operation completed successfully.
 
+# Notification codes
+CONST_EXPR_CODE_0 = 0
+CONST_EXPR_CODE_1 = 1
+CONST_EXPR_CODE_7 = 7
+CONST_EXPR_CODE_30 = 30
+
 # pandas dataframe column names
 CONST_PD_COL_COURSE_NAME = "Course name"
 CONST_PD_COL_LAB_NAME = "Lab name"
@@ -98,6 +106,8 @@ CONST_PD_COL_SUB_EXPIRY_DATE = "Subscription expiry date"
 CONST_PD_COL_SUB_USERS = "Subscription users"
 CONST_PD_COL_CRAWL_TIME_UTC = "Crawl time utc"
 
+CONST_SUB_CANCELLED = "Canceled"
+
 # paths
 CONST_TEST_FOLDER = "tests"
 CONST_DATA_FOLDER = "data"
@@ -107,6 +117,8 @@ CONST_TEST2_FILENAME = "ec_output_2.csv"
 CONST_TEST3_FILENAME = "ec_output_3.csv"
 CONST_TEST4_FILENAME = "ec_output_4.csv"
 CONST_TEST5_FILENAME = "ec_output_5.csv"
+CONST_TEST6_FILENAME = "ec_output_6.csv"
+CONST_TEST7_FILENAME = "ec_output_7.csv"
 
 CONST_TEST_DIR = os.path.abspath(
     os.path.join(
