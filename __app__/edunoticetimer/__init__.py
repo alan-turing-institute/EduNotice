@@ -22,7 +22,7 @@ def main(mytimer: func.TimerRequest) -> None:
 
     # Running EduCrawler
     args = Namespace(
-        course_name="Research Engineering", 
+        course_name="", 
         handout_action='list', 
         handout_name=None, 
         lab_name=None, 

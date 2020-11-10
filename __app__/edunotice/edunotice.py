@@ -49,7 +49,7 @@ def _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
 
     if succes:
         log("Sending summary email", level=1)
-        #succes, error = send_summary_email(html_content, curr_timestamp_utc)
+        succes, error = send_summary_email(html_content, curr_timestamp_utc)
 
     return succes, error
 
@@ -134,6 +134,10 @@ def notice(engine, args):
         error - error message
     """
 
+    success = True
+    error = None
+    prev_timestamp_utc = None
+
     log("Notification service started", level=1)
 
     if hasattr(args, "input_df"):
@@ -144,29 +148,29 @@ def notice(engine, args):
         crawl_df = pd.read_csv(args.input_file)
         log("Read %d data entries" % (len(crawl_df)), level=1)
     else:
-        succes = False
+        success = False
         error = "Input data is not provided"
 
-    if succes:
+    if success:
         log("Looking for the latest log timestamp value", level=1)
-        succes, error, prev_timestamp_utc = get_latest_log_timestamp(engine)
+        success, error, prev_timestamp_utc = get_latest_log_timestamp(engine)
 
-    if succes:
-        if latest_timestamp_utc is None:
+    if success:
+        if prev_timestamp_utc is None:
             log("No previous logs were found", level=1, indent=2)
         else:
-            log("Previous update was made on %s UTC" % (latest_timestamp_utc.strftime("%Y-%m-%d %H:%M")), level=1, indent=2)
+            log("Previous update was made on %s UTC" % (prev_timestamp_utc.strftime("%Y-%m-%d %H:%M")), level=1, indent=2)
 
         log("Appending DB with the new crawl data", level=1)
-        succes, error, lab_dict, sub_dict, new_sub_list, upd_sub_list, curr_timestamp_utc = update_edu_data(engine, crawl_df)
+        success, error, lab_dict, sub_dict, new_sub_list, upd_sub_list, curr_timestamp_utc = update_edu_data(engine, crawl_df)
     
     # prep and send summary email
     if success:
-         succes, error = _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
+         success, error = _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
             prev_timestamp_utc, curr_timestamp_utc)
 
-    # prep and send invidual emails
-    if success:
-        succes, error = _indv_emails(engine, lab_dict, sub_dict, new_sub_list)
+    # # prep and send invidual emails
+    # if success:
+    #     success, error = _indv_emails(engine, lab_dict, sub_dict, new_sub_list)
     
-    return succes, error
+    return success, error

@@ -23,8 +23,6 @@ if __name__ == "__main__":
         "AzureWebJobsStorage": conn_string,
         "EC_EMAIL": os.environ["EC_EMAIL"],
         "EC_PASSWORD": os.environ["EC_PASSWORD"],
-        "EC_DEFAULT_OUTPUT": os.environ["EC_DEFAULT_OUTPUT"],
-        "EC_HIDE": os.environ["EC_HIDE"],
         "EC_MFA": os.environ["EC_MFA"],
         "ENS_SQL_HOST": os.environ["ENS_SQL_HOST"],
         "ENS_SQL_USER": os.environ["ENS_SQL_USER"],
@@ -34,6 +32,7 @@ if __name__ == "__main__":
         "ENS_EMAIL_API": os.environ["ENS_EMAIL_API"],
         "ENS_FROM_EMAIL": os.environ["ENS_FROM_EMAIL"],
         "ENS_SUMMARY_RECIPIENTS": os.environ["ENS_SUMMARY_RECIPIENTS"],
+        "ENS_EMAIL_EXCL": os.environ["ENS_EMAIL_EXCL"],
     }
 
     with open(rel_file_path, 'w') as outfile:

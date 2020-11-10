@@ -206,8 +206,6 @@ az functionapp config appsettings set \
     "AzureWebJobsStorage=$CONNECTION_STRING" \
     "EC_EMAIL=$EC_EMAIL" \
     "EC_PASSWORD=$EC_PASSWORD" \
-    "EC_DEFAULT_OUTPUT=$EC_DEFAULT_OUTPUT" \
-    "EC_HIDE=$EC_HIDE" \
     "EC_MFA=$EC_MFA" \
     "ENS_SQL_HOST=$ENS_SQL_HOST" \
     "ENS_SQL_USER=$ENS_SQL_USER" \
@@ -217,6 +215,7 @@ az functionapp config appsettings set \
     "ENS_EMAIL_API=$ENS_EMAIL_API" \
     "ENS_FROM_EMAIL=$ENS_FROM_EMAIL" \
     "ENS_SUMMARY_RECIPIENTS=$ENS_SUMMARY_RECIPIENTS" \
+    "ENS_SUMMARY_RECIPIENTS=$ENS_SUMMARY_RECIPIENTS"
     > /dev/null
 
 echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
