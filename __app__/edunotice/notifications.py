@@ -125,7 +125,7 @@ def details_changed(prev_details, new_details):
     return changed
 
 
-def new_sub_details_html(lab_dict, sub_dict, new_sub):
+def new_sub_details_html(lab_dict, sub_dict, new_sub, show_expiry_date=False):
     """
     Generates html content for the details of a new subscription.
 
@@ -133,6 +133,7 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub):
         ab_dict - lab name /internal id dictionary
         sub_dict - subscription id /internal id dictionary
         new_sub - details of a new subscriptions
+        show_expiry_date - flag to always show expiry date
 
     Return:
         new_sub_html - html content
@@ -154,10 +155,12 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub):
 
     new_sub_html += "<br>"
 
-    if isinstance(new_sub.subscription_expiry_date, datetime.datetime):
-        new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date.date())
-    else:
-        new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date)
+    if new_sub.subscription_status.lower() != CONST_SUB_CANCELLED.lower() or show_expiry_date:
+
+        if isinstance(new_sub.subscription_expiry_date, datetime.datetime):
+            new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date.date())
+        else:
+            new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date)
 
     new_sub_html += "&#9 Budget: <i>${:,.2f}</i> <br>".format(new_sub.handout_budget)
     
@@ -168,7 +171,7 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub):
     return new_sub_html
 
 
-def upd_sub_details_html(lab_dict, sub_dict, upd_sub):
+def upd_sub_details_html(lab_dict, sub_dict, upd_sub, show_expiry_date=False):
     """
     Generates html content for the details of an updated subscription.
 
@@ -176,6 +179,7 @@ def upd_sub_details_html(lab_dict, sub_dict, upd_sub):
         ab_dict - lab name /internal id dictionary
         sub_dict - subscription id /internal id dictionary
         upd_sub - tuple (before, after) of subscription details
+        show_expiry_date - flag to always show expiry date
 
     Return:
         upd_sub_html - html content
@@ -209,7 +213,8 @@ def upd_sub_details_html(lab_dict, sub_dict, upd_sub):
     prev_expiry_date = prev_details.subscription_expiry_date.strftime("%Y-%m-%d")
     new_expiry_date = new_details.subscription_expiry_date.strftime("%Y-%m-%d")
 
-    upd_sub_html += value_change("Expiry date", prev_expiry_date, new_expiry_date)
+    if new_details.subscription_status.lower() != CONST_SUB_CANCELLED.lower() or show_expiry_date:
+        upd_sub_html += value_change("Expiry date", prev_expiry_date, new_expiry_date)
 
     prev_budget = "${:,.2f}".format(prev_details.handout_budget)
     new_budget = "${:,.2f}".format(new_details.handout_budget)
@@ -342,7 +347,7 @@ def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, from_date, to_date):
 
             new_subs += "<li><b>%s</b> (%s)</li><br>" % (new_sub.subscription_name, sub_guid)
 
-            new_subs += new_sub_details_html(lab_dict, sub_dict, new_sub)
+            new_subs += new_sub_details_html(lab_dict, sub_dict, new_sub, show_expiry_date=True)
 
         html_middle += "<p><ul>" + new_subs + "</ul></p>"
 
@@ -372,7 +377,7 @@ def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, from_date, to_date):
             sub_updates += "<li><b>%s</b> (%s)</li><br>" % (
                 new_details.subscription_name, sub_guid)
 
-            sub_updates += upd_sub_details_html(lab_dict, sub_dict, sub_update)
+            sub_updates += upd_sub_details_html(lab_dict, sub_dict, sub_update, show_expiry_date=True)
             
         html_middle += "<p><ul>" + sub_updates + "</ul></p>"
 

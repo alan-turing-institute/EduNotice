@@ -81,6 +81,7 @@ def test_summary():
     assert success, error
 
     assert success, error
+    print(html_content)
     assert len(html_content) == 2367
 
     ################### UPDATE 2
@@ -157,7 +158,7 @@ def test_indiv_email_new():
     success, error, html_content = indiv_email_new(lab_dict, sub_dict, sub_new_list[1])
     
     assert success, error
-    assert len(html_content) == 4754
+    assert len(html_content) == 4716
 
 
 def test_indiv_email_update():
@@ -175,9 +176,9 @@ def test_indiv_email_update():
     success, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[0])
 
     assert success, error
-    assert len(html_content) == 3448
+    assert len(html_content) == 3410
 
     success, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[1])
 
     assert success, error
-    assert len(html_content) == 3209
+    assert len(html_content) == 3171
