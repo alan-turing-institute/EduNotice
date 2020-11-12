@@ -160,6 +160,9 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub):
         new_sub_html += "&#9 Expiry date: <i>%s</i><br>" % (new_sub.subscription_expiry_date)
 
     new_sub_html += "&#9 Budget: <i>${:,.2f}</i> <br>".format(new_sub.handout_budget)
+    
+    new_sub_html += "&#9 Consumed: <i>%s</i><br>" % ("${:,.2f}".format(new_sub.handout_consumed))
+
     new_sub_html += "&#9 Users: <i>%s</i><br><br>" % (new_sub.subscription_users)
 
     return new_sub_html
@@ -425,8 +428,21 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
     # Communications
     html_middle += '<div><b>Communications:</b> EduNotice will send the following communications</div>'
     html_middle += '<div><ul>'
-    html_middle += '<li><b>Confirmation email:</b> EduNotice will send an email denoting the registration of the subscription.</li>'
-    html_middle += '<li><b>Update email:</b> EduNotice will send notification emails denoting changes in your subscription details.</li>'
+    html_middle += '<li><b>Confirmation:</b> an email denoting the registration of the subscription.</li><br>'
+    html_middle += '<li><b>Updates:</b> notification emails denoting changes in the subscription details.</li><br>'
+    html_middle += '<li><b>Time-based:</b> notification emails denoting the amount of time remaining in the subscription duration according to the following schedule.</li>'
+    html_middle += '<ul>'
+    html_middle += '<li>Notification 1: 30 days before end</li>'
+    html_middle += '<li>Notification 2: 7 days before end</li>'
+    html_middle += '<li>Notification 3: 1 day before end</li>'
+    html_middle += '</ul><br>'
+    html_middle += '<li><b>Usage-based:</b> notification emails denoting the monetary amount remaining in the subscription according to the following schedule.</li>'
+    html_middle += '<ul>'
+    html_middle += '<li>Notification 1: 50% of monetary credit has been used</li>'
+    html_middle += '<li>Notification 2: 75% of monetary credit has been used</li>'
+    html_middle += '<li>Notification 3: 90% of monetary credit has been used</li>'
+    html_middle += '<li>Notification 4: 95% of monetary credit has been used</li>'
+    html_middle += '</ul>'
     html_middle += '</ul></div>'
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 

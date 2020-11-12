@@ -12,6 +12,7 @@ from edunotice.constants import (
     SQL_CONNECTION_STRING_DB,
     CONST_EMAIL_SUBJECT_NEW,
     CONST_EMAIL_SUBJECT_UPD,
+    CONST_SUB_CANCELLED,
 )
 from edunotice.notifications import (
     summary, 
@@ -97,8 +98,19 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
         prev_details = sub_update[0]
         new_details = sub_update[1]
 
+        send_upd_email = False
+
         # check which subsciptions have chaged details
         if details_changed(prev_details, new_details):
+            send_upd_email = True
+
+        elif ((new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower())
+            and not details_changed(prev_details, new_details)
+            and (prev_details.handout_consumed != new_details.handout_consumed)):
+
+            send_upd_email = True
+        
+        if send_upd_email:
             
             success, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update)
 

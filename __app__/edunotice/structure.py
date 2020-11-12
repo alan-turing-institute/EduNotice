@@ -124,15 +124,18 @@ class DetailsClass(BASE):
 
     timestamp_utc = Column(DateTime, nullable=False)
 
+    # creation/update notifications
     new_flag = Column(Boolean, default=False)
     update_flag = Column(Boolean, default=False)
-    email_sent = Column(DateTime) # about subscription creation or update
+    email_sent = Column(DateTime)
 
     # time-based notifications
     expiry_code = Column(Integer)
     expiry_notice_sent = Column(DateTime)
 
     # usage-based notifications
+    usage_code = Column(Integer)
+    usage_notice_sent = Column(DateTime)
 
     time_created = Column(DateTime(), server_default=func.now())
     time_updated = Column(DateTime(), onupdate=func.now())

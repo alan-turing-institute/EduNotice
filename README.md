@@ -6,13 +6,35 @@ An Azure Function App that registers changes in the Education section of portal.
 
 Created and designed by <a href="https://github.com/tomaslaz">Tomas Lazauskas</a>.
 
+## Summary
+
+EduNotice sends the following communications to users:
+
+* **Confirmation**: an email denoting the registration of the subscription.
+
+* **Updates**: notification emails denoting changes in the subscription details.
+
+* **Time-based**: notification emails denoting the amount of time remaining in the subscription duration according to the following schedule.
+ - Notification 1: 30 days before end
+ - Notification 2: 7 days before end
+ - Notification 3: 1 day before end
+
+
+* **Usage-based**: notification emails denoting the monetary amount remaining in the subscription according to the following schedule.
+ - Notification 1: 50% of monetary credit has been used
+ - Notification 2: 75% of monetary credit has been used
+ - Notification 3: 90% of monetary credit has been used
+ - Notification 4: 95% of monetary credit has been used
+
+EduNotice sends the following communications to admins:
+
+* **Summary**: notification emails denoting changes EduHub activity since the last update.
+
 ## Email examples
 
-#### Summary
-
-<p align="left">
-  <img src="media/email_examples/summary.png" width="250">
-</p>
+| Confirmation | Summary |
+|---|---|
+| <p align="left"><img src="media/email_examples/confirmation.png" width="350"></p> | <p align="left"><img src="media/email_examples/summary.png" width="350"></p>|
 
 ## Prerequisites/Configuration/Set up
 

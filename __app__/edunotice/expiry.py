@@ -4,7 +4,7 @@ Time-based notifications module
 
 from datetime import datetime, timezone
 
-from edunotice.notifications import indiv_email_expiry_notification
+from edunotice.notifications import indiv_email_expiry_notification, details_changed
 from edunotice.sender import send_email
 from edunotice.utilities import log
 from edunotice.db import session_open, session_close
@@ -16,6 +16,7 @@ from edunotice.constants import (
     CONST_EXPR_CODE_7,
     CONST_EXPR_CODE_30,
     CONST_EMAIL_SUBJECT_EXPIRE,
+    CONST_SUB_CANCELLED,
 )
 
 def check_remaining_time(expiry_date, current_date=datetime.utcnow().date()):
@@ -139,6 +140,10 @@ def notify_expiring_subs(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list,
 
         prev_details = sub_update[0]
         new_details = sub_update[1]
+
+        # only for active subscriptions. If subscription is cancelled, it should have been notified 
+        if (new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower()):
+            continue
 
         # check if subscription is about to expire
         expires, expiry_code, remain_days = check_remaining_time(new_details.subscription_expiry_date, current_date=current_date)
