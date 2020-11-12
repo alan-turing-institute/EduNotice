@@ -2,3 +2,4 @@
 0,TEST,project,Test 1,$1000.00,$1.0,done,Azure usage,3xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx8,Active,2020-11-30,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
 1,TEST,project,Test 2,$1000.00,$1.0,done,Azure usage,3xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Active,2020-11-11,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
 2,TEST,project,Test 3,$1000.00,$1.0,done,Azure usage,1xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Active,2021-09-30,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
+3,TEST,project,Test 4,$1000.00,$0.0,done,Azure usage,2xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Active,2020-11-17,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197

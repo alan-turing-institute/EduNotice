@@ -69,10 +69,16 @@ else:
 
 CONST_EMAIL_SUBJECT_NEW = "Azure subscription registred"
 CONST_EMAIL_SUBJECT_UPD = "Azure subscription updated"
+CONST_EMAIL_SUBJECT_CANCELLED = "Azure subscription cancelled"
 CONST_EMAIL_SUBJECT_EXPIRE = "Azure subscription expires in"
 
 SG_TEST_FROM = os.environ.get('ENS_TEST_FROM_EMAIL')
 SG_TEST_TO = os.environ.get('ENS_TEST_TO_EMAIL')
+
+try:
+    SG_EMAIL_DISABLE = os.environ["ENS_EMAIL_DISABLE"].lower() == 'true'
+except:
+    SG_EMAIL_DISABLE = False
 
 # DB Constants
 COURSES_TABLE_NAME = "course"

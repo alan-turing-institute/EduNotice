@@ -169,8 +169,11 @@ def notice(engine, args):
          success, error = _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
             prev_timestamp_utc, curr_timestamp_utc)
 
-    # # prep and send invidual emails
-    # if success:
-    #     success, error = _indv_emails(engine, lab_dict, sub_dict, new_sub_list)
+    if False: #success:
+        # notify about new and updated subscriptions
+        sub_success, sub_error = _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+
+        # time-based notifications
+        sub_success, sub_error = notify_expiring_subs(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
     
     return success, error

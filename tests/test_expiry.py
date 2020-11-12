@@ -110,7 +110,7 @@ def test_expiry():
     success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc = update_edu_data(ENGINE, eduhub_df)
     
     assert success, error
-    assert len(sub_new_list) == 0
+    assert len(sub_new_list) == 1
     assert len(sub_update_list) == 3
 
     # expires in the future (more than 30 days)
@@ -135,4 +135,3 @@ def test_expiry():
     # send notifications
     success, error = notify_expiring_subs(ENGINE, lab_dict, sub_dict, sub_new_list, sub_update_list, current_date=current_date)
     assert success, error
-    assert False
