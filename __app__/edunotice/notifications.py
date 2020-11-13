@@ -73,7 +73,7 @@ def email_middle(content):
     html_content += '<div style="text-align:left"></div>'
     html_content += '<div style="border-bottom:1px solid #ededed"></div>'
     html_content += '<br>'
-    html_content += '<div>This automated email notification was sent from the Turing Research Compute Platforms cloud platform.</div>'
+    html_content += '<div>This is an automated email notification sent from the Turing Research Compute Platforms cloud platform -  please do not reply to it.</div>'
     html_content += '</div></div>'
 
     return html_content
@@ -452,11 +452,12 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Disclaimer
-    html_middle += '<div><b>Disclaimer:</b> We endeavour to make reasonable effort to keep the' + \
-        ' information and service up to date and correct. However, EduNotice is only for' + \
+    html_middle += '<div><b>Disclaimer:</b> EduNotice is only for' + \
         ' demonstration purposes and we make no warranties of any kind, express or implied,' + \
         ' about the completeness, accuracy, reliability, suitability or availability with' + \
-        ' respect to the information and service.</div>'
+        ' respect to the information and service. However, we endeavour to make reasonable' + \
+        ' effort to keep the information and service up to date and correct. </div>'
+        
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
     # Contact us

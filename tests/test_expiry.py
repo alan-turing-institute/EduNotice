@@ -123,14 +123,14 @@ def test_expiry():
     _, expiry_code, remain_days = check_remaining_time(sub_details.subscription_expiry_date, current_date=current_date)
     success, error, html_content = indiv_email_expiry_notification(lab_dict, sub_dict, sub_details, expiry_code, remain_days)
     
-    assert len(html_content) == 3209
+    assert len(html_content) == 3240
 
     # expires in 1 day
     sub_details = sub_update_list[2][1]
     _, expiry_code, remain_days = check_remaining_time(sub_details.subscription_expiry_date, current_date=current_date)
     success, error, html_content = indiv_email_expiry_notification(lab_dict, sub_dict, sub_details, expiry_code, remain_days)
 
-    assert len(html_content) == 3207
+    assert len(html_content) == 3238
 
     # send notifications
     success, error = notify_expiring_subs(ENGINE, lab_dict, sub_dict, sub_new_list, sub_update_list, current_date=current_date)

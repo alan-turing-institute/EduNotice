@@ -73,7 +73,7 @@ def test_summary():
         latest_timestamp_utc, success_timestamp_utc)
 
     assert success, error
-    assert len(html_content) == 1301
+    assert len(html_content) == 1332
 
     # 2 new subscriptions
     success, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list, 
@@ -82,7 +82,7 @@ def test_summary():
 
     assert success, error
     print(html_content)
-    assert len(html_content) == 2367
+    assert len(html_content) == 2398
 
     ################### UPDATE 2
 
@@ -105,7 +105,7 @@ def test_summary():
         latest_timestamp_utc, success_timestamp_utc)
 
     assert success, error
-    assert len(html_content) == 3457
+    assert len(html_content) == 3488
 
     # checking if the log message was created for the update
     session = session_open(ENGINE)
@@ -135,7 +135,7 @@ def test_summary():
         latest_timestamp_utc, success_timestamp_utc)
 
     assert success, error
-    assert len(html_content) == 1320
+    assert len(html_content) == 1351
 
 
 def test_indiv_email_new():
@@ -153,12 +153,12 @@ def test_indiv_email_new():
     success, error, html_content = indiv_email_new(lab_dict, sub_dict, sub_new_list[0])
     
     assert success, error
-    assert len(html_content) == 3779
+    assert len(html_content) == 3811
 
     success, error, html_content = indiv_email_new(lab_dict, sub_dict, sub_new_list[1])
     
     assert success, error
-    assert len(html_content) == 4716
+    assert len(html_content) == 4748
 
 
 def test_indiv_email_update():
@@ -176,9 +176,9 @@ def test_indiv_email_update():
     success, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[0])
 
     assert success, error
-    assert len(html_content) == 3410
+    assert len(html_content) == 3441
 
     success, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[1])
 
     assert success, error
-    assert len(html_content) == 3171
+    assert len(html_content) == 3202
