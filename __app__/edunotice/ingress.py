@@ -444,6 +444,13 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
         else:
             update_list.append((prev_details, latest_details))
 
+            # # if subscription_expiry_date has changed, nullify expiry_code and expiry_notice_sent
+
+            # # if handout_budget has changed, nullify usage_code and usage_notice_sent
+            # if prev_details.handout_budget != latest_details.handout_budget:
+
+
+
     session.expunge_all()
     session_close(session)
 

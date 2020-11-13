@@ -94,7 +94,7 @@ def test_expiry():
     
     current_date = datetime.datetime(2020, 11, 10).date()
 
-    # 2 new subscriptions
+    # new subscriptions
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST6_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
@@ -104,7 +104,7 @@ def test_expiry():
     assert len(sub_new_list) == 5
     assert len(sub_update_list) == 0
 
-    # 2 updates
+    # updates
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST7_FILENAME)
     eduhub_df = pd.read_csv(file_path)
     success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc = update_edu_data(ENGINE, eduhub_df)

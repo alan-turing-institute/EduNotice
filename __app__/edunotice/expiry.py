@@ -77,10 +77,10 @@ def notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, remai
     success, error, html_content = indiv_email_expiry_notification(lab_dict, sub_dict, details, expiry_code, remain_days)
 
     if success:
-        log("Sending subscription update email to: %s " % (details.subscription_users), level=1)
+        log("Sending subscription expiry notification email to: %s " % (details.subscription_users), level=1)
 
         subject = "%s %d day(s)" %(CONST_EMAIL_SUBJECT_EXPIRE, remain_days)
-        success, error = send_email(details.subscription_users, CONST_EMAIL_SUBJECT_EXPIRE, html_content)
+        success, error = send_email(details.subscription_users, subject, html_content)
 
         if success:
             

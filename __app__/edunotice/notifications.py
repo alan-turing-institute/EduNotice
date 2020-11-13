@@ -9,6 +9,7 @@ from edunotice.constants import (
     CONST_EMAIL_SUBJECT_UPD,
     CONST_EMAIL_SUBJECT_EXPIRE,
     CONST_EMAIL_SUBJECT_CANCELLED,
+    CONST_EMAIL_SUBJECT_USAGE,
     CONST_SUB_CANCELLED,
 )
 
@@ -274,7 +275,7 @@ def disabled_html():
     """
     return '<div>Once a subscription is cancelled (i.e. expires) Microsoft will <b>' + \
         '<a href="https://docs.microsoft.com/en-us/microsoft-365/commerce/subscriptions/what-if-my-subscription-expires?view=o365-worldwide"' + \
-        '>permanently delete all data after 90 days</a></b>. If you wish to access data on your subscription, ' + \
+        '>permanently delete all data after 90 days</a></b>. If you wish to access data on your cancelled subscription, ' + \
         'you should get in touch with us via ' + \
         '<a href="https://turingcomplete.topdesk.net/tas/public/' + \
         'ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895' + \
@@ -543,6 +544,54 @@ def indiv_email_expiry_notification(lab_dict, sub_dict, sub_details, expiry_code
 
     html_middle += '<div>You are receiving this email because a subscription will expire ' +\
         'in %d days and you are listed as its user.</div>' % (remain_days)
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Important notice
+    html_middle += disabled_html()
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Subscription details
+    html_middle += '<div><b>Subscription details:</b></div><br>'
+
+    html_middle += new_sub_details_html(lab_dict, sub_dict, sub_details)
+
+    html_middle += '<div style="border-bottom:1px solid #ededed"></div><br>'
+
+    # Contact us
+    html_middle += contact_us_html()
+
+    html_middle += '</div>'
+
+    html_content += email_middle(html_middle)
+
+    html_content += email_bottom()
+
+    return True, None, html_content
+
+
+def indiv_email_usage_notification(lab_dict, sub_dict, sub_details, usage_code):
+    """
+    Generates usage-based notification content as an html document. 
+
+    Arguments:
+        lab_dict - lab name /internal id dictionary
+        sub_dict - subscription id /internal id dictionary
+        sub_details - subscription details
+        usage_code - usage code
+    Returns:
+        success - flag if the action was succesful
+        error - error message
+        html_content - summary as an html text
+    """
+
+    html_content = email_top("%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE, usage_code))
+
+    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
+
+    html_middle += '<div>You are receiving this email because a subscription has reached &#8805; ' +\
+       '%d%% utilisation and you are listed as its user. Once a subscription utilises its budget, it will be cancelled.</div>' % (usage_code)
 
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
 
