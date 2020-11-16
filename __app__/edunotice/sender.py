@@ -13,6 +13,7 @@ from edunotice.constants import(
     SG_TEST_EMAIL,
     SG_TEST_FROM,
     SG_TEST_TO,
+    SG_EMAIL_DISABLE,
 )
 
 SG_CLIENT = sendgrid.SendGridAPIClient(api_key=SG_API_KEY)
@@ -56,6 +57,10 @@ def send_email(to, subject, html_content):
         success - flag if the action was succesful
         error - error message
     """ 
+
+    if SG_EMAIL_DISABLE:
+        print("!!! SendGrid DISABLED !!!")
+        return True, None
 
     # if we are testing functionality - ovewrite from/to
     if SG_TEST_EMAIL:

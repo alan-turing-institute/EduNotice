@@ -1,2 +1,7 @@
 ,Course name,Lab name,Handout name,Handout budget,Handout consumed,Handout status,Subscription name,Subscription id,Subscription status,Subscription expiry date,Subscription users,Crawl time utc
-0,TEST,project,Azure usage,$1000.00,$123.12,done,Azure usage,3xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx8,Active,2021-09-30,"['qqqqqq@turing.ac.uk']",2020-11-06 10:01:47.637197
+0,TEST,project,Test 1,$1000.00,$1.0,done,Test 1,3xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx8,Active,2020-11-30,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
+1,TEST,project,Test 2,$1000.00,$1.0,done,Test 2,3xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Active,2020-11-11,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
+2,TEST,project,Test 3,$1000.00,$1.0,done,Test 3,1xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Active,2021-09-30,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
+3,TEST,project,Test 4,$1000.00,$0.0,done,Test 4,2xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Active,2020-11-17,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
+4,TEST,project,Test 5,$1000.00,$0.0,done,Test 5,4xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Canceled,2020-11-30,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197
+5,TEST,project,Test 6,$1000.00,$10.0,done,Test 6,5xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx9,Canceled,2020-11-30,"['qqqqqq@turing.ac.uk']",2020-11-10 10:01:47.637197

@@ -9,6 +9,7 @@ jobs:
         - pip install -r requirements.txt
       env:
         -ENS_TEST_MODE=true
+        -ENS_EMAIL_DISABLE=true
         -PYTHONPATH=$PYTHONPATH:$(pwd)/__app__
       git:
         submodules: false

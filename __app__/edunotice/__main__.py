@@ -5,8 +5,10 @@ Tomas Lazauskas
 """
 
 import argparse
+from sqlalchemy import create_engine
 
 from edunotice.edunotice import notice
+from edunotice.constants import SQL_CONNECTION_STRING_DB
 
 def set_command_line_args():
     """
@@ -39,7 +41,9 @@ def main(args):
         args: command line arguments
     """
 
-    notice(args)
+    engine = create_engine(SQL_CONNECTION_STRING_DB)
+
+    notice(engine, args)
 
 
 if __name__ == "__main__":

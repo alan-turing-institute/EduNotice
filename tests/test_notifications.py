@@ -48,17 +48,17 @@ def test_summary():
     ################### UPDATE 1
 
     # get the latest log timestamp value
-    succes, error, latest_timestamp_utc = get_latest_log_timestamp(ENGINE)
-    assert succes, error
+    success, error, latest_timestamp_utc = get_latest_log_timestamp(ENGINE)
+    assert success, error
     assert latest_timestamp_utc is None
     
     # real data
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST1_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc = update_edu_data(ENGINE, eduhub_df)
+    success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc = update_edu_data(ENGINE, eduhub_df)
 
-    assert succes, error
+    assert success, error
     assert len(sub_new_list) == 2
     assert len(sub_update_list) == 0
 
@@ -69,42 +69,43 @@ def test_summary():
     assert query_cnt == 1
 
     # no changes
-    succes, error, html_content = summary(lab_dict, sub_dict, [], [], 
+    success, error, html_content = summary(lab_dict, sub_dict, [], [], 
         latest_timestamp_utc, success_timestamp_utc)
 
-    assert succes, error
-    assert len(html_content) == 1301
+    assert success, error
+    assert len(html_content) == 1332
 
     # 2 new subscriptions
-    succes, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list, 
+    success, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list, 
         latest_timestamp_utc, success_timestamp_utc)
-    assert succes, error
+    assert success, error
 
-    assert succes, error
-    assert len(html_content) == 2323
+    assert success, error
+    print(html_content)
+    assert len(html_content) == 2398
 
     ################### UPDATE 2
 
     # get the latest log timestamp value
-    succes, error, latest_timestamp_utc = get_latest_log_timestamp(ENGINE)
-    assert succes, error
+    success, error, latest_timestamp_utc = get_latest_log_timestamp(ENGINE)
+    assert success, error
     assert latest_timestamp_utc is not None
     
     # 2 updates and 1 new 
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST2_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp = update_edu_data(ENGINE, eduhub_df)
+    success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp = update_edu_data(ENGINE, eduhub_df)
 
-    assert succes, error
+    assert success, error
     assert len(sub_new_list) == 1
     assert len(sub_update_list) == 2
 
-    succes, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list,
+    success, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list,
         latest_timestamp_utc, success_timestamp_utc)
 
-    assert succes, error
-    assert len(html_content) == 3436
+    assert success, error
+    assert len(html_content) == 3488
 
     # checking if the log message was created for the update
     session = session_open(ENGINE)
@@ -115,8 +116,8 @@ def test_summary():
     ################### UPDATE 3
     
     # get the latest log timestamp value
-    succes, error, latest_timestamp_utc = get_latest_log_timestamp(ENGINE)
-    assert succes, error
+    success, error, latest_timestamp_utc = get_latest_log_timestamp(ENGINE)
+    assert success, error
     assert latest_timestamp_utc is not None
 
     # reading in the test data
@@ -124,17 +125,17 @@ def test_summary():
     eduhub_df = pd.read_csv(file_path)
 
     # putting the data into the database
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp = update_edu_data(ENGINE, eduhub_df)
+    success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp = update_edu_data(ENGINE, eduhub_df)
 
-    assert succes, error
+    assert success, error
     assert len(sub_new_list) == 0
     assert len(sub_update_list) == 1
 
-    succes, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list,
+    success, error, html_content = summary(lab_dict, sub_dict, sub_new_list, sub_update_list,
         latest_timestamp_utc, success_timestamp_utc)
 
-    assert succes, error
-    assert len(html_content) == 1320
+    assert success, error
+    assert len(html_content) == 1351
 
 
 def test_indiv_email_new():
@@ -143,16 +144,21 @@ def test_indiv_email_new():
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST4_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc = update_edu_data(ENGINE, eduhub_df)
+    success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, _ = update_edu_data(ENGINE, eduhub_df)
 
-    assert succes, error
-    assert len(sub_new_list) == 1
+    assert success, error
+    assert len(sub_new_list) == 2
     assert len(sub_update_list) == 0
 
-    succes, error, html_content = indiv_email_new(lab_dict, sub_dict, sub_new_list[0])
+    success, error, html_content = indiv_email_new(lab_dict, sub_dict, sub_new_list[0])
+    
+    assert success, error
+    assert len(html_content) == 3811
 
-    assert succes, error
-    assert len(html_content) == 3118
+    success, error, html_content = indiv_email_new(lab_dict, sub_dict, sub_new_list[1])
+    
+    assert success, error
+    assert len(html_content) == 4758
 
 
 def test_indiv_email_update():
@@ -161,13 +167,18 @@ def test_indiv_email_update():
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST5_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    succes, error, lab_dict, sub_dict, sub_new_list, sub_update_list, success_timestamp_utc = update_edu_data(ENGINE, eduhub_df)
+    success, error, lab_dict, sub_dict, sub_new_list, sub_update_list, _ = update_edu_data(ENGINE, eduhub_df)
 
-    assert succes, error
+    assert success, error
     assert len(sub_new_list) == 0
-    assert len(sub_update_list) == 1
+    assert len(sub_update_list) == 2
 
-    succes, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[0])
+    success, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[0])
 
-    assert succes, error
-    assert len(html_content) == 2429
+    assert success, error
+    assert len(html_content) == 3451
+
+    success, error, html_content = indiv_email_upd(lab_dict, sub_dict, sub_update_list[1])
+
+    assert success, error
+    assert len(html_content) == 3212

@@ -38,6 +38,8 @@ SQL_DEFAULT_DBNAME = "postgres"
 SQL_TEST_DBNAME1 = "edutestdb1"
 SQL_TEST_DBNAME2 = "edutestdb2"
 SQL_TEST_DBNAME3 = "edutestdb3"
+SQL_TEST_DBNAME4 = "edutestdb4"
+SQL_TEST_DBNAME5 = "edutestdb5"
 
 SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
     SQL_ENGINE,
@@ -68,9 +70,17 @@ else:
 
 CONST_EMAIL_SUBJECT_NEW = "Azure subscription registred"
 CONST_EMAIL_SUBJECT_UPD = "Azure subscription updated"
+CONST_EMAIL_SUBJECT_CANCELLED = "Azure subscription cancelled"
+CONST_EMAIL_SUBJECT_EXPIRE = "Azure subscription expires in"
+CONST_EMAIL_SUBJECT_USAGE = "Azure subscription's utilisation &#8805; "
 
 SG_TEST_FROM = os.environ.get('ENS_TEST_FROM_EMAIL')
 SG_TEST_TO = os.environ.get('ENS_TEST_TO_EMAIL')
+
+try:
+    SG_EMAIL_DISABLE = os.environ["ENS_EMAIL_DISABLE"].lower() == 'true'
+except:
+    SG_EMAIL_DISABLE = False
 
 # DB Constants
 COURSES_TABLE_NAME = "course"
@@ -83,6 +93,17 @@ ID_COL_NAME = "id"
 
 # Log codes
 CONST_LOG_CODE_SUCCESS = 0 # The operation completed successfully.
+
+# Notification codes
+CONST_EXPR_CODE_0 = 0
+CONST_EXPR_CODE_1 = 1
+CONST_EXPR_CODE_7 = 7
+CONST_EXPR_CODE_30 = 30
+
+CONST_USAGE_CODE_50 = 50
+CONST_USAGE_CODE_75 = 75
+CONST_USAGE_CODE_90 = 90
+CONST_USAGE_CODE_95 = 95
 
 # pandas dataframe column names
 CONST_PD_COL_COURSE_NAME = "Course name"
@@ -98,6 +119,8 @@ CONST_PD_COL_SUB_EXPIRY_DATE = "Subscription expiry date"
 CONST_PD_COL_SUB_USERS = "Subscription users"
 CONST_PD_COL_CRAWL_TIME_UTC = "Crawl time utc"
 
+CONST_SUB_CANCELLED = "Canceled"
+
 # paths
 CONST_TEST_FOLDER = "tests"
 CONST_DATA_FOLDER = "data"
@@ -107,6 +130,13 @@ CONST_TEST2_FILENAME = "ec_output_2.csv"
 CONST_TEST3_FILENAME = "ec_output_3.csv"
 CONST_TEST4_FILENAME = "ec_output_4.csv"
 CONST_TEST5_FILENAME = "ec_output_5.csv"
+CONST_TEST6_FILENAME = "ec_output_6.csv"
+CONST_TEST7_FILENAME = "ec_output_7.csv"
+CONST_TEST8_FILENAME = "ec_output_8.csv"
+CONST_TEST9_FILENAME = "ec_output_9.csv"
+CONST_TEST10_FILENAME = "ec_output_10.csv"
+CONST_TEST11_FILENAME = "ec_output_11.csv"
+CONST_TEST12_FILENAME = "ec_output_12.csv"
 
 CONST_TEST_DIR = os.path.abspath(
     os.path.join(
