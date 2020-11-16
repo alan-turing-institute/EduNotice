@@ -384,6 +384,9 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
             .first()
         )
 
+        if prev_details is not None:
+            session.expunge(prev_details)
+
         # appending details
         for _, row in sub_eduhub_df.iterrows():
             
@@ -438,20 +441,39 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
             .order_by(desc(DetailsClass.timestamp_utc))
             .first()
         )
+        session.expunge(latest_details)
 
         if prev_details is None:
             new_list.append(latest_details)
         else:
             update_list.append((prev_details, latest_details))
 
-            # # if subscription_expiry_date has changed, nullify expiry_code and expiry_notice_sent
+            # if handout_budget has changed, nullify usage_code and usage_notice_sent
+            if prev_details.handout_budget != latest_details.handout_budget:
 
-            # # if handout_budget has changed, nullify usage_code and usage_notice_sent
-            # if prev_details.handout_budget != latest_details.handout_budget:
+                session.query(SubscriptionClass).filter(
+                    SubscriptionClass.id == latest_details.sub_id
+                ).update(
+                    {
+                        "usage_code": None,
+                        "usage_notice_sent": None,
+                    }
+                )
+                session.commit()
 
+            # if subscription_expiry_date has changed, nullify expiry_code and expiry_notice_sent
+            if prev_details.subscription_expiry_date != latest_details.subscription_expiry_date:
 
+                session.query(SubscriptionClass).filter(
+                    SubscriptionClass.id == latest_details.sub_id
+                ).update(
+                    {
+                        "expiry_code": None,
+                        "expiry_notice_sent": None,
+                    }
+                )
+                session.commit()
 
-    session.expunge_all()
     session_close(session)
 
     return True, None, new_list, update_list

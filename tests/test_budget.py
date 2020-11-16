@@ -17,6 +17,8 @@ from edunotice.constants import (
     CONST_TEST_DIR_DATA,
     CONST_TEST8_FILENAME,
     CONST_TEST9_FILENAME,
+    CONST_TEST10_FILENAME,
+    CONST_TEST11_FILENAME,
     CONST_USAGE_CODE_50,
     CONST_USAGE_CODE_75,
     CONST_USAGE_CODE_90,
@@ -124,5 +126,59 @@ def test_usage():
     # send notifications
     success, error, count = notify_usage(ENGINE, lab_dict, sub_dict, sub_update_list)
     assert success, error
-
     assert count == 4
+
+    # updates
+    file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST10_FILENAME)
+    eduhub_df = pd.read_csv(file_path)
+
+    (
+        success,
+        error,
+        lab_dict,
+        sub_dict,
+        sub_new_list,
+        sub_update_list,
+        _,
+    ) = update_edu_data(ENGINE, eduhub_df)
+
+    assert success, error
+    assert len(sub_new_list) == 0
+    assert len(sub_update_list) == 2
+
+    # send notifications (1 changed code from 50 to 90, the other did not change its code)
+    success, error, count = notify_usage(ENGINE, lab_dict, sub_dict, sub_update_list)
+    assert success, error
+    assert count == 1
+
+
+def test_usage_update():
+    """
+    Additional routine to test the budget module.
+
+    In this test we cover the scenatio when budget value is updated. 
+
+    """
+
+    # updates
+    file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST11_FILENAME)
+    eduhub_df = pd.read_csv(file_path)
+
+    (
+        success,
+        error,
+        lab_dict,
+        sub_dict,
+        sub_new_list,
+        sub_update_list,
+        _,
+    ) = update_edu_data(ENGINE, eduhub_df)
+
+    assert success, error
+    assert len(sub_new_list) == 0
+    assert len(sub_update_list) == 4
+
+    # send notifications (1 changed code from 50 to 90, the other did not change its code)
+    success, error, count = notify_usage(ENGINE, lab_dict, sub_dict, sub_update_list)
+    assert success, error
+    assert count == 2

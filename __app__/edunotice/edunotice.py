@@ -27,6 +27,7 @@ from edunotice.db import session_open, session_close
 from edunotice.structure import DetailsClass
 
 from edunotice.budget import notify_usage
+from edunotice.expiry import notify_expire
 
 
 def _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
@@ -70,13 +71,18 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
     Returns:
         success - flag if the action was succesful
         error - error message
+        new_count - the number of new subscription nutifications sent
+        upd_count - the number of subscription update nutifications sent
     """
+
+    new_count = 0
+    upd_count = 0
 
     # Notifying about new subscriptions
     for new_sub in new_sub_list:
 
         # generating html content
-        success, error, html_content = indiv_email_new(lab_dict, sub_dict, new_sub)
+        success, _, html_content = indiv_email_new(lab_dict, sub_dict, new_sub)
         
         if success:
             # sending email
@@ -94,8 +100,10 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
                 session.commit()
                 session_close(session)
 
+                new_count += 1
+
     # Notifying about updates
-    for i, sub_update in enumerate(upd_sub_list):
+    for _, sub_update in enumerate(upd_sub_list):
         
         prev_details = sub_update[0]
         new_details = sub_update[1]
@@ -118,7 +126,7 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
 
             if success:
                 log("Sending subscription update email to: %s " % (new_details.subscription_users), level=1)
-                success, error = send_email(new_details.subscription_users, CONST_EMAIL_SUBJECT_UPD, html_content)
+                success, _ = send_email(new_details.subscription_users, CONST_EMAIL_SUBJECT_UPD, html_content)
 
                 # let's note that the email was sent successfully
                 if success:
@@ -132,7 +140,9 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
                     session.commit()
                     session_close(session)
 
-    return True, None
+                    upd_count += 1
+
+    return True, None, new_count, upd_count
 
 
 def notice(engine, args):
@@ -146,11 +156,14 @@ def notice(engine, args):
     Returns:
         success - flag if the action was succesful
         error - error message
+        counts - counts of notifications sent (new, update, time-based, usage-based)
     """
 
     success = True
     error = ""
 
+    new_count = -1
+    upd_count = -1
     time_count = -1
     usage_count = -1
 
@@ -188,11 +201,16 @@ def notice(engine, args):
             prev_timestamp_utc, curr_timestamp_utc)
 
     if False: #success:
-        # notify about new and updated subscriptions
-        # sub_success, sub_error = _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+        # new and update notifications
+        sub_success, sub_error, new_count, upd_count = _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+
+        if not sub_success:
+            success = False
+            error += sub_error
+            log("Time notification error: %s" % (sub_error), level=0)
 
         # time-based notifications
-        time_success, time_error, time_count = notify_expiring_subs(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+        time_success, time_error, time_count = notify_expire(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
 
         if not time_success:
             success = False
@@ -206,5 +224,7 @@ def notice(engine, args):
             success = False
             error += usage_error
             log("Usage notification error: %s" % (usage_error), level=0)
-            
-    return success, error, time_count, usage_count
+    
+    counts = (new_count, upd_count, time_count, usage_count)
+
+    return success, error, counts

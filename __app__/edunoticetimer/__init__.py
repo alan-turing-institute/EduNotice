@@ -43,15 +43,17 @@ def main(mytimer: func.TimerRequest) -> None:
 
         engine = create_engine(SQL_CONNECTION_STRING_DB)
 
-        status, error, usage_count = notice(engine, args)
+        status, error, counts = notice(engine, args)
+
+        logging.info("EduNotice: sent %d new subscription notification" % (counts[0]))
+        logging.info("EduNotice: sent %d subscription update notification" % (counts[1]))
+        logging.info("EduNotice: sent %d time-based notification" % (counts[2]))
+        logging.info("EduNotice: sent %d usage-based notification" % (counts[3]))
     else:
         logging.error("Failed to crawl EduHub")
         logging.error(error)
 
-    if status:
-        logging.info("EduNotice: sent %d usage notification" % (usage_count))
-        
-    else:
+    if not status:
         logging.error("Failed to send notification emails")
         logging.error(error)
 

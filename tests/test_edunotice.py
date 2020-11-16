@@ -56,8 +56,10 @@ def test_summary_email():
     assert len(new_sub_list) == 1
     assert len(upd_sub_list) == 2
 
-    success, error = _indv_emails(ENGINE, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+    success, error, new_count, upd_count = _indv_emails(ENGINE, lab_dict, sub_dict, new_sub_list, upd_sub_list)
     assert success, error
+    assert new_count == 1
+    assert upd_count == 2
 
     # 1 update - only usage
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST3_FILENAME)
@@ -69,5 +71,7 @@ def test_summary_email():
     assert len(new_sub_list) == 0
     assert len(upd_sub_list) == 1
 
-    success, error = _indv_emails(ENGINE, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+    success, error, new_count, upd_count = _indv_emails(ENGINE, lab_dict, sub_dict, new_sub_list, upd_sub_list)
     assert success, error
+    assert new_count == 0
+    assert upd_count == 0 # details didn't change

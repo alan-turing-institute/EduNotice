@@ -134,6 +134,9 @@ CONST_TEST6_FILENAME = "ec_output_6.csv"
 CONST_TEST7_FILENAME = "ec_output_7.csv"
 CONST_TEST8_FILENAME = "ec_output_8.csv"
 CONST_TEST9_FILENAME = "ec_output_9.csv"
+CONST_TEST10_FILENAME = "ec_output_10.csv"
+CONST_TEST11_FILENAME = "ec_output_11.csv"
+CONST_TEST12_FILENAME = "ec_output_12.csv"
 
 CONST_TEST_DIR = os.path.abspath(
     os.path.join(

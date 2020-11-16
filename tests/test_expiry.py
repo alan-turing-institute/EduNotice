@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 
 from edunotice.expiry import (
     _check_remaining_time,
-    notify_expiring_subs,
+    notify_expire,
 )
 
 from edunotice.notifications import indiv_email_expiry_notification
@@ -23,6 +23,7 @@ from edunotice.constants import (
     CONST_TEST_DIR_DATA,
     CONST_TEST6_FILENAME,
     CONST_TEST7_FILENAME,
+    CONST_TEST12_FILENAME,
     CONST_EXPR_CODE_0,
     CONST_EXPR_CODE_1,
     CONST_EXPR_CODE_7,
@@ -181,12 +182,52 @@ def test_expiry():
     assert len(html_content) == 3248
 
     # send notifications
-    success, error = notify_expiring_subs(
+    success, error, count = notify_expire(
         ENGINE,
         lab_dict,
         sub_dict,
-        sub_new_list,
         sub_update_list,
         current_date=current_date,
     )
     assert success, error
+    assert count == 2
+
+
+def test_expiry_update():
+    """
+    Additional routine to test the expiry module.
+
+    In this test we cover the scenatio when expiry date is updated. 
+
+    """
+
+    current_date = datetime.datetime(2020, 11, 11).date()
+
+    # updates
+    file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST12_FILENAME)
+    eduhub_df = pd.read_csv(file_path)
+
+    (
+        success,
+        error,
+        lab_dict,
+        sub_dict,
+        sub_new_list,
+        sub_update_list,
+        _,
+    ) = update_edu_data(ENGINE, eduhub_df)
+
+    assert success, error
+    assert len(sub_new_list) == 0
+    assert len(sub_update_list) == 4
+
+    # send notifications
+    success, error, count = notify_expire(
+        ENGINE,
+        lab_dict,
+        sub_dict,
+        sub_update_list,
+        current_date=current_date,
+    )
+    assert success, error
+    assert count == 3

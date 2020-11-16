@@ -88,11 +88,13 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
         success, error = send_email(details.subscription_users, subject, html_content)
 
         if success:
+            
+            sent_timestamp = datetime.now(timezone.utc)
 
             session.query(DetailsClass).filter(DetailsClass.id == details.id).update(
                 {
                     "usage_code": usage_code,
-                    "usage_notice_sent": datetime.now(timezone.utc),
+                    "usage_notice_sent": sent_timestamp,
                 }
             )
 
@@ -101,7 +103,7 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
             ).update(
                 {
                     "usage_code": usage_code,
-                    "usage_notice_sent": datetime.now(timezone.utc),
+                    "usage_notice_sent": sent_timestamp,
                 }
             )
 
@@ -169,6 +171,10 @@ def notify_usage(engine, lab_dict, sub_dict, upd_sub_list):
 
         if sub_latest_noti_code is None:
             send_notification = True
+        elif usage_code > sub_latest_noti_code:
+            send_notification = True
+
+        print(send_notification, usage_code, sub_latest_noti_code)
 
         if send_notification:
             send_success, _ = _notify_usage_sub(
