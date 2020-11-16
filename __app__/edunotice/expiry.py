@@ -4,7 +4,7 @@ Time-based notifications module
 
 from datetime import datetime, timezone
 
-from edunotice.notifications import indiv_email_expiry_notification, details_changed
+from edunotice.notifications import indiv_email_expiry_notification
 from edunotice.sender import send_email
 from edunotice.utilities import log
 from edunotice.db import session_open, session_close
@@ -19,7 +19,8 @@ from edunotice.constants import (
     CONST_SUB_CANCELLED,
 )
 
-def check_remaining_time(expiry_date, current_date=datetime.utcnow().date()):
+
+def _check_remaining_time(expiry_date, current_date=datetime.utcnow().date()):
     """
     Checks the remaining time by comparing expiry and current dates.
 
@@ -28,7 +29,7 @@ def check_remaining_time(expiry_date, current_date=datetime.utcnow().date()):
         current_date - current date (default: now)
 
     Returns:
-        expires - flag whether subscription should be notified about the 
+        expires - flag whether subscription should be notified about the
             amount of time remaining
         expiry_code - expiration code
         days_diff - remaining number of days
@@ -54,11 +55,11 @@ def check_remaining_time(expiry_date, current_date=datetime.utcnow().date()):
     elif days_diff <= 30:
         expires = True
         expiry_code = CONST_EXPR_CODE_30
-    
+
     return expires, expiry_code, days_diff
 
 
-def notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, remain_days):
+def _notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, remain_days):
     """
     Sends a time-based notification for an expiring subscription.
 
@@ -74,33 +75,45 @@ def notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, remai
         error - error message
     """
 
-    success, error, html_content = indiv_email_expiry_notification(lab_dict, sub_dict, details, expiry_code, remain_days)
+    success, error, html_content = indiv_email_expiry_notification(
+        lab_dict, sub_dict, details, expiry_code, remain_days
+    )
 
     if success:
-        log("Sending subscription expiry notification email to: %s " % (details.subscription_users), level=1)
+        log(
+            "Sending subscription expiry notification email to: %s "
+            % (details.subscription_users),
+            level=1,
+        )
 
-        subject = "%s %d day(s)" %(CONST_EMAIL_SUBJECT_EXPIRE, remain_days)
+        subject = "%s %d day(s)" % (CONST_EMAIL_SUBJECT_EXPIRE, remain_days)
         success, error = send_email(details.subscription_users, subject, html_content)
 
         if success:
-            
-            session.query(DetailsClass).\
-                filter(DetailsClass.id == details.id).\
-                update({
+
+            session.query(DetailsClass).filter(DetailsClass.id == details.id).update(
+                {
                     "expiry_code": expiry_code,
                     "expiry_notice_sent": datetime.now(timezone.utc),
-                })
+                }
+            )
 
             session.commit()
-    
-    return success, error
-    
 
-def notify_expiring_subs(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list,
-    current_date=datetime.utcnow().date()):
+    return success, error
+
+
+def notify_expire(
+    engine,
+    lab_dict,
+    sub_dict,
+    new_sub_list,
+    upd_sub_list,
+    current_date=datetime.utcnow().date(),
+):
     """
     Checks remaining time for new and updated subscriptions and sends out time-based
-        notifications. 
+        notifications.
 
         Notification 1: 1 day before end
         Notification 2: 7 days before end
@@ -127,40 +140,54 @@ def notify_expiring_subs(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list,
     for new_details in new_sub_list:
 
         # check if subscription is about to expire
-        expires, expiry_code, remain_days = check_remaining_time(new_details.subscription_expiry_date, current_date=current_date)
+        expires, expiry_code, remain_days = _check_remaining_time(
+            new_details.subscription_expiry_date, current_date=current_date
+        )
 
         if expires and expiry_code != CONST_EXPR_CODE_0:
 
-            _, _ = notify_expiring_sub(session, lab_dict, sub_dict, new_details, expiry_code, remain_days)
+            _, _ = _notify_expiring_sub(
+                session, lab_dict, sub_dict, new_details, expiry_code, remain_days
+            )
 
     # Notifying updated subscriptions about expiry
-    for i, sub_update in enumerate(upd_sub_list):
-        
+    for _, sub_update in enumerate(upd_sub_list):
+
         send_notification = False
 
         prev_details = sub_update[0]
         new_details = sub_update[1]
 
-        # only for active subscriptions. If subscription is cancelled, it should have been notified 
-        if (new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower()):
+        # only for active subscriptions. If subscription is cancelled, it should have been notified
+        if new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower():
             continue
 
         # check if subscription is about to expire
-        expires, expiry_code, remain_days = check_remaining_time(new_details.subscription_expiry_date, current_date=current_date)
+        expires, expiry_code, remain_days = _check_remaining_time(
+            new_details.subscription_expiry_date, current_date=current_date
+        )
 
         if expires and expiry_code != CONST_EXPR_CODE_0:
-            
+
             # check if expiry date has been updated
-            if prev_details.subscription_expiry_date != new_details.subscription_expiry_date:
+            if (
+                prev_details.subscription_expiry_date
+                != new_details.subscription_expiry_date
+            ):
                 send_notification = True
             # check if notification has already been sent
-            elif prev_details.expiry_code is None or prev_details.expiry_code != expiry_code:
+            elif (
+                prev_details.expiry_code is None
+                or prev_details.expiry_code != expiry_code
+            ):
                 send_notification = True
 
             # send a time-based notification if subscriptions expires
             if send_notification:
-                _, _ = notify_expiring_sub(session, lab_dict, sub_dict, new_details, expiry_code, remain_days)
-                
+                _, _ = _notify_expiring_sub(
+                    session, lab_dict, sub_dict, new_details, expiry_code, remain_days
+                )
+
     session_close(session)
 
     return success, error

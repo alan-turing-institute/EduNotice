@@ -29,7 +29,6 @@ def main(mytimer: func.TimerRequest) -> None:
         output='df')
     
     num_attempts = 3
-    attempts = 0
 
     for i in range(num_attempts):
         logging.info("EduCrawler attempt: %d / %d " % (i+1, num_attempts))
@@ -44,12 +43,15 @@ def main(mytimer: func.TimerRequest) -> None:
 
         engine = create_engine(SQL_CONNECTION_STRING_DB)
 
-        status, error = notice(engine, args)
+        status, error, usage_count = notice(engine, args)
     else:
         logging.error("Failed to crawl EduHub")
         logging.error(error)
 
-    if not status:
+    if status:
+        logging.info("EduNotice: sent %d usage notification" % (usage_count))
+        
+    else:
         logging.error("Failed to send notification emails")
         logging.error(error)
 

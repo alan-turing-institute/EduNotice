@@ -26,6 +26,8 @@ from edunotice.utilities import log
 from edunotice.db import session_open, session_close
 from edunotice.structure import DetailsClass
 
+from edunotice.budget import notify_usage
+
 
 def _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
         prev_timestamp_utc, curr_timestamp_utc):
@@ -147,7 +149,11 @@ def notice(engine, args):
     """
 
     success = True
-    error = None
+    error = ""
+
+    time_count = -1
+    usage_count = -1
+
     prev_timestamp_utc = None
 
     log("Notification service started", level=1)
@@ -183,9 +189,22 @@ def notice(engine, args):
 
     if False: #success:
         # notify about new and updated subscriptions
-        sub_success, sub_error = _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+        # sub_success, sub_error = _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
 
         # time-based notifications
-        sub_success, sub_error = notify_expiring_subs(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
-    
-    return success, error
+        time_success, time_error, time_count = notify_expiring_subs(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+
+        if not time_success:
+            success = False
+            error += time_error
+            log("Time notification error: %s" % (time_error), level=0)
+
+        # usage-based notifications
+        usage_success, usage_error, usage_count = notify_usage(engine, lab_dict, sub_dict, upd_sub_list)
+
+        if not usage_success:
+            success = False
+            error += usage_error
+            log("Usage notification error: %s" % (usage_error), level=0)
+            
+    return success, error, time_count, usage_count
