@@ -14,6 +14,7 @@ from edunotice.constants import(
     SG_TEST_FROM,
     SG_TEST_TO,
     SG_EMAIL_DISABLE,
+    SG_EMAIL_EXCL,
 )
 
 SG_CLIENT = sendgrid.SendGridAPIClient(api_key=SG_API_KEY)
@@ -67,10 +68,13 @@ def send_email(to, subject, html_content):
         print("!!! SendGrid TEST Mode. Overwriting from/to !!!")
         
         from_email = Email(SG_TEST_FROM)
-        to_emails =  _prep_to_list(SG_TEST_TO)
+        to_emails_ =  _prep_to_list(SG_TEST_TO)
     else:
         from_email = Email(SG_FROM_EMAIL)
-        to_emails =  _prep_to_list(to)
+        to_emails_ =  _prep_to_list(to)
+
+    # excluding emails
+    to_emails = [x for x in to_emails_ if x not in SG_EMAIL_EXCL]
 
     if len(to_emails) == 0:
         return False, "Empty recipient list"
