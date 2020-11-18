@@ -197,10 +197,10 @@ def notice(engine, args):
     
     # prep and send summary email
     if success:
-         success, error = _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
+        summary_success, summary_error = _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
             prev_timestamp_utc, curr_timestamp_utc)
 
-    if False: #success:
+    if success:
         # new and update notifications
         sub_success, sub_error, new_count, upd_count = _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
 
@@ -210,7 +210,7 @@ def notice(engine, args):
             log("Time notification error: %s" % (sub_error), level=0)
 
         # time-based notifications
-        time_success, time_error, time_count = notify_expire(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list)
+        time_success, time_error, time_count = notify_expire(engine, lab_dict, sub_dict, upd_sub_list)
 
         if not time_success:
             success = False
