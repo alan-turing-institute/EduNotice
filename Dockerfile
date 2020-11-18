@@ -40,5 +40,3 @@ RUN pip install -r /requirements.txt
 
 # 4. Copy  python code to image
 COPY __app__ /home/site/wwwroot
-
-ENV PYTHONPATH=/home/site/wwwroot:/home/site/wwwroot/educrawler/src:

@@ -7,8 +7,8 @@ from sqlalchemy import create_engine
 
 import sys, os.path
 
-from edunotice.edunotice import notice
 from educrawler.crawler import crawl
+from edunotice.edunotice import notice
 from edunotice.constants import SQL_CONNECTION_STRING_DB
 
 class Namespace:

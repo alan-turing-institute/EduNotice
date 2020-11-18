@@ -215,7 +215,7 @@ az functionapp config appsettings set \
     "ENS_EMAIL_API=$ENS_EMAIL_API" \
     "ENS_FROM_EMAIL=$ENS_FROM_EMAIL" \
     "ENS_SUMMARY_RECIPIENTS=$ENS_SUMMARY_RECIPIENTS" \
-    "ENS_SUMMARY_RECIPIENTS=$ENS_SUMMARY_RECIPIENTS"
+    "ENS_EMAIL_EXCL=$ENS_EMAIL_EXCL"
     > /dev/null
 
 echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
