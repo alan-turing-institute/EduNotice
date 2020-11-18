@@ -5,7 +5,7 @@
       "name": "mytimer",
       "type": "timerTrigger",
       "direction": "in",
-      "schedule": "*/10 * * * *" // every 10th minute
+      "schedule": "*/30 * * * *" // every 30th minute
       // "schedule": "0 6 * * 1-5"
       // "schedule": "48 8 * * *"
     }

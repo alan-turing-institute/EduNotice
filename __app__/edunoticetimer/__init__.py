@@ -5,6 +5,8 @@ import azure.functions as func
 
 from sqlalchemy import create_engine
 
+import sys, os.path
+
 from educrawler.crawler import crawl
 from edunotice.edunotice import notice
 from edunotice.constants import SQL_CONNECTION_STRING_DB
