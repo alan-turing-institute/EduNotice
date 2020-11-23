@@ -177,7 +177,7 @@ def notify_expire(
 
         if sub_latest_noti_code is None:
             send_notification = True
-        elif expiry_code > send_notification:
+        elif sub_latest_noti_code > expiry_code:
             send_notification = True
 
         if send_notification:

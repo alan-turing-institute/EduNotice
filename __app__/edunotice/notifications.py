@@ -11,6 +11,7 @@ from edunotice.constants import (
     CONST_EMAIL_SUBJECT_CANCELLED,
     CONST_EMAIL_SUBJECT_USAGE,
     CONST_SUB_CANCELLED,
+    SG_EMAIL_EXCL,
 )
 
 def email_top(headline):
@@ -181,7 +182,6 @@ def upd_sub_details_html(lab_dict, sub_dict, upd_sub, show_expiry_date=False):
         sub_dict - subscription id /internal id dictionary
         upd_sub - tuple (before, after) of subscription details
         show_expiry_date - flag to always show expiry date
-
     Return:
         upd_sub_html - html content
     """

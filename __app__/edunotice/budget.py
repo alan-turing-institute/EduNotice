@@ -174,8 +174,6 @@ def notify_usage(engine, lab_dict, sub_dict, upd_sub_list):
         elif usage_code > sub_latest_noti_code:
             send_notification = True
 
-        print(send_notification, usage_code, sub_latest_noti_code)
-
         if send_notification:
             send_success, _ = _notify_usage_sub(
                 session, lab_dict, sub_dict, new_details, usage_code

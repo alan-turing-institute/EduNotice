@@ -30,7 +30,7 @@ def main(mytimer: func.TimerRequest) -> None:
         lab_name=None, 
         output='df')
     
-    num_attempts = 3
+    num_attempts = 5
 
     for i in range(num_attempts):
         logging.info("EduCrawler attempt: %d / %d " % (i+1, num_attempts))
