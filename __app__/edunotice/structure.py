@@ -133,10 +133,13 @@ class DetailsClass(BASE):
 
     timestamp_utc = Column(DateTime, nullable=False)
 
-    # creation/update notifications
+    # creation notifications
     new_flag = Column(Boolean, default=False)
+    new_notice_sent = Column(DateTime)
+
+    # update notifications
     update_flag = Column(Boolean, default=False)
-    email_sent = Column(DateTime)
+    update_notice_sent = Column(DateTime)
 
     # time-based notifications
     expiry_code = Column(Integer)

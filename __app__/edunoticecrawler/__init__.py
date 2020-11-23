@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 import sys, os.path
 
 from educrawler.crawler import crawl
-from edunotice.edunotice import notice
+from edunotice.edunotice import notice_indv
 from edunotice.constants import SQL_CONNECTION_STRING_DB
 
 class Namespace:
@@ -45,7 +45,7 @@ def main(mytimer: func.TimerRequest) -> None:
 
         engine = create_engine(SQL_CONNECTION_STRING_DB)
 
-        status, error, counts = notice(engine, args)
+        status, error, counts = notice_indv(engine, args)
 
         logging.info("EduNotice: sent %d new subscription notification" % (counts[0]))
         logging.info("EduNotice: sent %d subscription update notification" % (counts[1]))

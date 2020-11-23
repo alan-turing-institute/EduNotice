@@ -73,6 +73,7 @@ CONST_EMAIL_SUBJECT_UPD = "Azure subscription updated"
 CONST_EMAIL_SUBJECT_CANCELLED = "Azure subscription cancelled"
 CONST_EMAIL_SUBJECT_EXPIRE = "Azure subscription expires in"
 CONST_EMAIL_SUBJECT_USAGE = "Azure subscription's utilisation &#8805; "
+CONST_EMAIL_SUBJECT_USAGE_2 = "Azure subscription's utilisation "
 
 SG_TEST_FROM = os.environ.get('ENS_TEST_FROM_EMAIL')
 SG_TEST_TO = os.environ.get('ENS_TEST_TO_EMAIL')

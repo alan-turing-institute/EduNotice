@@ -80,7 +80,6 @@ def update_edu_data(engine, eduhub_df):
         sub_dict - subscription id/internal id dictionar
         sub_new_list - a list of details of new subscriptions
         sub_upd_list - a list of tuples (before, after) of subscription details
-        success_timestamp_utc - timestamp of successful edu data update
     """
 
     course_dict = None
@@ -88,7 +87,6 @@ def update_edu_data(engine, eduhub_df):
     sub_dict = None
     sub_new_list = None
     sub_upd_list = None
-    success_timestamp_utc = None
 
     success, error = _check_df(eduhub_df)
 
@@ -115,39 +113,33 @@ def update_edu_data(engine, eduhub_df):
             engine, eduhub_df, lab_dict, sub_dict
         )
 
-    if success:
-        # log the successful update
-        success, error, success_timestamp_utc = _new_log(engine)
-
-    return success, error, lab_dict, sub_dict, sub_new_list, sub_upd_list, success_timestamp_utc
+    return success, error, lab_dict, sub_dict, sub_new_list, sub_upd_list
 
 
-def _new_log(engine):
+def new_log(engine, timestamp_utc=datetime.now(timezone.utc)):
     """
     Logs successful update of edu_data
 
     Arguments:
         engine - an sql engine instance
+        timestamp_utc - timestamp value
     Returns:
         success - flag if the action was succesful
         error - error message
-        timestamp_utc - timestamp value
     """
 
     session = session_open(engine)
 
-    timestamp_utc = datetime.now(timezone.utc)
+    new_log_entry = LogsClass(code=CONST_LOG_CODE_SUCCESS, timestamp_utc=timestamp_utc,)
 
-    new_log = LogsClass(code=CONST_LOG_CODE_SUCCESS, timestamp_utc=timestamp_utc,)
-
-    session.add(new_log)
+    session.add(new_log_entry)
 
     session.flush()
     #session.commit()
 
     session_close(session)
 
-    return True, None, timestamp_utc
+    return True, None
 
 
 def get_latest_log_timestamp(engine):

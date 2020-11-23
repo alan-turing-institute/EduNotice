@@ -6,7 +6,7 @@ Notifications management module.
 from datetime import datetime, timezone
 import pandas as pd
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 
 from edunotice.constants import (
     SQL_CONNECTION_STRING_DB,
@@ -21,41 +21,13 @@ from edunotice.notifications import (
     details_changed
 )
 from edunotice.sender import send_summary_email, send_email
-from edunotice.ingress import update_edu_data, get_latest_log_timestamp
+from edunotice.ingress import update_edu_data, get_latest_log_timestamp, new_log
 from edunotice.utilities import log
 from edunotice.db import session_open, session_close
 from edunotice.structure import DetailsClass
 
 from edunotice.budget import notify_usage
 from edunotice.expiry import notify_expire
-
-
-def _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
-        prev_timestamp_utc, curr_timestamp_utc):
-    """
-    Prepares and sends out a summary email of new and updated subscriptions.
-
-    Arguments:
-        lab_dict - lab name /internal id dictionary
-        sub_dict - subscription id /internal id dictionary
-        new_sub_list - a list of details of new subscriptions
-        upd_sub_list - a list of tuple (before, after) of subscription details
-        prev_timestamp_utc - previous crawl timestamp
-        curr_timestamp_utc - current crawl timestamp
-    Returns:
-        success - flag if the action was succesful
-        error - error message
-    """
-
-    log("Making summary of the registered changes", level=1)
-    success, error, html_content = summary(lab_dict, sub_dict, new_sub_list, upd_sub_list,
-        prev_timestamp_utc, curr_timestamp_utc)
-
-    if success:
-        log("Sending summary email", level=1)
-        success, error = send_summary_email(html_content, curr_timestamp_utc)
-
-    return success, error
 
 
 def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
@@ -95,7 +67,7 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
 
                 session.query(DetailsClass).\
                     filter(DetailsClass.id == new_sub.id).\
-                    update({"email_sent": datetime.now(timezone.utc)})
+                    update({"new_notice_sent": datetime.now(timezone.utc)})
 
                 session.commit()
                 session_close(session)
@@ -135,7 +107,7 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
 
                     session.query(DetailsClass).\
                         filter(DetailsClass.id == new_details.id).\
-                        update({"email_sent": datetime.now(timezone.utc)})
+                        update({"update_notice_sent": datetime.now(timezone.utc)})
 
                     session.commit()
                     session_close(session)
@@ -145,9 +117,9 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list):
     return True, None, new_count, upd_count
 
 
-def notice(engine, args):
+def notice_indv(engine, args):
     """
-    The main routine.
+    Sends individual notifications
 
     Arguments:
         engine - an sql engine instance
@@ -183,22 +155,15 @@ def notice(engine, args):
         error = "Input data is not provided"
 
     if success:
-        log("Looking for the latest log timestamp value", level=1)
-        success, error, prev_timestamp_utc = get_latest_log_timestamp(engine)
 
-    if success:
-        if prev_timestamp_utc is None:
-            log("No previous logs were found", level=1, indent=2)
-        else:
-            log("Previous update was made on %s UTC" % (prev_timestamp_utc.strftime("%Y-%m-%d %H:%M")), level=1, indent=2)
 
         log("Appending DB with the new crawl data", level=1)
         success, error, lab_dict, sub_dict, new_sub_list, upd_sub_list, curr_timestamp_utc = update_edu_data(engine, crawl_df)
     
     # prep and send summary email
-    if success:
-        summary_success, summary_error = _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
-            prev_timestamp_utc, curr_timestamp_utc)
+    # if success:
+    #     summary_success, summary_error = _summary_email(lab_dict, sub_dict, new_sub_list, upd_sub_list,
+    #         prev_timestamp_utc, curr_timestamp_utc)
 
     if success:
         # new and update notifications

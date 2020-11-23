@@ -17,6 +17,7 @@ from edunotice.constants import (
     CONST_USAGE_CODE_90,
     CONST_USAGE_CODE_95,
     CONST_EMAIL_SUBJECT_USAGE,
+    CONST_EMAIL_SUBJECT_USAGE_2,
 )
 
 
@@ -83,7 +84,7 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
             level=1,
         )
 
-        subject = "%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE, usage_code)
+        subject = "%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE_2, usage_code)
 
         success, error = send_email(details.subscription_users, subject, html_content)
 
