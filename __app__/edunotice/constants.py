@@ -40,6 +40,7 @@ SQL_TEST_DBNAME2 = "edutestdb2"
 SQL_TEST_DBNAME3 = "edutestdb3"
 SQL_TEST_DBNAME4 = "edutestdb4"
 SQL_TEST_DBNAME5 = "edutestdb5"
+SQL_TEST_DBNAME6 = "edutestdb6"
 
 SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
     SQL_ENGINE,
