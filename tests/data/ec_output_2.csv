@@ -1,4 +1,4 @@
 ,Course name,Lab name,Handout name,Handout budget,Handout consumed,Handout status,Subscription name,Subscription id,Subscription status,Subscription expiry date,Subscription users,Crawl time utc
-0,Research Engineering,project,Tomas Lazauskas,$500.00,$300.00,done,Tomas Lazauskas,2xxxxxxc-cxx5-4xx1-8xx7-cxxxxxxxxxxe,Active,2021-11-30,"['xxxxx@turing.ac.uk', 'zzzzz@turing.ac.uk']",2020-10-20 22:20:47.637197
-1,TEST,project,new_name,$2000.00,$199.99,done,new_name,3xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx8,Active,2021-09-30,"['zzzzzz@turing.ac.uk', 'yyyyy@turing.ac.uk']",2020-10-20 22:20:47.637197
-2,TEST,project,awesome project,$5000.00,$1.00,done,awesome project,3xxxxxxf-1aaa-4aaa-9b44-9xxxxxxxxxx8,Active,2021-09-30,"['yyyyy@turing.ac.uk']",2020-10-20 22:20:47.637197
+0,Research Engineering,project,Tomas Lazauskas,$500.00,$200.00,done,Tomas Lazauskas,2xxxxxxc-cxx5-4xx1-8xx7-cxxxxxxxxxxe,Active,2021-11-30,"['xxxxx@turing.ac.uk', 'zzzzz@turing.ac.uk']",2020-10-20 22:20:47.637197
+1,TEST,project,new_name,$2000.00,$199.99,done,new_name,3xxxxxxf-1b3b-40b8-9b44-9xxxxxxxxxx8,Active,2020-11-21,"['zzzzzz@turing.ac.uk', 'yyyyy@turing.ac.uk']",2020-10-20 22:20:48.637197
+2,TEST,project,awesome project,$5000.00,$1.00,done,awesome project,3xxxxxxf-1aaa-4aaa-9b44-9xxxxxxxxxx8,Active,2021-09-30,"['yyyyy@turing.ac.uk']",2020-10-20 22:20:49.637197

@@ -61,7 +61,7 @@ def _check_df(eduhub_df):
     # Checks if df is empty
     if eduhub_df.empty:
         return False, "Dataframe empty"
-            
+
     return True, None
 
 
@@ -80,7 +80,6 @@ def update_edu_data(engine, eduhub_df):
         sub_dict - subscription id/internal id dictionar
         sub_new_list - a list of details of new subscriptions
         sub_upd_list - a list of tuples (before, after) of subscription details
-        success_timestamp_utc - timestamp of successful edu data update
     """
 
     course_dict = None
@@ -88,7 +87,6 @@ def update_edu_data(engine, eduhub_df):
     sub_dict = None
     sub_new_list = None
     sub_upd_list = None
-    success_timestamp_utc = None
 
     success, error = _check_df(eduhub_df)
 
@@ -115,39 +113,36 @@ def update_edu_data(engine, eduhub_df):
             engine, eduhub_df, lab_dict, sub_dict
         )
 
-    if success:
-        # log the successful update
-        success, error, success_timestamp_utc = _new_log(engine)
-
-    return success, error, lab_dict, sub_dict, sub_new_list, sub_upd_list, success_timestamp_utc
+    return success, error, lab_dict, sub_dict, sub_new_list, sub_upd_list
 
 
-def _new_log(engine):
+def new_log(engine, timestamp_utc=datetime.now(timezone.utc)):
     """
     Logs successful update of edu_data
 
     Arguments:
         engine - an sql engine instance
+        timestamp_utc - timestamp value
     Returns:
         success - flag if the action was succesful
         error - error message
-        timestamp_utc - timestamp value
     """
 
     session = session_open(engine)
 
-    timestamp_utc = datetime.now(timezone.utc)
+    new_log_entry = LogsClass(
+        code=CONST_LOG_CODE_SUCCESS,
+        timestamp_utc=timestamp_utc,
+    )
 
-    new_log = LogsClass(code=CONST_LOG_CODE_SUCCESS, timestamp_utc=timestamp_utc,)
-
-    session.add(new_log)
+    session.add(new_log_entry)
 
     session.flush()
-    #session.commit()
+    # session.commit()
 
     session_close(session)
 
-    return True, None, timestamp_utc
+    return True, None
 
 
 def get_latest_log_timestamp(engine):
@@ -159,15 +154,12 @@ def get_latest_log_timestamp(engine):
     Returns:
         success - flag if the action was succesful
         error - error message
-        timestamp_utc - timestamp value
+        timestamp - timestamp value
     """
 
     session = session_open(engine)
 
     timestamp = session.query(func.max(LogsClass.timestamp_utc)).first()[0]
-    
-    if timestamp is not None:
-        timestamp = timestamp.replace(tzinfo=timezone.utc)
 
     session.expunge_all()
     session_close(session)
@@ -216,11 +208,13 @@ def _update_courses(engine, eduhub_df):
     for course_name in unique_courses:
         if course_name not in course_dict.keys():
             # new course -> insert to the database
-            new_course = CourseClass(name=course_name,)
+            new_course = CourseClass(
+                name=course_name,
+            )
 
             session.add(new_course)
             session.flush()
-            #session.commit() 
+            # session.commit()
 
             course_dict.update({course_name: new_course.id})
 
@@ -276,11 +270,14 @@ def _update_labs(engine, eduhub_df, course_dict):
         # create new lab
         if lab_id == 0:
             # new lab -> insert to the database
-            new_lab = LabClass(name=lab_name, course_id=course_id,)
+            new_lab = LabClass(
+                name=lab_name,
+                course_id=course_id,
+            )
 
             session.add(new_lab)
             session.flush()
-            #session.commit()
+            # session.commit()
 
             lab_dict.update({(course_name, lab_name): new_lab.id})
         else:
@@ -332,11 +329,13 @@ def _update_subscriptions(engine, eduhub_df):
     for sub_guid in unique_subscription_ids:
         if sub_guid not in sub_dict.keys():
             # new course -> insert to the database
-            new_subscription = SubscriptionClass(guid=sub_guid,)
+            new_subscription = SubscriptionClass(
+                guid=sub_guid,
+            )
 
             session.add(new_subscription)
             session.flush()
-            #session.commit()
+            # session.commit()
 
             sub_dict.update({sub_guid: new_subscription.id})
 
@@ -375,7 +374,7 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
         ].sort_values([CONST_PD_COL_CRAWL_TIME_UTC])
 
         sub_id = sub_dict[sub_guid]
-
+        
         # get the latest details before
         prev_details = (
             session.query(DetailsClass)
@@ -389,17 +388,17 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
 
         # appending details
         for _, row in sub_eduhub_df.iterrows():
-            
+
             crawl_time = row[CONST_PD_COL_CRAWL_TIME_UTC]
 
             if (
                 session.query(DetailsClass)
-                    .filter(
-                        DetailsClass.sub_id == sub_id,
-                        DetailsClass.timestamp_utc == crawl_time,
-                    )
-                    .scalar()
-                    is None
+                .filter(
+                    DetailsClass.sub_id == sub_id,
+                    DetailsClass.timestamp_utc == crawl_time,
+                )
+                .scalar()
+                is None
             ):
 
                 if type(row[CONST_PD_COL_SUB_USERS]) is str:
@@ -407,8 +406,8 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                 elif type(row[CONST_PD_COL_SUB_USERS]) is list:
                     sub_users = ", ".join(row[CONST_PD_COL_SUB_USERS])
                 else:
-                    sub_users = ''
-               
+                    sub_users = ""
+
                 # adds new record to the database
                 new_sub_detail = DetailsClass(
                     sub_id=sub_id,
@@ -421,19 +420,23 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                     handout_consumed=CONVERT_LAMBDA(row[CONST_PD_COL_HANDOUT_CONSUMED]),
                     subscription_name=row[CONST_PD_COL_SUB_NAME],
                     subscription_status=row[CONST_PD_COL_SUB_STATUS],
-                    subscription_expiry_date=datetime.strptime(row[CONST_PD_COL_SUB_EXPIRY_DATE], "%Y-%m-%d"),
+                    subscription_expiry_date=datetime.strptime(
+                        row[CONST_PD_COL_SUB_EXPIRY_DATE], "%Y-%m-%d"
+                    ),
                     subscription_users=sub_users,
                     timestamp_utc=crawl_time,
                     new_flag=(prev_details is None),
                 )
 
-                if (prev_details is not None) and details_changed(prev_details, new_sub_detail):
+                if (prev_details is not None) and details_changed(
+                    prev_details, new_sub_detail
+                ):
                     new_sub_detail.update_flag = True
 
                 session.add(new_sub_detail)
                 session.flush()
-                #session.commit() 
-                
+                # session.commit()
+
         # get the latest details after
         latest_details = (
             session.query(DetailsClass)
@@ -462,7 +465,10 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                 session.commit()
 
             # if subscription_expiry_date has changed, nullify expiry_code and expiry_notice_sent
-            if prev_details.subscription_expiry_date != latest_details.subscription_expiry_date:
+            if (
+                prev_details.subscription_expiry_date
+                != latest_details.subscription_expiry_date
+            ):
 
                 session.query(SubscriptionClass).filter(
                     SubscriptionClass.id == latest_details.sub_id

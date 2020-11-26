@@ -16,7 +16,7 @@ from edunotice.constants import (
     CONST_USAGE_CODE_75,
     CONST_USAGE_CODE_90,
     CONST_USAGE_CODE_95,
-    CONST_EMAIL_SUBJECT_USAGE,
+    CONST_EMAIL_SUBJECT_USAGE_2,
 )
 
 
@@ -57,7 +57,7 @@ def _usage_notification(budget, usage):
     return notify, notification_code
 
 
-def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
+def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code, timestamp_utc=None):
     """
     Sends a usage-based notification.
 
@@ -67,6 +67,7 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
         sub_dict - subscription id /internal id dictionary
         details - subscription details
         usage_code - usage code
+        timestamp_utc - timestamp when emails were sent (for testing purposes)
     Returns:
         success - flag if the action was succesful
         error - error message
@@ -83,18 +84,21 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
             level=1,
         )
 
-        subject = "%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE, usage_code)
+        subject = "%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE_2, usage_code)
 
         success, error = send_email(details.subscription_users, subject, html_content)
 
         if success:
-            
-            sent_timestamp = datetime.now(timezone.utc)
+
+            if timestamp_utc is not None:
+                notice_sent_timestamp = timestamp_utc
+            else:
+                notice_sent_timestamp = datetime.now(timezone.utc)
 
             session.query(DetailsClass).filter(DetailsClass.id == details.id).update(
                 {
                     "usage_code": usage_code,
-                    "usage_notice_sent": sent_timestamp,
+                    "usage_notice_sent": notice_sent_timestamp,
                 }
             )
 
@@ -103,7 +107,7 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
             ).update(
                 {
                     "usage_code": usage_code,
-                    "usage_notice_sent": sent_timestamp,
+                    "usage_notice_sent": notice_sent_timestamp,
                 }
             )
 
@@ -112,7 +116,7 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code):
     return success, error
 
 
-def notify_usage(engine, lab_dict, sub_dict, upd_sub_list):
+def notify_usage(engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=None):
     """
     Checks remaining budgets for new and updated subscriptions and sends out usage-based
         notifications.
@@ -127,7 +131,7 @@ def notify_usage(engine, lab_dict, sub_dict, upd_sub_list):
         lab_dict - lab name /internal id dictionary
         sub_dict - subscription id /internal id dictionary
         upd_sub_list - a list of tuple (before, after) of subscription details
-        current_date - current date (default: now)
+        timestamp_utc - timestamp when emails were sent (for testing purposes)
     Returns:
         success - flag if the action was succesful
         error - error message
@@ -174,12 +178,9 @@ def notify_usage(engine, lab_dict, sub_dict, upd_sub_list):
         elif usage_code > sub_latest_noti_code:
             send_notification = True
 
-        print(send_notification, usage_code, sub_latest_noti_code)
-
         if send_notification:
-            send_success, _ = _notify_usage_sub(
-                session, lab_dict, sub_dict, new_details, usage_code
-            )
+            send_success, _ = _notify_usage_sub(session,
+                lab_dict, sub_dict, new_details, usage_code, timestamp_utc=timestamp_utc)
 
             if send_success:
                 count += 1

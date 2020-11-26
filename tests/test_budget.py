@@ -45,7 +45,6 @@ def test_usage():
         sub_dict,
         sub_new_list,
         sub_update_list,
-        _,
     ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error
@@ -63,7 +62,6 @@ def test_usage():
         sub_dict,
         sub_new_list,
         sub_update_list,
-        _,
     ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error
@@ -139,7 +137,6 @@ def test_usage():
         sub_dict,
         sub_new_list,
         sub_update_list,
-        _,
     ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error
@@ -156,7 +153,7 @@ def test_usage_update():
     """
     Additional routine to test the budget module.
 
-    In this test we cover the scenatio when budget value is updated. 
+    In this test we cover the scenatio when budget value is updated.
 
     """
 
@@ -171,7 +168,6 @@ def test_usage_update():
         sub_dict,
         sub_new_list,
         sub_update_list,
-        _,
     ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error
