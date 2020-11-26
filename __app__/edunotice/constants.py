@@ -65,7 +65,7 @@ SG_FROM_EMAIL = os.environ.get('ENS_FROM_EMAIL')
 SG_SUMMARY_RECIPIENTS = os.environ.get('ENS_SUMMARY_RECIPIENTS')
 SG_API_KEY = os.environ.get('ENS_EMAIL_API')
 try:
-    SG_TEST_EMAIL = TEST_MODE and os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
+    SG_TEST_EMAIL = os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
 except:
     SG_TEST_EMAIL = False
 
