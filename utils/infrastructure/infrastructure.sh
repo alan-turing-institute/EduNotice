@@ -219,7 +219,6 @@ az functionapp config appsettings set \
     "ENS_TEST_EMAIL_API=$ENS_TEST_EMAIL_API" \
     "ENS_TEST_FROM_EMAIL=$ENS_TEST_FROM_EMAIL" \
     "ENS_TEST_TO_EMAIL=$ENS_TEST_TO_EMAIL" \
-
     > /dev/null
 
 echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
