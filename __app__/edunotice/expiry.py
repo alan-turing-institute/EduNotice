@@ -59,7 +59,8 @@ def _check_remaining_time(expiry_date, current_date=datetime.utcnow().date()):
     return expires, expiry_code, days_diff
 
 
-def _notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, remain_days):
+def _notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, remain_days,
+    timestamp_utc=None):
     """
     Sends a time-based notification for an expiring subscription.
 
@@ -69,14 +70,15 @@ def _notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, rema
         sub_dict - subscription id /internal id dictionary
         details - subscription details
         expiry_code - expiration code
-        days_diff - remaining number of days
+        remain_days - remaining number of days
+        timestamp_utc - timestamp when emails were sent (for testing purposes)
     Returns:
         success - flag if the action was succesful
         error - error message
     """
 
     success, error, html_content = indiv_email_expiry_notification(
-        lab_dict, sub_dict, details, expiry_code, remain_days
+        lab_dict, sub_dict, details, remain_days
     )
 
     if success:
@@ -90,13 +92,16 @@ def _notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, rema
         success, error = send_email(details.subscription_users, subject, html_content)
 
         if success:
-            
-            sent_timestamp = datetime.now(timezone.utc)
+
+            if timestamp_utc is not None:
+                notice_sent_timestamp = timestamp_utc
+            else:
+                notice_sent_timestamp = datetime.now(timezone.utc)
 
             session.query(DetailsClass).filter(DetailsClass.id == details.id).update(
                 {
                     "expiry_code": expiry_code,
-                    "expiry_notice_sent": sent_timestamp,
+                    "expiry_notice_sent": notice_sent_timestamp,
                 }
             )
 
@@ -105,7 +110,7 @@ def _notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, rema
             ).update(
                 {
                     "expiry_code": expiry_code,
-                    "expiry_notice_sent": sent_timestamp,
+                    "expiry_notice_sent": notice_sent_timestamp,
                 }
             )
 
@@ -114,13 +119,7 @@ def _notify_expiring_sub(session, lab_dict, sub_dict, details, expiry_code, rema
     return success, error
 
 
-def notify_expire(
-    engine,
-    lab_dict,
-    sub_dict,
-    upd_sub_list,
-    current_date=datetime.utcnow().date(),
-):
+def notify_expire(engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=None):
     """
     Checks remaining time for updated subscriptions and sends out time-based
         notifications.
@@ -134,7 +133,7 @@ def notify_expire(
         lab_dict - lab name /internal id dictionary
         sub_dict - subscription id /internal id dictionary
         upd_sub_list - a list of tuple (before, after) of subscription details
-        current_date - current date (default: now)
+        timestamp_utc - timestamp when emails were sent (for testing purposes)
     Returns:
         success - flag if the action was succesful
         error - error message
@@ -144,6 +143,11 @@ def notify_expire(
     success = True
     error = None
     count = 0
+
+    if timestamp_utc is None:
+        current_date = datetime.utcnow().date()
+    else:
+        current_date = timestamp_utc.date()
 
     session = session_open(engine)
 
@@ -181,10 +185,9 @@ def notify_expire(
             send_notification = True
 
         if send_notification:
-
-            send_success, _ = _notify_expiring_sub(
-                session, lab_dict, sub_dict, new_details, expiry_code, remain_days
-            )
+            send_success, _ = _notify_expiring_sub(session,
+                lab_dict, sub_dict, new_details, expiry_code, remain_days,
+                timestamp_utc=timestamp_utc)
 
             if send_success:
                 count += 1

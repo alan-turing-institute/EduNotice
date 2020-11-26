@@ -17,7 +17,6 @@ from edunotice.constants import (
 from edunotice.ingress import update_edu_data
 from edunotice.data import (
     get_labs_dict,
-    get_courses_dict,
     get_subs_dict,
 )
 
@@ -55,8 +54,3 @@ def test_get_courses_labs_subscriptions_dict():
     assert success, error
 
     assert len(db_sub_dict) == len(sub_dict)
-
-    success, error, db_course_dict = get_courses_dict(ENGINE)
-    assert success, error
-
-    assert len(db_course_dict) == 2

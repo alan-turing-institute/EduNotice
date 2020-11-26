@@ -2,8 +2,6 @@
 Utilities module.
 """
 
-import os
-
 from datetime import datetime, timezone
 
 from edunotice.constants import CONST_VERBOSE_LEVEL

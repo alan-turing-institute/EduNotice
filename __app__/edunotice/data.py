@@ -22,34 +22,13 @@ def get_labs_dict(engine):
 
     session = session_open(engine)
 
-    labs_dict = (
+    labs_list = (
         session.query(LabClass)
-        .with_entities(LabClass.id, LabClass.name)
+        .with_entities(LabClass.id, LabClass.course_id, LabClass.name)
         .all()
     )
 
-    session.expunge_all()
-
-    session_close(session)
-
-    return True, None, labs_dict
-
-
-def get_courses_dict(engine):
-    """
-    Returns a dictionary containing all courses and their internal id numbers.
-
-    Arguments:
-        engine - an sql engine instance
-    Returns:
-        success - flag if the action was succesful
-        error - error message
-        courses_dict - lab name/internal id dictionary
-    """
-
-    session = session_open(engine)
-
-    courses_dict = (
+    courses_list = (
         session.query(CourseClass)
         .with_entities(CourseClass.id, CourseClass.name)
         .all()
@@ -59,7 +38,19 @@ def get_courses_dict(engine):
 
     session_close(session)
 
-    return True, None, courses_dict
+    courses_dict = {}
+    for (course_id, course_name) in courses_list:
+        courses_dict.update({course_id: course_name})
+
+    labs_dict = {}
+
+    for (lab_id, course_id, lab_name) in labs_list:
+
+        course_name = courses_dict[course_id]
+
+        labs_dict.update({(course_name, lab_name): lab_id})
+
+    return True, None, labs_dict
 
 
 def get_subs_dict(engine):
@@ -76,7 +67,7 @@ def get_subs_dict(engine):
 
     session = session_open(engine)
 
-    subs_dict = (
+    subs_list = (
         session.query(SubscriptionClass)
         .with_entities(SubscriptionClass.guid, SubscriptionClass.id)
         .all()
@@ -85,5 +76,10 @@ def get_subs_dict(engine):
     session.expunge_all()
 
     session_close(session)
+
+    subs_dict = {}
+
+    for (sub_guid, sub_id) in subs_list:
+        subs_dict.update({sub_guid: sub_id})
 
     return True, None, subs_dict

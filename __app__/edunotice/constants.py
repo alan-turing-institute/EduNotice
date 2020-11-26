@@ -3,6 +3,7 @@ Constants module.
 """
 
 import os
+import time
 
 # Test mode
 try:
@@ -41,6 +42,7 @@ SQL_TEST_DBNAME3 = "edutestdb3"
 SQL_TEST_DBNAME4 = "edutestdb4"
 SQL_TEST_DBNAME5 = "edutestdb5"
 SQL_TEST_DBNAME6 = "edutestdb6"
+SQL_TEST_DBNAME7 = "edutestdb7"
 
 SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
     SQL_ENGINE,
@@ -53,6 +55,10 @@ SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
 SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DEFAULT_DBNAME)
 
 SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
+
+# Time zone
+CONST_TIME_ZONE_NAME = time.tzname[time.daylight]
+
 
 # SendGrid
 SG_FROM_EMAIL = os.environ.get('ENS_FROM_EMAIL')

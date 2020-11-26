@@ -2,7 +2,6 @@
 Test sender.py module
 """
 
-import os
 import pytest
 
 from edunotice.sender import (

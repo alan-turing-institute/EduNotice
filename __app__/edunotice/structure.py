@@ -88,7 +88,7 @@ class SubscriptionClass(BASE):
     #   time-based notifications
     expiry_code = Column(Integer)
     expiry_notice_sent = Column(DateTime)
-    
+
     #  latest information about usage-based notifications
     usage_code = Column(Integer)
     usage_notice_sent = Column(DateTime)
@@ -162,7 +162,7 @@ class LogsClass(BASE):
     """
 
     __tablename__ = LOGS_TABLE_NAME
-    
+
     id = Column(Integer, primary_key=True, autoincrement=True)
 
     code = Column(Integer, nullable=False)
