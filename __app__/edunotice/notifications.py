@@ -520,11 +520,11 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
         html_content - summary as an html text
     """
 
-    # Check if the subscription is cancelled
-    if new_sub.subscription_status.lower() == CONST_SUB_CANCELLED.lower():
-        html_content = email_top(CONST_EMAIL_SUBJECT_CANCELLED)
-    else:
-        html_content = email_top(CONST_EMAIL_SUBJECT_NEW)
+    # # Check if the subscription is cancelled
+    # if new_sub.subscription_status.lower() == CONST_SUB_CANCELLED.lower():
+    #     html_content = email_top(CONST_EMAIL_SUBJECT_CANCELLED)
+    # else:
+    html_content = email_top(CONST_EMAIL_SUBJECT_NEW)
 
     html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
     html_middle += (
@@ -606,18 +606,20 @@ def indiv_email_upd(lab_dict, sub_dict, upd_sub):
         html_content - summary as an html text
     """
 
-    if upd_sub[1].subscription_status.lower() == CONST_SUB_CANCELLED.lower():
-        html_content = email_top(CONST_EMAIL_SUBJECT_CANCELLED)
-    else:
-        html_content = email_top(CONST_EMAIL_SUBJECT_UPD)
+    # if upd_sub[1].subscription_status.lower() == CONST_SUB_CANCELLED.lower():
+    #     html_content = email_top(CONST_EMAIL_SUBJECT_CANCELLED)
+    # else:
+    html_content = email_top(CONST_EMAIL_SUBJECT_UPD)
 
     html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
     html_middle += (
-        "<div>You are receiving this email because a subscription has been updated"
+        "<div>You are receiving this email because a subscription has been "
     )
 
     if upd_sub[1].subscription_status.lower() == CONST_SUB_CANCELLED.lower():
-        html_middle += "/cancelled"
+        html_middle += "<b>cancelled</b>"
+    else:
+        html_middle += "updated"
 
     html_middle += " and you are listed as its user.</div>"
     html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'

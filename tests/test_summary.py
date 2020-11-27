@@ -92,7 +92,7 @@ def test_summary_new():
         ENGINE, timestamp_utc=new_summary_timestamp_utc
     )
     assert success, error
-    assert len(html_content) == 2852
+    assert len(html_content) == 2854
 
     # preps and sends out summary email
     success, error = summary_email(ENGINE, timestamp_utc=new_summary_timestamp_utc)
@@ -160,7 +160,7 @@ def test_summary_upd():
         ENGINE, timestamp_utc=new_summary_timestamp_utc
     )
     assert success, error
-    assert len(html_content) == 4074
+    assert len(html_content) == 4075
 
     # preps and sends out summary email
     success, error = summary_email(ENGINE, timestamp_utc=new_summary_timestamp_utc)

@@ -75,7 +75,7 @@ if type(__email_excl) is str:
 else:
     SG_EMAIL_EXCL = None
 
-CONST_EMAIL_SUBJECT_NEW = "Azure subscription registred"
+CONST_EMAIL_SUBJECT_NEW = "Azure subscription registered"
 CONST_EMAIL_SUBJECT_UPD = "Azure subscription updated"
 CONST_EMAIL_SUBJECT_CANCELLED = "Azure subscription cancelled"
 CONST_EMAIL_SUBJECT_EXPIRE = "Azure subscription expires in"
