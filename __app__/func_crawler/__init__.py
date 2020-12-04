@@ -24,7 +24,7 @@ def main(mytimer: func.TimerRequest) -> None:
 
     # Running EduCrawler
     args = Namespace(
-        course_name="RCP Bot test",
+        course_name="Research Engineering",
         handout_action="list",
         handout_name=None,
         lab_name=None,
