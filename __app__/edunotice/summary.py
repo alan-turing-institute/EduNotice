@@ -164,7 +164,7 @@ def _find_sent_notifications(engine, prev_timestamp_utc):
     return True, None, noti_list
 
 
-def _prep_summary_email(engine, timestamp_utc=datetime.now(timezone.utc)):
+def _prep_summary_email(engine, timestamp_utc=None):
     """
     Prepares and sends out a summary email of new and updated subscriptions and notifications sent.
 
@@ -176,6 +176,9 @@ def _prep_summary_email(engine, timestamp_utc=datetime.now(timezone.utc)):
         error - error message
         html_content - html content of the summary email
     """
+
+    if timestamp_utc is None:
+        timestamp_utc=datetime.now(timezone.utc)
 
     html_content = None
 
@@ -230,7 +233,7 @@ def _prep_summary_email(engine, timestamp_utc=datetime.now(timezone.utc)):
     return success, error, html_content
 
 
-def summary_email(engine, timestamp_utc=datetime.now(timezone.utc)):
+def summary_email(engine, timestamp_utc=None):
     """
     Prepares and sends out the summary email
 
@@ -241,6 +244,9 @@ def summary_email(engine, timestamp_utc=datetime.now(timezone.utc)):
         success - flag if the action was succesful
         error - error message
     """
+
+    if timestamp_utc is None:
+        timestamp_utc=datetime.now(timezone.utc)
 
     log("Preparing summary email", level=1)
 

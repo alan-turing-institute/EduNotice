@@ -116,7 +116,7 @@ def update_edu_data(engine, eduhub_df):
     return success, error, lab_dict, sub_dict, sub_new_list, sub_upd_list
 
 
-def new_log(engine, timestamp_utc=datetime.now(timezone.utc)):
+def new_log(engine, timestamp_utc=None):
     """
     Logs successful update of edu_data
 
@@ -127,6 +127,9 @@ def new_log(engine, timestamp_utc=datetime.now(timezone.utc)):
         success - flag if the action was succesful
         error - error message
     """
+
+    if timestamp_utc is None:
+        timestamp_utc = datetime.now(timezone.utc)
 
     session = session_open(engine)
 
