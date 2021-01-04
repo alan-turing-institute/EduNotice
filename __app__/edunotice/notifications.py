@@ -326,8 +326,8 @@ def disabled_html():
         + "ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895"
         + '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a> '
         + "as soon as possible.<br><br>Please also note that <b>we will not be able to extend your "
-        + "subscription beyond October 2021</b>. We strongly advise you to transfer your information "
-        + "from the subscription in advance of the 1st November 2021 deadline, otherwise you risk "
+        + "subscription beyond <span style='color:red'>11 October 2021</span></b>. We strongly advise you to transfer your information "
+        + "from the subscription in advance of the 11 October 2021 deadline, otherwise you risk "
         + "of losing access to data and Azure resources associated with the subscription.</div>"
     )
 
