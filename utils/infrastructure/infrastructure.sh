@@ -3,6 +3,9 @@
 # Script that sets up infrastructre for EduHub Notification Service on Azure in a 
 #   given subscription (ENS_SUBSCRIPTION_ID).
 
+
+ENS_SQL_RG='Databases' # Resource group name where the SQL database is located
+
 # CONSTANTS
 CONST_LOCATION='uksouth'
 CONST_POSTGRES_V='11'
@@ -14,11 +17,9 @@ CONST_POSTGRES_SERVER='B_Gen5_1'
 
 # Azure resource group names
 ENS_RG_NAME=""
-ENS_RG_NAME_TEST="EduNoticeTest"
-ENS_RG_NAME_PROD="EduNoticeProd"
+ENS_RG_NAME_TEST="EduNoticeFuncTest"
+ENS_RG_NAME_PROD="EduNoticeFuncProd"
 ENS_STORAGE_ACCOUNT="edunoticestorage"
-
-CONST_FUNCAPP_PLAN=$CROP_RG_NAME'funcappbasicplan'
 
 if [ -z "$1" ]; then 
     echo "Unspecified positional argument for the environment. Options: PROD, TEST"; 
@@ -52,11 +53,76 @@ fi
 az account set -s $ENS_SUBSCRIPTION_ID || exit 0 
 echo "EduNotice BUILD INFO: default subscription set to $ENS_SUBSCRIPTION_ID"
 
+CONST_FUNCAPP_PLAN=$ENS_RG_NAME'funcappbasicplan'
+
+###################################################################################
+# Creates PostgreSQL DB
+###################################################################################
+
+# If resource group for SQL database does not exist - stop
+if ! `az group exists -n $ENS_SQL_RG`; then
+    echo "EduNotice BUILD INFO: resource group $ENS_SQL_RG does not exist."
+    exit 0
+else
+    echo "EduNotice BUILD INFO: resource group $ENS_SQL_RG exists."
+fi
+
+# Checks for postgres databases
+#   This is not a great implementation as it depends on Python to parse the json object.
+#   Suggestions are welcome.
+
+exists=`az postgres server list -g $ENS_SQL_RG`
+
+# Checks the lenght of the query result. 2 means there were no results.
+if [ ${#exists} = 2 ]; then
+    az postgres server create \
+        --resource-group $ENS_SQL_RG \
+        --name $ENS_SQL_SERVER \
+        --location $CONST_LOCATION \
+        --admin-user $ENS_SQL_USERNAME \
+        --admin-password $ENS_SQL_PASS \
+        --sku-name $CONST_POSTGRES_SERVER \
+        --version $CONST_POSTGRES_V \
+        --ssl-enforcement Disabled \
+        || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER has been created."
+
+    # Adding rules of allowed ip addresses
+    #   0.0.0.0 - Azure services
+    az postgres server firewall-rule create \
+        --resource-group $ENS_SQL_RG \
+        --server-name $ENS_SQL_SERVER \
+        -n azureservices \
+        --start-ip-address 0.0.0.0 \
+        --end-ip-address 0.0.0.0 \
+        || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: 0.0.0.0"
+
+    az postgres server firewall-rule create \
+        --resource-group $ENS_SQL_RG \
+        --server-name $ENS_SQL_SERVER \
+        -n whitelistedip \
+        --start-ip-address $ENS_SQL_WHITELISTED_IP \
+        --end-ip-address $ENS_SQL_WHITELISTED_IP \
+        || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: $ENS_SQL_WHITELISTED_IP"
+
+    # Establishing database
+    python -c 'from edunotice import db; db.create_db();' || exit 0
+
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER database initialised."
+else
+    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
+fi
+
 ###################################################################################
 # Resource group
 ###################################################################################
 
-# If resource group does not exist - create
+# If resource group for the functionapp does not exist - create
 if ! `az group exists -n $ENS_RG_NAME`; then
 
     az group create --name $ENS_RG_NAME \
@@ -93,61 +159,6 @@ fi
 ACCESS_KEY=$(az storage account keys list --account-name $ENS_STORAGE_ACCOUNT --resource-group $ENS_RG_NAME --output tsv |head -1 | awk '{print $3}')
 # Creating a connection string
 CONNECTION_STRING="DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=${ENS_STORAGE_ACCOUNT};AccountKey=${ACCESS_KEY}"
-
-###################################################################################
-# Creates PostgreSQL DB
-###################################################################################
-
-# Checks for postgres databases
-#   This is not a great implementation as it depends on Python to parse the json object.
-#   Suggestions are welcome.
-
-exists=`az postgres server list -g $ENS_RG_NAME`
-
-# Checks the lenght of the query result. 2 means there were no results.
-if [ ${#exists} = 2 ]; then
-    az postgres server create \
-        --resource-group $ENS_RG_NAME \
-        --name $ENS_SQL_SERVER \
-        --location $CONST_LOCATION \
-        --admin-user $ENS_SQL_USERNAME \
-        --admin-password $ENS_SQL_PASS \
-        --sku-name $CONST_POSTGRES_SERVER \
-        --version $CONST_POSTGRES_V \
-        --ssl-enforcement Disabled \
-        || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER has been created."
-
-    # Adding rules of allowed ip addresses
-    #   0.0.0.0 - Azure services
-    az postgres server firewall-rule create \
-        --resource-group $ENS_RG_NAME \
-        --server-name $ENS_SQL_SERVER \
-        -n azureservices \
-        --start-ip-address 0.0.0.0 \
-        --end-ip-address 0.0.0.0 \
-        || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: 0.0.0.0"
-
-    az postgres server firewall-rule create \
-        --resource-group $ENS_RG_NAME \
-        --server-name $ENS_SQL_SERVER \
-        -n whitelistedip \
-        --start-ip-address $ENS_SQL_WHITELISTED_IP \
-        --end-ip-address $ENS_SQL_WHITELISTED_IP \
-        || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER firewall rule created: $ENS_SQL_WHITELISTED_IP"
-
-    # Establishing database
-    python -c 'from edunotice import db; db.create_db();' || exit 0
-
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER database initialised."
-else
-    echo "EduNotice BUILD INFO: PostgreSQL DB $ENS_SQL_SERVER already exists. Skipping."
-fi
 
 ###################################################################################
 # (Re-)Creates Function App
@@ -207,7 +218,14 @@ az functionapp config appsettings set \
     "EC_EMAIL=$EC_EMAIL" \
     "EC_PASSWORD=$EC_PASSWORD" \
     "EC_MFA=$EC_MFA" \
+    "ENS_TEST_MODE=$ENS_TEST_MODE" \
+    "ENS_EMAIL_DISABLE=$ENS_EMAIL_DISABLE" \
+    "ENS_TEST_EMAIL_API=$ENS_TEST_EMAIL_API" \
+    "ENS_TEST_FROM_EMAIL=$ENS_TEST_FROM_EMAIL" \
+    "ENS_TEST_TO_EMAIL=$ENS_TEST_TO_EMAIL" \
+    "ENS_SQL_SERVER=$ENS_SQL_SERVER" \
     "ENS_SQL_HOST=$ENS_SQL_HOST" \
+    "ENS_SQL_USERNAME=$ENS_SQL_USERNAME" \
     "ENS_SQL_USER=$ENS_SQL_USER" \
     "ENS_SQL_PASS=$ENS_SQL_PASS" \
     "ENS_SQL_DBNAME=$ENS_SQL_DBNAME" \
@@ -216,10 +234,6 @@ az functionapp config appsettings set \
     "ENS_FROM_EMAIL=$ENS_FROM_EMAIL" \
     "ENS_SUMMARY_RECIPIENTS=$ENS_SUMMARY_RECIPIENTS" \
     "ENS_EMAIL_EXCL=$ENS_EMAIL_EXCL" \
-    "ENS_TEST_EMAIL_API=$ENS_TEST_EMAIL_API" \
-    "ENS_TEST_FROM_EMAIL=$ENS_TEST_FROM_EMAIL" \
-    "ENS_TEST_TO_EMAIL=$ENS_TEST_TO_EMAIL" \
-
     > /dev/null
 
 echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
@@ -227,10 +241,10 @@ echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
 python $cwd/create_json.py $CONNECTION_STRING local.settings.json
 echo "EduNotice BUILD INFO: Function APP: local.settings.json file updated."
 
-echo "EduNotice BUILD INFO: Function APP: func azure functionapp publish"
+# echo "EduNotice BUILD INFO: Function APP: func azure functionapp publish"
 func azure functionapp publish $function_name --build-native-deps --build remote
 
-echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
+# echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
 
 echo "EduNotice BUILD INFO: Function APP cd: "$cwd
 cd $cwd

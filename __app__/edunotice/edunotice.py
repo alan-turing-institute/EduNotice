@@ -94,14 +94,18 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list, timesta
         # check which subsciptions have chaged details
         if details_changed(prev_details, new_details):
             send_upd_email = True
+        
+        # # checks if the unchanged cancelled subscription's consumption has been updated,
+        # #   if so, sends a update notifcation email.
+        # switching this functionality off as it takes few days (about 2) for usage date to 
+        # arrive and the service tends to send too many emails.
+        # if (
+        #     (new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower())
+        #     and not details_changed(prev_details, new_details)
+        #     and (prev_details.handout_consumed != new_details.handout_consumed)
+        # ):
 
-        elif (
-            (new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower())
-            and not details_changed(prev_details, new_details)
-            and (prev_details.handout_consumed != new_details.handout_consumed)
-        ):
-
-            send_upd_email = True
+        #     send_upd_email = True
 
         if send_upd_email:
 

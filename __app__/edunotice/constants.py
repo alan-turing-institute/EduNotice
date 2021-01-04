@@ -65,7 +65,7 @@ SG_FROM_EMAIL = os.environ.get('ENS_FROM_EMAIL')
 SG_SUMMARY_RECIPIENTS = os.environ.get('ENS_SUMMARY_RECIPIENTS')
 SG_API_KEY = os.environ.get('ENS_EMAIL_API')
 try:
-    SG_TEST_EMAIL = TEST_MODE and os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
+    SG_TEST_EMAIL = os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
 except:
     SG_TEST_EMAIL = False
 
@@ -75,7 +75,7 @@ if type(__email_excl) is str:
 else:
     SG_EMAIL_EXCL = None
 
-CONST_EMAIL_SUBJECT_NEW = "Azure subscription registred"
+CONST_EMAIL_SUBJECT_NEW = "Azure subscription registered"
 CONST_EMAIL_SUBJECT_UPD = "Azure subscription updated"
 CONST_EMAIL_SUBJECT_CANCELLED = "Azure subscription cancelled"
 CONST_EMAIL_SUBJECT_EXPIRE = "Azure subscription expires in"

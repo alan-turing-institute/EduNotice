@@ -24,7 +24,14 @@ if __name__ == "__main__":
         "EC_EMAIL": os.environ["EC_EMAIL"],
         "EC_PASSWORD": os.environ["EC_PASSWORD"],
         "EC_MFA": os.environ["EC_MFA"],
+        "ENS_TEST_MODE": os.environ["ENS_TEST_MODE"],
+        "ENS_EMAIL_DISABLE": os.environ["ENS_EMAIL_DISABLE"],
+        "ENS_TEST_EMAIL_API": os.environ["ENS_TEST_EMAIL_API"],
+        "ENS_TEST_FROM_EMAIL": os.environ["ENS_TEST_FROM_EMAIL"],
+        "ENS_TEST_TO_EMAIL": os.environ["ENS_TEST_TO_EMAIL"],
+        "ENS_SQL_SERVER": os.environ["ENS_SQL_SERVER"],
         "ENS_SQL_HOST": os.environ["ENS_SQL_HOST"],
+        "ENS_SQL_USERNAME": os.environ["ENS_SQL_USERNAME"],
         "ENS_SQL_USER": os.environ["ENS_SQL_USER"],
         "ENS_SQL_PASS": os.environ["ENS_SQL_PASS"],
         "ENS_SQL_DBNAME": os.environ["ENS_SQL_DBNAME"],
@@ -36,4 +43,4 @@ if __name__ == "__main__":
     }
 
     with open(rel_file_path, 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump(data, outfile, indent=4)
