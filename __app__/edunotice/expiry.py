@@ -181,7 +181,7 @@ def notify_expire(engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=None):
 
         if sub_latest_noti_code is None:
             send_notification = True
-        elif sub_latest_noti_code > expiry_code:
+        elif sub_latest_noti_code > expiry_code and expiry_code != CONST_EXPR_CODE_0:
             send_notification = True
 
         if send_notification:
