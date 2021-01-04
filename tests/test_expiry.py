@@ -166,7 +166,7 @@ def test_expiry():
         lab_dict, sub_dict, sub_details, remain_days
     )
 
-    assert len(html_content) == 3250
+    assert len(html_content) == 3282
 
     # expires in 1 day
     sub_details = sub_update_list[2][1]
@@ -177,7 +177,7 @@ def test_expiry():
         lab_dict, sub_dict, sub_details, remain_days
     )
 
-    assert len(html_content) == 3248
+    assert len(html_content) == 3280
 
     # send notifications
     success, error, count = notify_expire(ENGINE,

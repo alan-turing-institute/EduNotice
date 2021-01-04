@@ -80,7 +80,7 @@ def test_usage():
         lab_dict, sub_dict, sub_details, usage_code
     )
     assert success, error
-    assert len(html_content) == 3334
+    assert len(html_content) == 3366
 
     # usage more than 75%
     sub_details = sub_update_list[3][1]
