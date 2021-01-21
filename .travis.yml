@@ -19,8 +19,8 @@ jobs:
       script:
         - pytest -vv
     
-    # - name: Lint Python
-    #   language: python
-    #   python: 3.9
-    #   before_script: pip install flake8
-    #   script: flake8 . --statistics --count
+    - name: Lint Python
+      language: python
+      python: 3.9
+      before_script: pip install flake8
+      script: flake8 . --statistics --count
