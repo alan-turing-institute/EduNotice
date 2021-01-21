@@ -39,16 +39,25 @@ def test_summary_new():
     """
 
     prev_summary_timestamp_utc = None
-    indv_email_sent_timestamp_utc = datetime(2020, 10, 20, 10, 20, tzinfo=timezone.utc)
-    new_summary_timestamp_utc = datetime(2020, 10, 20, 10, 30, tzinfo=timezone.utc)
+    indv_email_sent_timestamp_utc = datetime(
+        2020, 10, 20, 10, 20, tzinfo=timezone.utc
+    )
+    new_summary_timestamp_utc = datetime(
+        2020, 10, 20, 10, 30, tzinfo=timezone.utc
+    )
 
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST1_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
     # importing data
-    success, error, lab_dict, sub_dict, new_sub_list, upd_sub_list = update_edu_data(
-        ENGINE, eduhub_df
-    )
+    (
+        success,
+        error,
+        lab_dict,
+        sub_dict,
+        new_sub_list,
+        upd_sub_list,
+    ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error
     assert len(new_sub_list) == 2
@@ -71,12 +80,16 @@ def test_summary_new():
     assert counts[3] == 0
 
     # finding new subscriptions for the summary
-    success, error, new_subs = _find_new_subs(ENGINE, prev_summary_timestamp_utc)
+    success, error, new_subs = _find_new_subs(
+        ENGINE, prev_summary_timestamp_utc
+    )
     assert success, error
     assert len(new_subs) == counts[0]
 
     # finding updated subscriptions for the summary
-    success, error, upd_subs = _find_upd_subs(ENGINE, prev_summary_timestamp_utc)
+    success, error, upd_subs = _find_upd_subs(
+        ENGINE, prev_summary_timestamp_utc
+    )
     assert success, error
     assert len(upd_subs) == counts[1]
 
@@ -95,7 +108,9 @@ def test_summary_new():
     assert len(html_content) in (2854, 2851)
 
     # preps and sends out summary email
-    success, error = summary_email(ENGINE, timestamp_utc=new_summary_timestamp_utc)
+    success, error = summary_email(
+        ENGINE, timestamp_utc=new_summary_timestamp_utc
+    )
     assert success, error
 
 
@@ -105,19 +120,30 @@ def test_summary_upd():
 
     """
 
-    success, error, prev_summary_timestamp_utc = get_latest_log_timestamp(ENGINE)
+    success, error, prev_summary_timestamp_utc = get_latest_log_timestamp(
+        ENGINE
+    )
     assert success, error
 
-    indv_email_sent_timestamp_utc = datetime(2020, 10, 21, 11, 20, tzinfo=timezone.utc)
-    new_summary_timestamp_utc = datetime(2020, 10, 21, 11, 30, tzinfo=timezone.utc)
+    indv_email_sent_timestamp_utc = datetime(
+        2020, 10, 21, 11, 20, tzinfo=timezone.utc
+    )
+    new_summary_timestamp_utc = datetime(
+        2020, 10, 21, 11, 30, tzinfo=timezone.utc
+    )
 
     # importing data 1 new subscription, 2 updates
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST2_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    success, error, lab_dict, sub_dict, new_sub_list, upd_sub_list = update_edu_data(
-        ENGINE, eduhub_df
-    )
+    (
+        success,
+        error,
+        lab_dict,
+        sub_dict,
+        new_sub_list,
+        upd_sub_list,
+    ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error
     assert len(new_sub_list) == 1
@@ -139,12 +165,16 @@ def test_summary_upd():
     assert counts[3] == 0
 
     # finding new subscriptions for the summary
-    success, error, new_subs = _find_new_subs(ENGINE, prev_summary_timestamp_utc)
+    success, error, new_subs = _find_new_subs(
+        ENGINE, prev_summary_timestamp_utc
+    )
     assert success, error
     assert len(new_subs) == counts[0]
 
     # finding updated subscriptions for the summary
-    success, error, new_subs = _find_upd_subs(ENGINE, prev_summary_timestamp_utc)
+    success, error, new_subs = _find_upd_subs(
+        ENGINE, prev_summary_timestamp_utc
+    )
     assert success, error
     assert len(new_subs) == counts[1]
 
@@ -163,7 +193,9 @@ def test_summary_upd():
     assert len(html_content) in (4075, 4071)
 
     # preps and sends out summary email
-    success, error = summary_email(ENGINE, timestamp_utc=new_summary_timestamp_utc)
+    success, error = summary_email(
+        ENGINE, timestamp_utc=new_summary_timestamp_utc
+    )
     assert success, error
 
 
@@ -173,19 +205,30 @@ def test_summary_upd_2():
 
     """
 
-    success, error, prev_summary_timestamp_utc = get_latest_log_timestamp(ENGINE)
+    success, error, prev_summary_timestamp_utc = get_latest_log_timestamp(
+        ENGINE
+    )
     assert success, error
 
-    indv_email_sent_timestamp_utc = datetime(2020, 10, 22, 10, 10, tzinfo=timezone.utc)
-    new_summary_timestamp_utc = datetime(2020, 10, 22, 11, 30, tzinfo=timezone.utc)
+    indv_email_sent_timestamp_utc = datetime(
+        2020, 10, 22, 10, 10, tzinfo=timezone.utc
+    )
+    new_summary_timestamp_utc = datetime(
+        2020, 10, 22, 11, 30, tzinfo=timezone.utc
+    )
 
     # 1 update - only usage
     file_path = os.path.join(CONST_TEST_DIR_DATA, CONST_TEST3_FILENAME)
     eduhub_df = pd.read_csv(file_path)
 
-    success, error, lab_dict, sub_dict, new_sub_list, upd_sub_list = update_edu_data(
-        ENGINE, eduhub_df
-    )
+    (
+        success,
+        error,
+        lab_dict,
+        sub_dict,
+        new_sub_list,
+        upd_sub_list,
+    ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error
     assert len(new_sub_list) == 0
@@ -207,12 +250,16 @@ def test_summary_upd_2():
     assert counts[3] == 1
 
     # finding new subscriptions for the summary
-    success, error, new_subs = _find_new_subs(ENGINE, prev_summary_timestamp_utc)
+    success, error, new_subs = _find_new_subs(
+        ENGINE, prev_summary_timestamp_utc
+    )
     assert success, error
     assert len(new_subs) == counts[0]
 
     # finding updated subscriptions for the summary
-    success, error, new_subs = _find_upd_subs(ENGINE, prev_summary_timestamp_utc)
+    success, error, new_subs = _find_upd_subs(
+        ENGINE, prev_summary_timestamp_utc
+    )
     assert success, error
     assert len(new_subs) == counts[1]
 
@@ -231,5 +278,7 @@ def test_summary_upd_2():
     assert len(html_content) in (1889, 1885)
 
     # preps and sends out summary email
-    success, error = summary_email(ENGINE, timestamp_utc=new_summary_timestamp_utc)
+    success, error = summary_email(
+        ENGINE, timestamp_utc=new_summary_timestamp_utc
+    )
     assert success, error

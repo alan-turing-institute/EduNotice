@@ -20,16 +20,17 @@ from edunotice.constants import (
     CONST_TEST1_FILENAME,
     CONST_TEST2_FILENAME,
     SQL_CONNECTION_STRING,
-    SQL_TEST_DBNAME1
+    SQL_TEST_DBNAME1,
 )
 
 # wrong dataframe
-wrong_df = pd.DataFrame({
-        'name': ['Jason', 'Molly', 'Tina', 'Jake', 'Amy'],
-        'year': [2012, 2012, 2013, 2014, 2014],
-        'reports': [4, 24, 31, 2, 3]
+wrong_df = pd.DataFrame(
+    {
+        "name": ["Jason", "Molly", "Tina", "Jake", "Amy"],
+        "year": [2012, 2012, 2013, 2014, 2014],
+        "reports": [4, 24, 31, 2, 3],
     },
-    index=['Cochice', 'Pima', 'Santa Cruz', 'Maricopa', 'Yuma']
+    index=["Cochice", "Pima", "Santa Cruz", "Maricopa", "Yuma"],
 )
 
 # good data
@@ -124,7 +125,9 @@ def test_update_details_1():
     assert len(sub_dict) == 2
 
     # 2 new subscriptions
-    success, error, new_list, update_list = _update_details(ENGINE, eduhub_df1, lab_dict, sub_dict)
+    success, error, new_list, update_list = _update_details(
+        ENGINE, eduhub_df1, lab_dict, sub_dict
+    )
 
     assert success, error
     assert len(new_list) == 2
@@ -139,7 +142,8 @@ def test_update_details_2():
     """
 
     eduhub_df_local = pd.read_csv(
-        os.path.join(CONST_TEST_DIR_DATA, CONST_TEST2_FILENAME))
+        os.path.join(CONST_TEST_DIR_DATA, CONST_TEST2_FILENAME)
+    )
 
     # getting the courses
     success, error, course_dict = _update_courses(ENGINE, eduhub_df_local)
@@ -147,7 +151,9 @@ def test_update_details_2():
     assert len(course_dict) == 2
 
     # getting the labs
-    success, error, lab_dict = _update_labs(ENGINE, eduhub_df_local, course_dict)
+    success, error, lab_dict = _update_labs(
+        ENGINE, eduhub_df_local, course_dict
+    )
     assert success, error
     assert len(lab_dict) == 2
 
@@ -156,8 +162,9 @@ def test_update_details_2():
     assert success, error
     assert len(sub_dict) == 3
 
-    success, error, new_list, update_list = _update_details(ENGINE,
-        eduhub_df_local, lab_dict, sub_dict)
+    success, error, new_list, update_list = _update_details(
+        ENGINE, eduhub_df_local, lab_dict, sub_dict
+    )
 
     assert success, error
     assert len(new_list) == 1
@@ -170,15 +177,26 @@ def test_update_edu_data():
     """
 
     # not a dataframe
-    success, error, _, _, sub_new_list, sub_update_list = update_edu_data(ENGINE, None)
+    (
+        success,
+        error,
+        _,
+        _,
+        sub_new_list,
+        sub_update_list
+    ) = update_edu_data(ENGINE, None)
     assert success is False, error
 
     # empty dataframe
-    success, error, _, _, sub_new_list, sub_update_list = update_edu_data(ENGINE, pd.DataFrame())
+    success, error, _, _, sub_new_list, sub_update_list = update_edu_data(
+        ENGINE, pd.DataFrame()
+    )
     assert success is False, error
 
     # real data
-    success, error, _, _, sub_new_list, sub_update_list = update_edu_data(ENGINE, eduhub_df1)
+    success, error, _, _, sub_new_list, sub_update_list = update_edu_data(
+        ENGINE, eduhub_df1
+    )
 
     assert success, error
     assert len(sub_new_list) == 0

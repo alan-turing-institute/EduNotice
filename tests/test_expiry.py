@@ -180,8 +180,9 @@ def test_expiry():
     assert len(html_content) == 3280
 
     # send notifications
-    success, error, count = notify_expire(ENGINE,
-        lab_dict, sub_dict, sub_update_list, timestamp_utc=current_date)
+    success, error, count = notify_expire(
+        ENGINE, lab_dict, sub_dict, sub_update_list, timestamp_utc=current_date
+    )
     assert success, error
     assert count == 2
 
@@ -206,7 +207,7 @@ def test_expiry_update():
         lab_dict,
         sub_dict,
         sub_new_list,
-        sub_update_list
+        sub_update_list,
     ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error

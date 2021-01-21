@@ -122,7 +122,9 @@ def test_usage():
     assert success, error
 
     # send notifications
-    success, error, count = notify_usage(ENGINE, lab_dict, sub_dict, sub_update_list)
+    success, error, count = notify_usage(
+        ENGINE, lab_dict, sub_dict, sub_update_list
+    )
     assert success, error
     assert count == 4
 
@@ -143,8 +145,12 @@ def test_usage():
     assert len(sub_new_list) == 0
     assert len(sub_update_list) == 2
 
-    # send notifications (1 changed code from 50 to 90, the other did not change its code)
-    success, error, count = notify_usage(ENGINE, lab_dict, sub_dict, sub_update_list)
+    # send notifications
+    #   1 changed code from 50 to 90
+    #   the other did not change its code
+    success, error, count = notify_usage(
+        ENGINE, lab_dict, sub_dict, sub_update_list
+    )
     assert success, error
     assert count == 1
 
@@ -174,7 +180,11 @@ def test_usage_update():
     assert len(sub_new_list) == 0
     assert len(sub_update_list) == 4
 
-    # send notifications (1 changed code from 50 to 90, the other did not change its code)
-    success, error, count = notify_usage(ENGINE, lab_dict, sub_dict, sub_update_list)
+    # send notifications
+    #   1 changed code from 50 to 90
+    #   the other did not change its code
+    success, error, count = notify_usage(
+        ENGINE, lab_dict, sub_dict, sub_update_list
+    )
     assert success, error
     assert count == 2
