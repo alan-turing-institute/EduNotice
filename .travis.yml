@@ -1,9 +1,3 @@
----
-os: linux
-dist: focal
-
-language: minimal
-
 jobs:
   include:
     - name: Unit Tests
