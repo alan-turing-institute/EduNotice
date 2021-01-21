@@ -1,7 +1,5 @@
 import datetime
 import logging
-import sys
-import os.path
 import azure.functions as func
 
 from sqlalchemy import create_engine
@@ -18,9 +16,15 @@ class Namespace:
 
 def main(mytimer: func.TimerRequest) -> None:
 
-    utc_timestamp = (datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat())
+    utc_timestamp = (
+        datetime.datetime.utcnow()
+        .replace(tzinfo=datetime.timezone.utc)
+        .isoformat()
+    )
 
-    logging.info("EduNotice timer trigger crawler function started at %s", utc_timestamp)
+    logging.info(
+        "EduNotice timer trigger crawler function started at %s", utc_timestamp
+    )
 
     # Running EduCrawler
     args = Namespace(
@@ -48,10 +52,18 @@ def main(mytimer: func.TimerRequest) -> None:
 
         status, error, counts = update_subscriptions(engine, args)
 
-        logging.info("EduNotice: sent %d new subscription notification" % (counts[0]))
-        logging.info("EduNotice: sent %d subscription update notification" % (counts[1]))
-        logging.info("EduNotice: sent %d time-based notification" % (counts[2]))
-        logging.info("EduNotice: sent %d usage-based notification" % (counts[3]))
+        logging.info(
+            "EduNotice: sent %d new subscription notification" % (counts[0])
+        )
+        logging.info(
+            "EduNotice: sent %d subscription update notification" % (counts[1])
+        )
+        logging.info(
+            "EduNotice: sent %d time-based notification" % (counts[2])
+        )
+        logging.info(
+            "EduNotice: sent %d usage-based notification" % (counts[3])
+        )
     else:
         logging.error("Failed to crawl EduHub")
         logging.error(error)
@@ -60,6 +72,13 @@ def main(mytimer: func.TimerRequest) -> None:
         logging.error("Failed to send notification emails")
         logging.error(error)
 
-    utc_timestamp = (datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat())
+    utc_timestamp = (
+        datetime.datetime.utcnow()
+        .replace(tzinfo=datetime.timezone.utc)
+        .isoformat()
+    )
 
-    logging.info("EduNotice timer trigger crawler function finished at %s", utc_timestamp)
+    logging.info(
+        "EduNotice timer trigger crawler function finished at " +
+        "%s" % utc_timestamp
+    )

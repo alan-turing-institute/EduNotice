@@ -52,7 +52,7 @@ def create_db(db_name=None):
             BASE.metadata.create_all(engine)
 
             conn.close()
-        except:
+        except Exception:
             return False, "Error while creating a new database"
     else:
         return False, "Database already exists."

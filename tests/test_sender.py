@@ -4,16 +4,16 @@ Test sender.py module
 
 import pytest
 
-from edunotice.sender import (
-   send_email
-)
+from edunotice.sender import send_email
 
-from edunotice.constants import(
+from edunotice.constants import (
     SG_FROM_EMAIL,
     SG_TEST_EMAIL,
 )
 
-TEST_EMAIL_API = pytest.mark.skipif(not SG_TEST_EMAIL, reason="Testing Email API is switched off")
+TEST_EMAIL_API = pytest.mark.skipif(
+    not SG_TEST_EMAIL, reason="Testing Email API is switched off"
+)
 
 
 @TEST_EMAIL_API

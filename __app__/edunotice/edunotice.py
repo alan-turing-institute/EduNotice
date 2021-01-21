@@ -9,7 +9,7 @@ import pandas as pd
 from edunotice.constants import (
     CONST_EMAIL_SUBJECT_NEW,
     CONST_EMAIL_SUBJECT_UPD,
-    CONST_SUB_CANCELLED,
+    # CONST_SUB_CANCELLED,
 )
 
 from edunotice.notifications import (
@@ -28,7 +28,9 @@ from edunotice.budget import notify_usage
 from edunotice.expiry import notify_expire
 
 
-def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list, timestamp_utc=None):
+def _indv_emails(
+    engine, lab_dict, sub_dict, new_sub_list, upd_sub_list, timestamp_utc=None
+):
     """
     Prepares and sends out individual emails for new and updated subscriptions.
 
@@ -60,11 +62,14 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list, timesta
         if success:
             # sending email
             log(
-                "Sending new subscription email to: %s " % (new_sub.subscription_users),
+                "Sending new subscription email to: %s "
+                % (new_sub.subscription_users),
                 level=1,
             )
             success, _ = send_email(
-                new_sub.subscription_users, CONST_EMAIL_SUBJECT_NEW, html_content
+                new_sub.subscription_users,
+                CONST_EMAIL_SUBJECT_NEW,
+                html_content,
             )
 
             # let's note that the email was sent successfully
@@ -94,15 +99,21 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list, timesta
         # check which subsciptions have chaged details
         if details_changed(prev_details, new_details):
             send_upd_email = True
-        
-        # # checks if the unchanged cancelled subscription's consumption has been updated,
-        # #   if so, sends a update notifcation email.
-        # switching this functionality off as it takes few days (about 2) for usage date to 
-        # arrive and the service tends to send too many emails.
+
+        # # checks if the unchanged cancelled subscription's consumption
+        # #   has been updated, if so, sends a update notifcation email.
+        # switching this functionality off as it takes few days (about 2)
+        # for usage date to arrive and the service tends
+        # to send too many emails.
         # if (
-        #     (new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower())
+        #     (
+        #         new_details.subscription_status.lower()
+        #         == CONST_SUB_CANCELLED.lower()
+        #     )
         #     and not details_changed(prev_details, new_details)
-        #     and (prev_details.handout_consumed != new_details.handout_consumed)
+        #     and (
+        #       prev_details.handout_consumed != new_details.handout_consumed
+        #     )
         # ):
 
         #     send_upd_email = True
@@ -146,8 +157,9 @@ def _indv_emails(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list, timesta
     return True, None, new_count, upd_count
 
 
-def _notify_subscriptions(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list,
-    timestamp_utc=None):
+def _notify_subscriptions(
+    engine, lab_dict, sub_dict, new_sub_list, upd_sub_list, timestamp_utc=None
+):
     """
     Sends individual notifications
 
@@ -161,7 +173,8 @@ def _notify_subscriptions(engine, lab_dict, sub_dict, new_sub_list, upd_sub_list
     Returns:
         success - flag if the action was succesful
         error - error message
-        counts - counts of notifications sent (new, update, time-based, usage-based)
+        counts - counts of notifications sent
+            (new, update, time-based, usage-based)
     """
 
     success = True
@@ -218,7 +231,8 @@ def update_subscriptions(engine, args, timestamp_utc=None):
     Returns:
         success - flag if the action was succesful
         error - error message
-        counts - counts of notifications sent (new, update, time-based, usage-based)
+        counts - counts of notifications sent
+            (new, update, time-based, usage-based)
     """
 
     success = True

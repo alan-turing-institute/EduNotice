@@ -1,7 +1,6 @@
 jobs:
   include:
-    - stage: test
-      name: "Unit Tests"
+    - name: Unit Tests
       language: python
       services:
         - postgresql
@@ -19,3 +18,9 @@ jobs:
         - psql -c "CREATE DATABASE testdb;" -U postgres
       script:
         - pytest -vv
+    
+    # - name: Lint Python
+    #   language: python
+    #   python: 3.9
+    #   before_script: pip install flake8
+    #   script: flake8 . --statistics --count

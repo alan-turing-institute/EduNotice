@@ -38,7 +38,7 @@ def test_get_courses_labs_subscriptions_dict():
         lab_dict,
         sub_dict,
         sub_new_list,
-        sub_update_list
+        sub_update_list,
     ) = update_edu_data(ENGINE, eduhub_df)
 
     assert success, error

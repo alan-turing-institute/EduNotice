@@ -7,14 +7,14 @@ import time
 
 # Test mode
 try:
-    TEST_MODE = os.environ["ENS_TEST_MODE"].lower() == 'true'
-except:
+    TEST_MODE = os.environ["ENS_TEST_MODE"].lower() == "true"
+except Exception:
     TEST_MODE = False
 
 # Verbose level
 try:
     CONST_VERBOSE_LEVEL = int(os.environ["ENS_VERBOSE_LEVEL"])
-except:
+except Exception:
     CONST_VERBOSE_LEVEL = 2
 
 # Connection strings
@@ -52,7 +52,10 @@ SQL_CONNECTION_STRING = "%s://%s:%s@%s:%s" % (
     SQL_PORT,
 )
 
-SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DEFAULT_DBNAME)
+SQL_CONNECTION_STRING_DEFAULT = "%s/%s" % (
+    SQL_CONNECTION_STRING,
+    SQL_DEFAULT_DBNAME,
+)
 
 SQL_CONNECTION_STRING_DB = "%s/%s" % (SQL_CONNECTION_STRING, SQL_DBNAME)
 
@@ -61,17 +64,17 @@ CONST_TIME_ZONE_NAME = time.tzname[time.daylight]
 
 
 # SendGrid
-SG_FROM_EMAIL = os.environ.get('ENS_FROM_EMAIL')
-SG_SUMMARY_RECIPIENTS = os.environ.get('ENS_SUMMARY_RECIPIENTS')
-SG_API_KEY = os.environ.get('ENS_EMAIL_API')
+SG_FROM_EMAIL = os.environ.get("ENS_FROM_EMAIL")
+SG_SUMMARY_RECIPIENTS = os.environ.get("ENS_SUMMARY_RECIPIENTS")
+SG_API_KEY = os.environ.get("ENS_EMAIL_API")
 try:
-    SG_TEST_EMAIL = os.environ["ENS_TEST_EMAIL_API"].lower() == 'true'
-except:
+    SG_TEST_EMAIL = os.environ["ENS_TEST_EMAIL_API"].lower() == "true"
+except Exception:
     SG_TEST_EMAIL = False
 
-__email_excl = os.environ.get('ENS_EMAIL_EXCL')
+__email_excl = os.environ.get("ENS_EMAIL_EXCL")
 if type(__email_excl) is str:
-    SG_EMAIL_EXCL = [x.strip() for x in __email_excl.split(',')]
+    SG_EMAIL_EXCL = [x.strip() for x in __email_excl.split(",")]
 else:
     SG_EMAIL_EXCL = None
 
@@ -82,12 +85,12 @@ CONST_EMAIL_SUBJECT_EXPIRE = "Azure subscription expires in"
 CONST_EMAIL_SUBJECT_USAGE = "Azure subscription's utilisation &#8805; "
 CONST_EMAIL_SUBJECT_USAGE_2 = "Azure subscription's utilisation "
 
-SG_TEST_FROM = os.environ.get('ENS_TEST_FROM_EMAIL')
-SG_TEST_TO = os.environ.get('ENS_TEST_TO_EMAIL')
+SG_TEST_FROM = os.environ.get("ENS_TEST_FROM_EMAIL")
+SG_TEST_TO = os.environ.get("ENS_TEST_TO_EMAIL")
 
 try:
-    SG_EMAIL_DISABLE = os.environ["ENS_EMAIL_DISABLE"].lower() == 'true'
-except:
+    SG_EMAIL_DISABLE = os.environ["ENS_EMAIL_DISABLE"].lower() == "true"
+except Exception:
     SG_EMAIL_DISABLE = False
 
 # DB Constants
@@ -100,7 +103,7 @@ LOGS_TABLE_NAME = "logs"
 ID_COL_NAME = "id"
 
 # Log codes
-CONST_LOG_CODE_SUCCESS = 0 # The operation completed successfully.
+CONST_LOG_CODE_SUCCESS = 0  # The operation completed successfully.
 
 # Notification codes
 CONST_EXPR_CODE_0 = 0
@@ -148,7 +151,10 @@ CONST_TEST12_FILENAME = "ec_output_12.csv"
 
 CONST_TEST_DIR = os.path.abspath(
     os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), "..", "..", CONST_TEST_FOLDER
+        os.path.dirname(os.path.realpath(__file__)),
+        "..",
+        "..",
+        CONST_TEST_FOLDER,
     )
 )
 

@@ -10,7 +10,7 @@ from edunotice.constants import (
     CONST_EMAIL_SUBJECT_NEW,
     CONST_EMAIL_SUBJECT_UPD,
     CONST_EMAIL_SUBJECT_EXPIRE,
-    CONST_EMAIL_SUBJECT_CANCELLED,
+    # CONST_EMAIL_SUBJECT_CANCELLED,
     CONST_EMAIL_SUBJECT_USAGE,
     CONST_SUB_CANCELLED,
     CONST_TIME_ZONE_NAME,
@@ -28,11 +28,19 @@ def email_top(headline):
     """
 
     html_content = "<html><body>"
-    html_content += '<div dir="ltr" style="font-family:verdana;font-size:12px;color:#555555;line-height:14pt">'
+
+    html_content += '<div dir="ltr" style="font-family:verdana;font-size:12px;'
+    html_content += 'color:#555555;line-height:14pt">'
+
     html_content += '<div style="width:590px">'
 
-    html_content += "<div style=\"background:url('https://www.gstatic.com/android/market_images/email/email_top.png') no-repeat;width:100%;height:75px;display:block\">"
-    html_content += '<div style="padding-top:30px;padding-left:50px;padding-right:50px;font-size:24px;">'
+    html_content += "<div style=\"background:url('"
+    html_content += "https://www.gstatic.com/android/"
+    html_content += "market_images/email/email_top.png')"
+    html_content += " no-repeat;width:100%;height:75px;display:block\">"
+
+    html_content += '<div style="padding-top:30px;padding-left:50px;'
+    html_content += 'padding-right:50px;font-size:24px;">'
 
     html_content += "<div>%s</div>" % (headline)
 
@@ -50,7 +58,10 @@ def email_bottom():
         html_content - html code
     """
 
-    html_content = "<div style=\"background:url('https://www.gstatic.com/android/market_images/email/email_bottom.png') no-repeat;width:100%;height:50px;display:block\"></div>"
+    html_content = "<div style=\"background:url("
+    html_content += "'https://www.gstatic.com/android/market_images/"
+    html_content += "email/email_bottom.png') no-repeat;width:100%;"
+    html_content += "height:50px;display:block\"></div>"
 
     html_content += "</div></div></body></html>"
 
@@ -67,14 +78,18 @@ def email_middle(content):
         html_content - html code
     """
 
-    html_content = "<div style=\"background:url('https://www.gstatic.com/android/market_images/email/email_mid.png') repeat-y;width:100%;display:block\">"
+    html_content = "<div style=\"background:url("
+    html_content += "'https://www.gstatic.com/android/market_images/"
+    html_content += "email/email_mid.png') repeat-y;width:100%;"
+    html_content += "display:block\">"
+
     html_content += (
         '<div style="padding-left:50px;padding-right:50px;padding-bottom:1px">'
     )
     html_content += '<div style="border-bottom:1px solid #ededed"></div>'
-    html_content += (
-        '<div style="margin:20px 0px;font-size:20px;line-height:30px;text-align:left">'
-    )
+
+    html_content += '<div style="margin:20px 0px;font-size:20px;'
+    html_content += 'line-height:30px;text-align:left">'
 
     html_content += content
 
@@ -82,8 +97,9 @@ def email_middle(content):
     html_content += '<div style="text-align:left"></div>'
     html_content += '<div style="border-bottom:1px solid #ededed"></div>'
     html_content += "<br>"
-    html_content += "<div>This is an automated email notification sent from the Turing Research Compute Platforms cloud platform -  please do not reply to it.</div>"
-    html_content += "</div></div>"
+    html_content += "<div>This is an automated email notification sent from "
+    html_content += "the Turing Research Compute Platforms cloud platform -  "
+    html_content += "please do not reply to it.</div></div></div>"
 
     return html_content
 
@@ -102,8 +118,9 @@ def value_change(paramter_name, old_value, new_value):
 
     if old_value != new_value:
         html_content = (
-            "&#9 %s: <strike><i>%s</i></strike> &rarr; <strong><i>%s</i></strong><br>"
-            % (paramter_name, old_value, new_value)
+            "&#9 %s: " % (paramter_name)
+            + "<strike><i>%s</i></strike> " % (old_value)
+            + "&rarr; <strong><i>%s</i></strong><br>" % (new_value)
         )
     else:
         html_content = "&#9 %s: <i>%s</i><br>" % (paramter_name, new_value)
@@ -128,7 +145,9 @@ def details_changed(prev_details, new_details):
     if (
         (prev_details.handout_status != new_details.handout_status)
         or (prev_details.subscription_name != new_details.subscription_name)
-        or (prev_details.subscription_status != new_details.subscription_status)
+        or (
+            prev_details.subscription_status != new_details.subscription_status
+        )
         or (
             prev_details.subscription_expiry_date
             != new_details.subscription_expiry_date
@@ -160,15 +179,21 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub, show_expiry_date=False):
         list(lab_dict.values()).index(new_sub.lab_id)
     ]
 
-    sub_guid = list(sub_dict.keys())[list(sub_dict.values()).index(new_sub.sub_id)]
+    sub_guid = list(sub_dict.keys())[
+        list(sub_dict.values()).index(new_sub.sub_id)
+    ]
 
     new_sub_html = "&#9 Course: <i>%s</i><br>" % (course_name)
     new_sub_html += "&#9 Lab: <i>%s</i><br>" % (lab_name)
-    new_sub_html += "&#9 Handout status: <i>%s</i><br>" % (new_sub.handout_status)
+    new_sub_html += "&#9 Handout status: <i>%s</i><br>" % (
+        new_sub.handout_status
+    )
 
     new_sub_html += "<br>"
 
-    new_sub_html += "&#9 Subscription name: <i>%s</i><br>" % (new_sub.subscription_name)
+    new_sub_html += "&#9 Subscription name: <i>%s</i><br>" % (
+        new_sub.subscription_name
+    )
     new_sub_html += "&#9 Subscription ID: <i>%s</i><br>" % (sub_guid)
     new_sub_html += "&#9 Subscription status: <i>%s</i><br>" % (
         new_sub.subscription_status
@@ -190,13 +215,17 @@ def new_sub_details_html(lab_dict, sub_dict, new_sub, show_expiry_date=False):
                 new_sub.subscription_expiry_date
             )
 
-    new_sub_html += "&#9 Budget: <i>${:,.2f}</i> <br>".format(new_sub.handout_budget)
+    new_sub_html += "&#9 Budget: <i>${:,.2f}</i> <br>".format(
+        new_sub.handout_budget
+    )
 
     new_sub_html += "&#9 Consumed: <i>%s</i><br>" % (
         "${:,.2f}".format(new_sub.handout_consumed)
     )
 
-    new_sub_html += "&#9 Users: <i>%s</i><br><br>" % (new_sub.subscription_users)
+    new_sub_html += "&#9 Users: <i>%s</i><br><br>" % (
+        new_sub.subscription_users
+    )
 
     return new_sub_html
 
@@ -221,13 +250,17 @@ def upd_sub_details_html(lab_dict, sub_dict, upd_sub, show_expiry_date=False):
         list(lab_dict.values()).index(new_details.lab_id)
     ]
 
-    sub_guid = list(sub_dict.keys())[list(sub_dict.values()).index(new_details.sub_id)]
+    sub_guid = list(sub_dict.keys())[
+        list(sub_dict.values()).index(new_details.sub_id)
+    ]
 
     upd_sub_html = "&#9 Course: <i>%s</i><br>" % (course_name)
     upd_sub_html += "&#9 Lab: <i>%s</i><br>" % (lab_name)
 
     upd_sub_html += value_change(
-        "Handout status", prev_details.handout_status, new_details.handout_status
+        "Handout status",
+        prev_details.handout_status,
+        new_details.handout_status,
     )
 
     upd_sub_html += "<br>"
@@ -248,14 +281,18 @@ def upd_sub_details_html(lab_dict, sub_dict, upd_sub, show_expiry_date=False):
 
     upd_sub_html += "<br>"
 
-    prev_expiry_date = prev_details.subscription_expiry_date.strftime("%Y-%m-%d")
+    prev_expiry_date = prev_details.subscription_expiry_date.strftime(
+        "%Y-%m-%d"
+    )
     new_expiry_date = new_details.subscription_expiry_date.strftime("%Y-%m-%d")
 
     if (
         new_details.subscription_status.lower() != CONST_SUB_CANCELLED.lower()
         or show_expiry_date
     ):
-        upd_sub_html += value_change("Expiry date", prev_expiry_date, new_expiry_date)
+        upd_sub_html += value_change(
+            "Expiry date", prev_expiry_date, new_expiry_date
+        )
 
     prev_budget = "${:,.2f}".format(prev_details.handout_budget)
     new_budget = "${:,.2f}".format(new_details.handout_budget)
@@ -305,10 +342,13 @@ def contact_us_html():
     # Contact us
     return (
         "<div>If the information presented in this email does not match your"
-        + " expectations or if you have questions related to this service, please contact"
-        + ' us by submiting a ticket on <a href="https://turingcomplete.topdesk.net/tas/public/'
-        + "ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895"
-        + '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a>.</div>'
+        + " expectations or if you have questions related to this service, "
+        + "please contact us by submiting a ticket on "
+        + '<a href="https://turingcomplete.topdesk.net/tas/public/'
+        + "ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f"
+        + "&from=7edfe644-ac0d-4895"
+        + '-af98-acd425ee0b19&openedFromService=true">'
+        + 'Turing Complete</a>.</div>'
     )
 
 
@@ -318,24 +358,40 @@ def disabled_html():
 
     """
     return (
-        "<div>Once a subscription is cancelled (i.e. expires) Microsoft will <b>"
-        + '<a href="https://docs.microsoft.com/en-us/microsoft-365/commerce/subscriptions/what-if-my-subscription-expires?view=o365-worldwide"'
-        + ">permanently delete all data after 90 days</a></b>. If you wish to access data on your cancelled subscription, "
+        "<div>Once a subscription is cancelled (i.e. expires) Microsoft "
+        + "will <b>"
+        + '<a href="https://docs.microsoft.com/en-us/microsoft-365/'
+        + 'commerce/subscriptions/what-if-my-subscription-expires?'
+        + 'view=o365-worldwide"'
+        + ">permanently delete all data after 90 days</a></b>. "
+        + "If you wish to access data on your cancelled subscription, "
         + "you should get in touch with us via "
         + '<a href="https://turingcomplete.topdesk.net/tas/public/'
-        + "ssp/content/serviceflow?unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895"
+        + "ssp/content/serviceflow?"
+        + "unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895"
         + '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a> '
-        + "as soon as possible.<br><br>Please also note that <b>we will not be able to extend your "
-        + "subscription beyond <span style='color:red'>11 October 2021</span></b>. We strongly advise you to transfer your information "
-        + "from the subscription in advance of the 11 October 2021 deadline, otherwise you risk "
-        + "of losing access to data and Azure resources associated with the subscription.</div>"
+        + "as soon as possible.<br><br>Please also note that <b>"
+        + "we will not be able to extend your subscription beyond "
+        + "<span style='color:red'>11 October 2021</span></b>. "
+        + "We strongly advise you to transfer your information "
+        + "from the subscription in advance of the 11 October 2021 "
+        + "deadline, otherwise you risk of losing access to data and "
+        + "Azure resources associated with the subscription.</div>"
     )
 
 
-def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, sent_noti_list, from_date, to_date):
+def summary(
+    lab_dict,
+    sub_dict,
+    new_sub_list,
+    upd_sub_list,
+    sent_noti_list,
+    from_date,
+    to_date,
+):
     """
-    Generates summary email content as an html document. It includes information about new
-        and updated subscriptions.
+    Generates summary email content as an html document. It includes
+        information about new and updated subscriptions.
 
     Arguments:
         lab_dict - lab name /internal id dictionary
@@ -364,13 +420,17 @@ def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, sent_noti_list, from
 
     html_content = email_top("EduHub Activity Update")
 
-    html_middle = '<div style="font-size:18px;line-height:16px;text-align:left">'
+    html_middle = (
+        '<div style="font-size:18px;line-height:16px;text-align:left">'
+    )
 
     to_date_str = to_date.astimezone(tzlocal()).strftime("%Y-%m-%d %H:%M")
     if from_date is None:
         html_middle += "%s" % (to_date_str)
     else:
-        from_date_str = from_date.astimezone(tzlocal()).strftime("%Y-%m-%d %H:%M")
+        from_date_str = from_date.astimezone(tzlocal()).strftime(
+            "%Y-%m-%d %H:%M"
+        )
         html_middle += "%s - %s" % (from_date_str, to_date_str)
 
     html_middle += " (%s)</div><br>" % (CONST_TIME_ZONE_NAME)
@@ -384,7 +444,9 @@ def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, sent_noti_list, from
     if len(new_sub_list) > 0:
 
         html_middle += "New subscriptions (%d):" % (len(new_sub_list))
-        html_middle += '<div style="font-size:12px;line-height:16px;text-align:left">'
+        html_middle += (
+            '<div style="font-size:12px;line-height:16px;text-align:left">'
+        )
 
         new_subs = ""
 
@@ -415,7 +477,9 @@ def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, sent_noti_list, from
     if len(sub_update_details_list) > 0:
 
         html_middle += "Updates (%d):" % (len(sub_update_details_list))
-        html_middle += '<div style="font-size:12px;line-height:16px;text-align:left">'
+        html_middle += (
+            '<div style="font-size:12px;line-height:16px;text-align:left">'
+        )
 
         sub_updates = ""
 
@@ -445,9 +509,12 @@ def summary(lab_dict, sub_dict, new_sub_list, upd_sub_list, sent_noti_list, from
     if len(sent_noti_list) > 0:
         noti_sent_html = ""
 
-        html_middle += '<div style="border-bottom:1px solid #ededed"></div><br>'
+        html_middle += '<div style="border-bottom:1px solid #ededed">'
+        html_middle += '</div><br>'
         html_middle += "Notifications sent (%d):" % (len(sent_noti_list))
-        html_middle += '<div style="font-size:12px;line-height:16px;text-align:left">'
+        html_middle += (
+            '<div style="font-size:12px;line-height:16px;text-align:left">'
+        )
 
         prev_sub_guid = None
 
@@ -526,7 +593,9 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
     # else:
     html_content = email_top(CONST_EMAIL_SUBJECT_NEW)
 
-    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
+    html_middle = (
+        '<div style="font-size:12px;line-height:16px;text-align:left">'
+    )
     html_middle += (
         "<div>You are receiving this email because a subscription has been"
         + " registered on EduHub notification service (<b>EduNotice</b>)"
@@ -536,7 +605,8 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
         html_middle += " as <b>cancelled</b>"
 
     html_middle += " and you are listed as its user.</div>"
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Subscription details
     html_middle += "<div><b>Subscription details:</b></div><br>"
@@ -546,39 +616,68 @@ def indiv_email_new(lab_dict, sub_dict, new_sub):
     # Check if the subscription is cancelled
     if new_sub.subscription_status.lower() == CONST_SUB_CANCELLED.lower():
         html_middle += disabled_html()
-        html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+        html_middle += (
+            '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+        )
 
     # Communications
-    html_middle += "<div><b>Communications:</b> EduNotice will send the following communications</div>"
+    html_middle += "<div><b>Communications:</b> EduNotice will send "
+    html_middle += "the following communications</div>"
+
     html_middle += "<div><ul>"
-    html_middle += "<li><b>Confirmation:</b> an email denoting the registration of the subscription.</li><br>"
-    html_middle += "<li><b>Updates:</b> notification emails denoting changes in the subscription details.</li><br>"
-    html_middle += "<li><b>Time-based:</b> notification emails denoting the amount of time remaining in the subscription duration according to the following schedule.</li>"
+
+    html_middle += "<li><b>Confirmation:</b> an email denoting the "
+    html_middle += "registration of the subscription.</li><br>"
+
+    html_middle += "<li><b>Updates:</b> notification emails denoting"
+    html_middle += " changes in the subscription details.</li><br>"
+
+    html_middle += "<li><b>Time-based:</b> notification emails "
+    html_middle += "denoting the amount of time remaining in the"
+    html_middle += " subscription duration according to the "
+    html_middle += "following schedule.</li>"
+
     html_middle += "<ul>"
     html_middle += "<li>Notification 1: 30 days before end</li>"
     html_middle += "<li>Notification 2: 7 days before end</li>"
     html_middle += "<li>Notification 3: 1 day before end</li>"
     html_middle += "</ul><br>"
-    html_middle += "<li><b>Usage-based:</b> notification emails denoting the monetary amount remaining in the subscription according to the following schedule.</li>"
+
+    html_middle += "<li><b>Usage-based:</b> notification emails "
+    html_middle += "denoting the monetary amount remaining in the "
+    html_middle += "subscription according to the following schedule.</li>"
+
     html_middle += "<ul>"
-    html_middle += "<li>Notification 1: 50% of monetary credit has been used</li>"
-    html_middle += "<li>Notification 2: 75% of monetary credit has been used</li>"
-    html_middle += "<li>Notification 3: 90% of monetary credit has been used</li>"
-    html_middle += "<li>Notification 4: 95% of monetary credit has been used</li>"
+    html_middle += (
+        "<li>Notification 1: 50% of monetary credit has been used</li>"
+    )
+    html_middle += (
+        "<li>Notification 2: 75% of monetary credit has been used</li>"
+    )
+    html_middle += (
+        "<li>Notification 3: 90% of monetary credit has been used</li>"
+    )
+    html_middle += (
+        "<li>Notification 4: 95% of monetary credit has been used</li>"
+    )
     html_middle += "</ul>"
     html_middle += "</ul></div>"
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Disclaimer
     html_middle += (
         "<div><b>Disclaimer:</b> EduNotice is only for"
-        + " demonstration purposes and we make no warranties of any kind, express or implied,"
-        + " about the completeness, accuracy, reliability, suitability or availability with"
-        + " respect to the information and service. However, we endeavour to make reasonable"
-        + " effort to keep the information and service up to date and correct. </div>"
+        + " demonstration purposes and we make no warranties of any "
+        + "kind, express or implied, about the completeness, accuracy,"
+        + " reliability, suitability or availability with respect to "
+        + "the information and service. However, we endeavour to make"
+        + " reasonable effort to keep the information and service up "
+        + "to date and correct. </div>"
     )
 
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Contact us
     html_middle += contact_us_html()
@@ -611,7 +710,9 @@ def indiv_email_upd(lab_dict, sub_dict, upd_sub):
     # else:
     html_content = email_top(CONST_EMAIL_SUBJECT_UPD)
 
-    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
+    html_middle = (
+        '<div style="font-size:12px;line-height:16px;text-align:left">'
+    )
     html_middle += (
         "<div>You are receiving this email because a subscription has been "
     )
@@ -622,16 +723,20 @@ def indiv_email_upd(lab_dict, sub_dict, upd_sub):
         html_middle += "updated"
 
     html_middle += " and you are listed as its user.</div>"
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Details
     html_middle += upd_sub_details_html(lab_dict, sub_dict, upd_sub)
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Check if the subscription is cancelled
     if upd_sub[1].subscription_status.lower() == CONST_SUB_CANCELLED.lower():
         html_middle += disabled_html()
-        html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+        html_middle += (
+            '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+        )
 
     # Contact us
     html_middle += contact_us_html()
@@ -645,7 +750,9 @@ def indiv_email_upd(lab_dict, sub_dict, upd_sub):
     return True, None, html_content
 
 
-def indiv_email_expiry_notification(lab_dict, sub_dict, sub_details, remain_days):
+def indiv_email_expiry_notification(
+    lab_dict, sub_dict, sub_details, remain_days
+):
     """
     Generates time-based notification content as an html document.
 
@@ -660,21 +767,27 @@ def indiv_email_expiry_notification(lab_dict, sub_dict, sub_details, remain_days
         html_content - summary as an html text
     """
 
-    html_content = email_top("%s %d day(s)" % (CONST_EMAIL_SUBJECT_EXPIRE, remain_days))
+    html_content = email_top(
+        "%s %d day(s)" % (CONST_EMAIL_SUBJECT_EXPIRE, remain_days)
+    )
 
-    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
+    html_middle = (
+        '<div style="font-size:12px;line-height:16px;text-align:left">'
+    )
 
     html_middle += (
         "<div>You are receiving this email because a subscription will expire "
         + "in %d days and you are listed as its user.</div>" % (remain_days)
     )
 
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Important notice
     html_middle += disabled_html()
 
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Subscription details
     html_middle += "<div><b>Subscription details:</b></div><br>"
@@ -695,7 +808,8 @@ def indiv_email_expiry_notification(lab_dict, sub_dict, sub_details, remain_days
     return True, None, html_content
 
 
-def indiv_email_usage_notification(lab_dict, sub_dict, sub_details, usage_code):
+def indiv_email_usage_notification(lab_dict, sub_dict, sub_details,
+                                   usage_code):
     """
     Generates usage-based notification content as an html document.
 
@@ -710,22 +824,29 @@ def indiv_email_usage_notification(lab_dict, sub_dict, sub_details, usage_code):
         html_content - summary as an html text
     """
 
-    html_content = email_top("%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE, usage_code))
-
-    html_middle = '<div style="font-size:12px;line-height:16px;text-align:left">'
-
-    html_middle += (
-        "<div>You are receiving this email because a subscription has reached &#8805; "
-        + "%d%% utilisation and you are listed as its user. Once a subscription utilises its budget, it will be cancelled.</div>"
-        % (usage_code)
+    html_content = email_top(
+        "%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE, usage_code)
     )
 
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle = (
+        '<div style="font-size:12px;line-height:16px;text-align:left">'
+    )
+
+    html_middle += (
+        "<div>You are receiving this email because a subscription has "
+        + "reached &#8805; %d%% utilisation and " % (usage_code)
+        + "you are listed as its user. Once a subscription utilises "
+        + "its budget, it will be cancelled.</div>"
+    )
+
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Important notice
     html_middle += disabled_html()
 
-    html_middle += '<br><div style="border-bottom:1px solid #ededed"></div><br>'
+    html_middle += '<br><div style="border-bottom:1px solid #ededed">'
+    html_middle += '</div><br>'
 
     # Subscription details
     html_middle += "<div><b>Subscription details:</b></div><br>"
