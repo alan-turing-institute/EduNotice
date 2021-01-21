@@ -411,6 +411,14 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                 else:
                     sub_users = ""
 
+                # While subscription is "Pending acceptance" it doesn't show its expiry date
+                if len(row[CONST_PD_COL_SUB_EXPIRY_DATE]) == 0:
+                    expiry_date = None
+                else:
+                    expiry_date = datetime.strptime(
+                        row[CONST_PD_COL_SUB_EXPIRY_DATE], "%Y-%m-%d"
+                    )
+
                 # adds new record to the database
                 new_sub_detail = DetailsClass(
                     sub_id=sub_id,
@@ -423,9 +431,7 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                     handout_consumed=CONVERT_LAMBDA(row[CONST_PD_COL_HANDOUT_CONSUMED]),
                     subscription_name=row[CONST_PD_COL_SUB_NAME],
                     subscription_status=row[CONST_PD_COL_SUB_STATUS],
-                    subscription_expiry_date=datetime.strptime(
-                        row[CONST_PD_COL_SUB_EXPIRY_DATE], "%Y-%m-%d"
-                    ),
+                    subscription_expiry_date=expiry_date,
                     subscription_users=sub_users,
                     timestamp_utc=crawl_time,
                     new_flag=(prev_details is None),

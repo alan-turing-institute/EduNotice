@@ -131,7 +131,7 @@ class DetailsClass(BASE):
     subscription_expiry_date = Column(DateTime, nullable=False)
     subscription_users = Column(String(10000), nullable=False)
 
-    timestamp_utc = Column(DateTime, nullable=False)
+    timestamp_utc = Column(DateTime)
 
     # creation notifications
     new_flag = Column(Boolean, default=False)

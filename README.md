@@ -40,7 +40,7 @@ EduNotice sends the following communications to admins:
 
 Set the required and optional environmental parameters (recommended by modifying the `~/.bash_profile` file).
 
-#### [EduCrawler](https://github.com/tomaslaz/EduCrawler)
+#### [EduCrawler](https://github.com/alan-turing-institute/EduCrawler)
 
 ```{bash}
 export EC_EMAIL="example@mail.com" # EduHub account email address
