@@ -1,6 +1,6 @@
 # EduHub Activity Notification Service
 
-[![Build Status](https://travis-ci.com/tomaslaz/EduNotice.svg?branch=main)](https://travis-ci.org/tomaslaz/EduNotice) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.com/alan-turing-institute/EduNotice.svg?branch=main)](https://travis-ci.org/alan-turing-institute/EduNotice) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An Azure Function App that registers changes in the Education section of portal.azure.com and sends out emails to admins and users.
 
@@ -147,7 +147,7 @@ cd EduNotice/utils/infrastructure
 ```
 
 ## Getting help
-If you found a bug or need support, please submit an issue [here](https://github.com/tomaslaz/EduNotice/issues/new).
+If you found a bug or need support, please submit an issue [here](https://github.com/alan-turing-institute/EduNotice/issues/new).
 
 ## How to contribute
-We welcome contributions! If you are willing to propose new features or have bug fixes to contribute, please submit a pull request [here](https://github.com/tomaslaz/EduNotice/pulls).
+We welcome contributions! If you are willing to propose new features or have bug fixes to contribute, please submit a pull request [here](https://github.com/alan-turing-institute/EduNotice/pulls).

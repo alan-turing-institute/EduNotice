@@ -55,7 +55,8 @@ def get_labs_dict(engine):
 
 def get_subs_dict(engine):
     """
-    Returns a dictionary containing all subscription ids and their internal id numbers.
+    Returns a dictionary containing all subscription ids and
+        their internal id numbers.
 
     Arguments:
         engine - an sql engine instance

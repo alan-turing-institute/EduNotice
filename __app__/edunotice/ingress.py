@@ -39,8 +39,12 @@ from edunotice.constants import (
 
 from edunotice.notifications import details_changed
 
-# lambda function to convert amount in dollars to a float
-CONVERT_LAMBDA = lambda x: float(x.replace("$", "").replace(",", ""))
+
+def CONVERT_LAMBDA(x):
+    """
+    Function to convert amount in dollars to a float
+    """
+    return float(x.replace("$", "").replace(",", ""))
 
 
 def _check_df(eduhub_df):
@@ -67,8 +71,9 @@ def _check_df(eduhub_df):
 
 def update_edu_data(engine, eduhub_df):
     """
-    Updates the database with the eduhub crawl data. If a course, lab or handout/subscription is
-        not found, new one is created. Updated data is added as new rows in the tables.
+    Updates the database with the eduhub crawl data. If a course, lab or
+        handout/subscription is not found, new one is created. Updated
+        data is added as new rows in the tables.
 
     Arguments:
         engine - an sql engine instance
@@ -104,7 +109,8 @@ def update_edu_data(engine, eduhub_df):
         success, error, lab_dict = _update_labs(engine, eduhub_df, course_dict)
 
     if success:
-        # getting unique subscriptions and making sure that they are in the database
+        # getting unique subscriptions and making sure that they are in the
+        # database
         success, error, sub_dict = _update_subscriptions(engine, eduhub_df)
 
     if success:
@@ -267,7 +273,7 @@ def _update_labs(engine, eduhub_df, course_dict):
                 .first()
                 .id
             )
-        except AttributeError as exception:
+        except Exception:
             lab_id = 0
 
         # create new lab
@@ -294,7 +300,8 @@ def _update_labs(engine, eduhub_df, course_dict):
 def _update_subscriptions(engine, eduhub_df):
     """
     Updates the database with the subscriptions eduhub crawl data and returns a
-        dictionary containing all subscription ids and their internal id numbers.
+        dictionary containing all subscription ids and their internal id
+        numbers.
 
     Arguments:
         engine - an sql engine instance
@@ -317,7 +324,8 @@ def _update_subscriptions(engine, eduhub_df):
 
     session = session_open(engine)
 
-    # get the internal ids of the subscriptions that are already in the database
+    # get the internal ids of the subscriptions that are already in
+    #   the database
     query_result = (
         session.query(SubscriptionClass)
         .filter(SubscriptionClass.guid.in_(unique_subscription_ids))
@@ -349,7 +357,8 @@ def _update_subscriptions(engine, eduhub_df):
 
 def _update_details(engine, eduhub_df, lab_dict, sub_dict):
     """
-    Updates the database with the subscription/handouts details eduhub crawl data.
+    Updates the database with the subscription/handouts details
+        eduhub crawl data.
 
     Arguments:
         engine - an sql engine instance
@@ -377,7 +386,7 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
         ].sort_values([CONST_PD_COL_CRAWL_TIME_UTC])
 
         sub_id = sub_dict[sub_guid]
-        
+
         # get the latest details before
         prev_details = (
             session.query(DetailsClass)
@@ -411,7 +420,8 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                 else:
                     sub_users = ""
 
-                # While subscription is "Pending acceptance" it doesn't show its expiry date
+                # While subscription is "Pending acceptance",
+                #   it doesn't show its expiry date
                 if len(row[CONST_PD_COL_SUB_EXPIRY_DATE]) == 0:
                     expiry_date = None
                 else:
@@ -423,12 +433,19 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                 new_sub_detail = DetailsClass(
                     sub_id=sub_id,
                     lab_id=lab_dict[
-                        (row[CONST_PD_COL_COURSE_NAME], row[CONST_PD_COL_LAB_NAME])
+                        (
+                            row[CONST_PD_COL_COURSE_NAME],
+                            row[CONST_PD_COL_LAB_NAME],
+                        )
                     ],
                     handout_name=row[CONST_PD_COL_HANDOUT_NAME],
                     handout_status=row[CONST_PD_COL_HANDOUT_STATUS],
-                    handout_budget=CONVERT_LAMBDA(row[CONST_PD_COL_HANDOUT_BUDGET]),
-                    handout_consumed=CONVERT_LAMBDA(row[CONST_PD_COL_HANDOUT_CONSUMED]),
+                    handout_budget=CONVERT_LAMBDA(
+                        row[CONST_PD_COL_HANDOUT_BUDGET]
+                    ),
+                    handout_consumed=CONVERT_LAMBDA(
+                        row[CONST_PD_COL_HANDOUT_CONSUMED]
+                    ),
                     subscription_name=row[CONST_PD_COL_SUB_NAME],
                     subscription_status=row[CONST_PD_COL_SUB_STATUS],
                     subscription_expiry_date=expiry_date,
@@ -460,7 +477,8 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
         else:
             update_list.append((prev_details, latest_details))
 
-            # if handout_budget has changed, nullify usage_code and usage_notice_sent
+            # if handout_budget has changed,
+            #   nullify usage_code and usage_notice_sent
             if prev_details.handout_budget != latest_details.handout_budget:
 
                 session.query(SubscriptionClass).filter(
@@ -473,7 +491,8 @@ def _update_details(engine, eduhub_df, lab_dict, sub_dict):
                 )
                 session.commit()
 
-            # if subscription_expiry_date has changed, nullify expiry_code and expiry_notice_sent
+            # if subscription_expiry_date has changed,
+            #   nullify expiry_code and expiry_notice_sent
             if (
                 prev_details.subscription_expiry_date
                 != latest_details.subscription_expiry_date

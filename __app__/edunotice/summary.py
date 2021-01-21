@@ -45,7 +45,8 @@ def _find_new_subs(engine, prev_timestamp_utc):
         )
         .order_by(
             DetailsClass.subscription_name.asc(),
-            DetailsClass.timestamp_utc.asc())
+            DetailsClass.timestamp_utc.asc(),
+        )
         .all()
     )
 
@@ -88,7 +89,8 @@ def _find_upd_subs(engine, prev_timestamp_utc):
         )
         .order_by(
             DetailsClass.subscription_name.asc(),
-            DetailsClass.timestamp_utc.asc())
+            DetailsClass.timestamp_utc.asc(),
+        )
         .all()
     )
 
@@ -151,11 +153,12 @@ def _find_sent_notifications(engine, prev_timestamp_utc):
 
     noti_list = (
         session.query(DetailsClass)
-            .filter(wh_clause)
-            .order_by(
-                DetailsClass.subscription_name.asc(),
-                DetailsClass.timestamp_utc.asc())
-            .all()
+        .filter(wh_clause)
+        .order_by(
+            DetailsClass.subscription_name.asc(),
+            DetailsClass.timestamp_utc.asc(),
+        )
+        .all()
     )
 
     if len(noti_list) > 0:
@@ -166,7 +169,8 @@ def _find_sent_notifications(engine, prev_timestamp_utc):
 
 def _prep_summary_email(engine, timestamp_utc=None):
     """
-    Prepares and sends out a summary email of new and updated subscriptions and notifications sent.
+    Prepares and sends out a summary email of new and updated
+        subscriptions and notifications sent.
 
     Arguments:
         engine - an sql engine instance
@@ -178,7 +182,7 @@ def _prep_summary_email(engine, timestamp_utc=None):
     """
 
     if timestamp_utc is None:
-        timestamp_utc=datetime.now(timezone.utc)
+        timestamp_utc = datetime.now(timezone.utc)
 
     html_content = None
 
@@ -198,15 +202,21 @@ def _prep_summary_email(engine, timestamp_utc=None):
 
     if success:
         log("Looking for new subscriptions", level=1)
-        success, error, new_sub_list = _find_new_subs(engine, prev_timestamp_utc)
+        success, error, new_sub_list = _find_new_subs(
+            engine, prev_timestamp_utc
+        )
 
     if success:
         log("Looking for updated subscriptions", level=1)
-        success, error, upd_sub_list = _find_upd_subs(engine, prev_timestamp_utc)
+        success, error, upd_sub_list = _find_upd_subs(
+            engine, prev_timestamp_utc
+        )
 
     if success:
         log("Looking for sent notifications", level=1)
-        success, error, sent_noti_list = _find_sent_notifications(engine, prev_timestamp_utc)
+        success, error, sent_noti_list = _find_sent_notifications(
+            engine, prev_timestamp_utc
+        )
 
     if success:
         # find all labs
@@ -246,7 +256,7 @@ def summary_email(engine, timestamp_utc=None):
     """
 
     if timestamp_utc is None:
-        timestamp_utc=datetime.now(timezone.utc)
+        timestamp_utc = datetime.now(timezone.utc)
 
     log("Preparing summary email", level=1)
 

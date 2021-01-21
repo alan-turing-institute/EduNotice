@@ -57,7 +57,9 @@ def _usage_notification(budget, usage):
     return notify, notification_code
 
 
-def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code, timestamp_utc=None):
+def _notify_usage_sub(
+    session, lab_dict, sub_dict, details, usage_code, timestamp_utc=None
+):
     """
     Sends a usage-based notification.
 
@@ -80,13 +82,19 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code, timestam
     if success:
         log(
             "Sending subscription utilisation email (%d) to: %s -> %s "
-            % (usage_code, details.subscription_name, details.subscription_users),
+            % (
+                usage_code,
+                details.subscription_name,
+                details.subscription_users,
+            ),
             level=1,
         )
 
         subject = "%s %d%%" % (CONST_EMAIL_SUBJECT_USAGE_2, usage_code)
 
-        success, error = send_email(details.subscription_users, subject, html_content)
+        success, error = send_email(
+            details.subscription_users, subject, html_content
+        )
 
         if success:
 
@@ -95,7 +103,9 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code, timestam
             else:
                 notice_sent_timestamp = datetime.now(timezone.utc)
 
-            session.query(DetailsClass).filter(DetailsClass.id == details.id).update(
+            session.query(DetailsClass).filter(
+                DetailsClass.id == details.id
+            ).update(
                 {
                     "usage_code": usage_code,
                     "usage_notice_sent": notice_sent_timestamp,
@@ -118,8 +128,8 @@ def _notify_usage_sub(session, lab_dict, sub_dict, details, usage_code, timestam
 
 def notify_usage(engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=None):
     """
-    Checks remaining budgets for new and updated subscriptions and sends out usage-based
-        notifications.
+    Checks remaining budgets for new and updated subscriptions
+        and sends out usage-based notifications.
 
         Notification 1: 50% of monetary credit has been used
         Notification 2: 75% of monetary credit has been used
@@ -154,7 +164,10 @@ def notify_usage(engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=None):
 
         # only for active subscriptions.
         #   If subscription is cancelled, it should have been alerady notified
-        if new_details.subscription_status.lower() == CONST_SUB_CANCELLED.lower():
+        if (
+            new_details.subscription_status.lower()
+            == CONST_SUB_CANCELLED.lower()
+        ):
             continue
 
         # check the budget notification code
@@ -179,8 +192,14 @@ def notify_usage(engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=None):
             send_notification = True
 
         if send_notification:
-            send_success, _ = _notify_usage_sub(session,
-                lab_dict, sub_dict, new_details, usage_code, timestamp_utc=timestamp_utc)
+            send_success, _ = _notify_usage_sub(
+                session,
+                lab_dict,
+                sub_dict,
+                new_details,
+                usage_code,
+                timestamp_utc=timestamp_utc,
+            )
 
             if send_success:
                 count += 1

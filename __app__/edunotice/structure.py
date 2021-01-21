@@ -10,7 +10,7 @@ from sqlalchemy import (
     String,
     DateTime,
     UniqueConstraint,
-    Boolean
+    Boolean,
 )
 
 from sqlalchemy.orm import relationship
