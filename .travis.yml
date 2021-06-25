@@ -2,6 +2,7 @@ jobs:
   include:
     - name: Unit Tests
       language: python
+      python: 3.7
       services:
         - postgresql
       install:
@@ -21,6 +22,6 @@ jobs:
     
     - name: Lint Python
       language: python
-      python: 3.9
+      python: 3.7
       before_script: pip install flake8
       script: flake8 . --statistics --count
