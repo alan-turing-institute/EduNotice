@@ -241,10 +241,10 @@ echo "EduNotice BUILD INFO: Function APP: $function_name configuration updated"
 python $cwd/create_json.py $CONNECTION_STRING local.settings.json
 echo "EduNotice BUILD INFO: Function APP: local.settings.json file updated."
 
-# echo "EduNotice BUILD INFO: Function APP: func azure functionapp publish"
+echo "EduNotice BUILD INFO: Function APP: func azure functionapp publish"
 func azure functionapp publish $function_name --build-native-deps --build remote
 
-# echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
+echo "EduNotice BUILD INFO: Function APP "$function" uploaded"
 
 echo "EduNotice BUILD INFO: Function APP cd: "$cwd
 cd $cwd

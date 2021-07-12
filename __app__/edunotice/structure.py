@@ -122,12 +122,12 @@ class DetailsClass(BASE):
     )
 
     handout_name = Column(String(100), nullable=False)
-    handout_status = Column(String(10), nullable=False)
+    handout_status = Column(String(25), nullable=False)
     handout_budget = Column(Float, nullable=False)
     handout_consumed = Column(Float, nullable=False)
 
     subscription_name = Column(String(100), nullable=False)
-    subscription_status = Column(String(10), nullable=False)
+    subscription_status = Column(String(25), nullable=False)
     subscription_expiry_date = Column(DateTime, nullable=False)
     subscription_users = Column(String(10000), nullable=False)
 
