@@ -5,9 +5,11 @@ from educrawler.crawler import crawl
 from edunotice.edunotice import update_subscriptions
 from edunotice.constants import SQL_CONNECTION_STRING_DB
 
+
 class Namespace:
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
+
 
 if __name__ == "__main__":
 
