@@ -166,6 +166,8 @@ def notify_expire(engine, lab_dict, sub_dict, upd_sub_list,
     # Notifying updated subscriptions about expiry
     for _, sub_update in enumerate(upd_sub_list):
 
+        expires = False
+        expiry_code = None
         send_notification = False
 
         # prev_details = sub_update[0]
@@ -179,12 +181,17 @@ def notify_expire(engine, lab_dict, sub_dict, upd_sub_list,
         ):
             continue
 
-        # check the expiration notification code
-        expires, expiry_code, remain_days = _check_remaining_time(
-            new_details.subscription_expiry_date, current_date=current_date
-        )
+        # subscription_expiry_date can be null if handout status is pending
+        #   acceptance
+        if new_details.subscription_expiry_date is not None:
+            # check the expiration notification code
+            expires, expiry_code, remain_days = _check_remaining_time(
+                new_details.subscription_expiry_date, current_date=current_date
+            )
 
-        if not expires:
+            if not expires:
+                continue
+        else:
             continue
 
         # check the latest notification code

@@ -128,7 +128,7 @@ class DetailsClass(BASE):
 
     subscription_name = Column(String(100), nullable=False)
     subscription_status = Column(String(25), nullable=False)
-    subscription_expiry_date = Column(DateTime, nullable=False)
+    subscription_expiry_date = Column(DateTime)
     subscription_users = Column(String(10000), nullable=False)
 
     timestamp_utc = Column(DateTime)
