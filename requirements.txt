@@ -1,14 +1,13 @@
-pytest==5.4.1
-pandas==0.25.3
-sqlalchemy==1.3.12
-SQLAlchemy-Utils==0.36.3 # 0.36.8 breaks database_exists() call
-flask-sqlalchemy==2.4.1
-sendgrid==6.4.7
-psycopg2-binary==2.8.4
+pytest==6.2.4
+sqlalchemy==1.4.21
+SQLAlchemy-Utils==0.37.8 # 0.36.8 breaks database_exists() call (0.36.3)
+flask-sqlalchemy==2.5.1
+sendgrid==6.7.1
+psycopg2-binary==2.9.1
 selenium==3.141.0
-webdriver-manager==3.2.2
-pandas==0.25.3
-tabulate==0.8.7
-pyyaml==5.1.1
-flake8==3.8.4
+webdriver-manager==3.4.2
+pandas==1.3.0
+tabulate==0.8.9
+pyyaml==5.4.1
+flake8==3.9.2
 git+git://github.com/alan-turing-institute/EduCrawler.git#egg=EduCrawler
