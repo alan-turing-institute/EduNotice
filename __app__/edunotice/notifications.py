@@ -370,13 +370,20 @@ def disabled_html():
         + "ssp/content/serviceflow?"
         + "unid=0d44e83330e54fac9984742ab85b4e8f&from=7edfe644-ac0d-4895"
         + '-af98-acd425ee0b19&openedFromService=true">Turing Complete</a> '
-        + "as soon as possible.<br><br>Please also note that <b>"
-        + "we will not be able to extend your subscription beyond "
-        + "<span style='color:red'>11 October 2021</span></b>. "
-        + "We strongly advise you to transfer your information "
-        + "from the subscription in advance of the 11 October 2021 "
-        + "deadline, otherwise you risk of losing access to data and "
-        + "Azure resources associated with the subscription.</div>"
+        + "as soon as possible.<br><br>Please also note that<b> "
+        + "the final $1million 2020/21 Microsoft gift will expire on the "
+        + "11th of October 2021</b>. If this subscription is being "
+        + "supported by the Microsoft gift and you would like to continue "
+        + "using it beyond the 11th of October 2021, you <b>need to "
+        + "register your subscription for migration to an Enterprise "
+        + "Agreement enrolment</b>, paid for by the Turing Institute. "
+        + "Otherwise you risk of losing access to data and Azure "
+        + "resources associated with the subscription.<br><br>"
+        + "If you haven't received an email about the Azure Enterprise "
+        + "Agreement Migration, please email "
+        + '<a href="ResearchComputePlatforms@turing.ac.uk">'
+        + "ResearchComputePlatforms@turing.ac.uk</a> as soon as possible "
+        + 'and include "EA Migration" in the subject.</div>'
     )
 
 
