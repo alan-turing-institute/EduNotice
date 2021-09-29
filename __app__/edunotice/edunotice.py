@@ -196,14 +196,16 @@ def _notify_subscriptions(
         log("Time notification error: %s" % (sub_error), level=0)
 
     # time-based notifications
-    time_success, time_error, time_count = notify_expire(
-        engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=timestamp_utc
-    )
+    # time_success, time_error, time_count = notify_expire(
+    #     engine, lab_dict, sub_dict, upd_sub_list, timestamp_utc=timestamp_utc
+    # )
+    
+    # if not time_success:
+    #     success = False
+    #     error += time_error
+    #     log("Time notification error: %s" % (time_error), level=0)
 
-    if not time_success:
-        success = False
-        error += time_error
-        log("Time notification error: %s" % (time_error), level=0)
+    time_count = 0
 
     # usage-based notifications
     usage_success, usage_error, usage_count = notify_usage(
