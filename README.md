@@ -1,3 +1,9 @@
+# Archived
+
+This repository is no longer in use.
+
+---
+
 # EduHub Activity Notification Service
 
 [![Build Status](https://travis-ci.com/alan-turing-institute/EduNotice.svg?branch=main)](https://travis-ci.org/alan-turing-institute/EduNotice) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
